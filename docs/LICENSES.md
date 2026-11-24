@@ -17,3 +17,7 @@ Checked 2026-11-24. All external assets were checked before implementation.
 Attribution: Siczewicz, Peter. _U.S. Historical States and Territories_. Emily Kelley, digital compiler. _Atlas of Historical County Boundaries_, edited by John H. Long. Chicago: Newberry Library, 2011.
 
 Licensing is separate from accuracy. Public-domain status does not establish that a boundary is exact or every record date denotes effective sovereignty. See sources page and DATA-PROVENANCE.json. A later change of business model should recheck all current upstream notices.
+
+## Release tooling and optional analytics
+
+Ajv 8.20.0 is an MIT-licensed build/CI schema validator (https://github.com/ajv-validator/ajv); its package notice is retained by the dependency, and it is not bundled into the browser app. The Site Pulse v1 schema and Markdown are the project owner's public integration contract, cached byte-for-byte for validation. Google’s official Analytics SDK is loaded remotely only after consent under Google's service terms; it is not copied into this repository or redistributed as a local asset. The integration and opt-out behavior are described in /privacy/ and docs/ANALYTICS.md.

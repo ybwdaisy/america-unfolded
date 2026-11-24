@@ -1,0 +1,45 @@
+{
+  "origin": "https://usa.ybwdaisy.com",
+  "commit": "91fcf9f2f476fef366a0a93bfd570225106d035f",
+  "browsers": "Installed Chrome; iPhone-emulated WebKit (not physical Safari)",
+  "googleRequests": 0,
+  "errors": [],
+  "results": [
+    {
+      "name": "production home opens at 1776 with no invented outline",
+      "result": "pass"
+    },
+    {
+      "name": "production map selection, detail close/reopen and dated records",
+      "result": "pass"
+    },
+    {
+      "name": "production yearly playback, quiet year and pause",
+      "result": "pass"
+    },
+    {
+      "name": "production before/after, modern reference, share and reload",
+      "result": "pass"
+    },
+    {
+      "name": "production back/forward restore exact chapter",
+      "result": "pass"
+    },
+    {
+      "name": "production complete 10-step sourced story",
+      "result": "pass"
+    },
+    {
+      "name": "production phone map/timeline visible and detail panel stays inline",
+      "result": "pass"
+    },
+    {
+      "name": "production touch pan does not scroll the phone page",
+      "result": "pass"
+    },
+    {
+      "name": "production iPhone-emulated WebKit: year, map, compare, details and history",
+      "result": "pass"
+    }
+  ]
+}

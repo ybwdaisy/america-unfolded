@@ -33,3 +33,18 @@ The usa subdomain was added to this project. Aliyun had 17 existing records; onl
 Production environment: SITE_ORIGIN=https://usa.ybwdaisy.com and GA_MEASUREMENT_ID=G-G1BH7EZXL9. Preview shares the canonical origin but excludes the measurement ID and emits noindex/robots Disallow. Runtime code independently checks the exact production origin, production configuration, consent and QA/automation state.
 
 The earlier CLI connectivity failure was resolved with command-scoped use of the existing system proxy (127.0.0.1:7897) and the official JavaScript CLI runtime; no proxy configuration or routing was modified. See ANALYTICS.md for independently created Google resources and the public funnel contract. Final deployment ID, commit and HTTP acceptance are appended after publication.
+
+## Published release
+
+- Public URL: https://usa.ybwdaisy.com/.
+- Independent project: prj_9TbpWYsiprpOdCHzt7PLMKzSWcVu / america-unfolded, ybwdaisy's projects (Hobby).
+- Current production target: dpl_CrCY1uLPrcvKyuHL2DxRRv5GUqTN, READY, target production.
+- Published application commit: 91fcf9f2f476fef366a0a93bfd570225106d035f on feat/historical-atlas. PR #2 remains open; main was not merged. Later evidence-only commits do not change the published application.
+- GitHub checks for this release both succeeded. An initial runner failure was fixed by pinning Ubuntu 24.04 rather than using the incompatible Ubuntu 26.04 latest image.
+- Production was first staged with --prod --skip-domain, its protected HTML/sitemap/manifest checked with authenticated vercel curl, then promoted explicitly. The project production target was re-read after promotion and matches this deployment and commit. The earlier staged deployment was never promoted.
+- Public HTTPS returned the expected canonical, 1776 default and exact manifest source bytes. All 20 sitemap routes returned HTTP 200 with canonical/metadata/structured data, robots allowed production crawling, and an unknown route returned a real 404/noindex page.
+- Nine browser smoke checks passed against the real production origin, covering map/detail, annual quiet-year playback, before/after, modern lines, clipboard/reload/history, complete story, inline phone panel and touch pan. iPhone WebKit is emulated, not physical Safari.
+- GSC sitemap Success / 20 discovered pages / 0 videos. The platform confirms siteOwner and successful real read APIs. Indexing/ranking and production collection from actual consenting visitors are not claimed.
+- Site Pulse remote manifest and all four actual funnel API queries passed; existing four sites and 16 funnels were preserved. No QA analytics requests were sent.
+
+Recorded evidence is in docs/evidence/release.json, production-browser.json, production-seo.json and the Site Pulse summaries. Nothing was purchased; no new paid service, login, database, payment system or tracking beyond the explicitly requested optional GA4 was added. Automatic Git deployment remains disabled and the review PR remains open.

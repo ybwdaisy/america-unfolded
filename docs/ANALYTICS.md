@@ -9,6 +9,8 @@ America Unfolded production: https://usa.ybwdaisy.com
 - Independent Web stream: 16405063176, https://usa.ybwdaisy.com.
 - Measurement ID: G-G1BH7EZXL9, production environment only.
 - Enhanced Measurement: explicitly disabled in this stream; no linked site tags.
+- Business key events saved in GA4: story_complete, map_source_open, map_share_success, with no default monetary value. Google’s existing purchase default is unchanged and is not emitted by this atlas.
+- Event retention was saved as 14 months for this new property to cover the platform’s 90-day funnel window; user retention remains 14 months.
 - Search Console URL-prefix: https://usa.ybwdaisy.com/. The Site Pulse production read client successfully queried this exact prefix and returned no search data yet; no indexing claim follows from configuration.
 
 Other products' properties/streams and their settings are unchanged. No Measurement Protocol key or additional Cloud project is required.
@@ -52,3 +54,9 @@ Normal events carry content_group=america_unfolded_public, tool_id=america_unfol
 The 12 offline checks simulate canonical human traffic only in a local-file routing fixture with an SDK stub; all external requests are blocked before navigation. They cover exclusions, consent, query stripping, map/source/compare/share actions, all ten story steps, completion deduplication, no annual-frame events and withdrawal. The separate real Google SDK fixture uses the real stream ID and actual SDK while intercepting every collection packet before dispatch; it verified one page view plus explore/year/detail, safe locations and withdrawal. This is not evidence of production ingestion or real visitors. Evidence: docs/evidence/analytics-results.json and analytics-real-sdk.json.
 
 Site Pulse owns its production integration and independent validation in the GA4+GSC aggregation conversation. Report availability, zero-data API responses and manifest synchronization do not establish historical accuracy, audience demand, indexing or conversion performance.
+
+## Production acceptance
+
+The exact production origin passed 9 Chrome desktop/phone and iPhone-emulated WebKit checks, with 0 Google SDK/collection requests and no page errors. The real SDK fixture additionally confirmed au_ga and au_ga_G1BH7EZXL9 cookies belong only to .usa.ybwdaisy.com and both are expired after withdrawal. GSC identified the exact URL prefix as siteOwner; sitemap.xml was submitted successfully and its UI returned Success / 20 discovered pages / 0 videos on November 24, 2026. Discovered pages are not a count of indexed pages.
+
+Site Pulse production read-back returned the four remote definitions at revision 2026-11-24.1 with no synchronization failures, and all four actual GA4 funnel queries returned HTTP 200 without cache. The checked period ends November 23 (before launch), so zero observed people/events and null rates do not measure launch-day usage. Original four-site definitions remain 1+3+5+7=16; the five-site total is 20. See evidence/site-pulse-five-production-summary.json and site-pulse-usa-live-funnels.json. No collector events were sent for this verification.

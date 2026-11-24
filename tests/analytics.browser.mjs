@@ -138,8 +138,22 @@ if (process.env.REAL_SDK) {
       assert.ok(parsed.every((e) => !e.dl || !/[?#]/.test(e.dl)));
       assert.ok(!JSON.stringify(parsed).includes('do-not-upload'));
       assert.ok(parsed.filter((e) => e.en).every((e) => e.tid === id));
+      const analyticsCookies = (await f.c.cookies(origin)).filter((cookie) =>
+        /^_?au_/.test(cookie.name),
+      );
+      assert.ok(
+        analyticsCookies.length > 0,
+        'Real SDK writes only the explicitly permitted first-party analytics cookies',
+      );
+      assert.ok(
+        analyticsCookies.every((cookie) => cookie.domain.replace(/^\./, '') === 'usa.ybwdaisy.com'),
+      );
       await f.p.locator('#analytics-settings').click();
       await f.p.locator('[data-analytics-consent=denied]').click();
+      assert.equal(
+        (await f.c.cookies(origin)).filter((cookie) => /^_?au_/.test(cookie.name)).length,
+        0,
+      );
       const count = f.packets.length;
       await f.p.locator('#next').click();
       await ready(f.p);
@@ -153,6 +167,8 @@ if (process.env.REAL_SDK) {
             collectionBlocked: true,
             ingestionVerified: false,
             sdk: f.sdk,
+            cookieScopes: analyticsCookies.map(({ name, domain }) => ({ name, domain })),
+            cookiesClearedAfterWithdrawal: true,
             eventNames: parsed.map((e) => e.en).filter(Boolean),
             locations: [...new Set(parsed.map((e) => e.dl).filter(Boolean))],
           },
@@ -337,7 +353,9 @@ if (process.env.REAL_SDK) {
 await browser.close();
 await fs.mkdir('docs/evidence', { recursive: true });
 await fs.writeFile(
-  'docs/evidence/analytics-results.json',
+  process.env.REAL_SDK
+    ? 'docs/evidence/analytics-real-sdk-results.json'
+    : 'docs/evidence/analytics-results.json',
   JSON.stringify(
     {
       kind: process.env.REAL_SDK

@@ -1,0 +1,129 @@
+{
+  "base": "https://usa.ybwdaisy.com",
+  "sitemapUrls": 20,
+  "https": true,
+  "robots": true,
+  "notFoundStatus": 404,
+  "pages": [
+    {
+      "url": "https://usa.ybwdaisy.com/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/convention-of-1818/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/independence/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/treaty-of-paris/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/louisiana-purchase/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/florida-statehood/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/mexican-cession/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/adams-onis-treaty/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/texas-annexation/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/oregon-treaty/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/gadsden-purchase/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/alaska-statehood/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/alaska-purchase/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/california-statehood/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/hawaii-annexation/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/story/how-america-took-shape/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/sources/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/events/hawaii-statehood/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/about/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    },
+    {
+      "url": "https://usa.ybwdaisy.com/privacy/",
+      "status": 200,
+      "canonical": true,
+      "structuredData": true
+    }
+  ]
+}
