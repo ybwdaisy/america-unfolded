@@ -1,5 +1,5 @@
-/* Hallmark · shape: app screen · genre: editorial · theme: custom American atlas (by request)
- * paper: warm ivory · accent: brick red · display: EB Garamond · body: Public Sans
+/* Hallmark · shape: app screen · genre: editorial · theme: custom American atlas (by request) · redesign: restyle
+ * paper: ivory #F7F3E9 · ink: #1F1D1A · accent: rust #8B3A2B · display: EB Garamond · body: Public Sans
  * nav: atlas masthead with reading links · signature: dated map with margin narrative and time ruler
  * states: loading, missing, error, full · axes: light/roman-serif/warm · posture: workbench · contrast: rendered sweep passed · v2.0.0 */
 /* Hallmark · pre-emit critique: map legibility leads; weak point: narrow-screen density, addressed with an inline expandable chapter. Independent finish review: 2 comparison findings, both fixed and regression-verified. */
@@ -1267,4 +1267,119 @@ dd {
   background: var(--color-polity);
   border-color: var(--color-state-line);
   border-style: dashed;
+}
+
+/* Requested engraved map details. Layout and interaction hit areas stay intact. */
+.brand svg {
+  width: 42px;
+  height: 42px;
+  padding: var(--space-xs);
+  color: var(--color-brass);
+  border: 3px double var(--color-brass);
+  border-radius: 50%;
+}
+.atlas {
+  outline: 1px solid var(--color-brass);
+  outline-offset: 3px;
+}
+.map-stage::after {
+  content: '';
+  position: absolute;
+  inset: var(--space-xs);
+  border: 3px double var(--color-brass);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.map-mode .compass-rose {
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  overflow: visible;
+}
+.compass-rim,
+.compass-ticks line {
+  fill: none;
+  stroke: var(--color-brass);
+  stroke-width: 0.8;
+}
+.compass-rim.inner {
+  stroke-width: 0.5;
+}
+.compass-secondary {
+  fill: var(--color-brass);
+}
+.compass-light {
+  fill: var(--color-paper);
+  stroke: var(--color-navy);
+  stroke-width: 0.7;
+}
+.compass-dark {
+  fill: var(--color-navy);
+}
+.compass-centre {
+  fill: var(--color-rust);
+}
+.compass-rose text {
+  font-family: var(--font-display);
+  font-size: 13px;
+  fill: var(--color-ink);
+}
+.legend-seal {
+  flex: none;
+  align-self: center;
+  color: var(--color-brass);
+}
+.legend-seal circle,
+.legend-seal path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+}
+.map-legend {
+  align-items: center;
+}
+.swatch {
+  outline: 1px solid var(--color-brass);
+  outline-offset: 2px;
+  margin-inline: var(--space-2xs);
+}
+.map-legend span {
+  min-height: 20px;
+}
+.map-print-label {
+  color: var(--color-navy);
+}
+.graticules path {
+  stroke-width: 0.65;
+}
+@media (max-width: 760px) {
+  .brand svg {
+    width: 34px;
+    height: 34px;
+    padding: var(--space-2xs);
+  }
+  .map-mode .compass-rose {
+    width: 36px;
+    height: 36px;
+  }
+  .map-stage::after {
+    inset: var(--space-2xs);
+  }
+  .legend-seal {
+    width: 24px;
+    height: 24px;
+  }
+}
+.map-toolbar {
+  padding-block: var(--space-2xs);
+}
+.legend-seal {
+  width: 24px;
+  height: 24px;
+}
+@media (max-width: 380px) {
+  .map-options {
+    column-gap: var(--space-xs);
+  }
 }

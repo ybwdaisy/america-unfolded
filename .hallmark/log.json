@@ -1,1 +1,34 @@
-[{"scope":"app","shape":"app screen","theme":"custom American printed atlas","axes":"light/roman-serif/warm","nav":"atlas masthead with reading links","footer":"publisher-style project line","imagery":"licensed boundary geometry","signature":"dated map with margin narrative and time ruler","waived":["65","49b"],"prompt":"America Unfolded, free U.S. territorial formation atlas 1776–1959; user-specified historical paper/serif/brick style."}]
+[
+  {
+    "mode": "redesign",
+    "depth": "restyle",
+    "scope": "app",
+    "theme": "Owner-specified classical American atlas",
+    "shape": "existing app screen",
+    "palette": [
+      "#F7F3E9",
+      "#1F1D1A",
+      "#2C3E50",
+      "#8B3A2B",
+      "#8A6B3E"
+    ],
+    "signature": "Existing dated map with engraved frame and compass emblem",
+    "preserved": "Layout, history, routes and controls",
+    "review": "Independent finish review: ship; existing controls rechecked in browser"
+  },
+  {
+    "scope": "app",
+    "shape": "app screen",
+    "theme": "custom American printed atlas",
+    "axes": "light/roman-serif/warm",
+    "nav": "atlas masthead with reading links",
+    "footer": "publisher-style project line",
+    "imagery": "licensed boundary geometry",
+    "signature": "dated map with margin narrative and time ruler",
+    "waived": [
+      "65",
+      "49b"
+    ],
+    "prompt": "America Unfolded, free U.S. territorial formation atlas 1776\u20131959; user-specified historical paper/serif/brick style."
+  }
+]

@@ -81,6 +81,17 @@ const fmt = (d) =>
     year: 'numeric',
     timeZone: 'UTC',
   });
+function orientCompass() {
+  const mainland = modernData.features.filter(
+    (f) => !['Alaska', 'Hawaii'].includes(f.properties.NAME),
+  );
+  const centre = geoCentroid({ type: 'FeatureCollection', features: mainland });
+  const origin = projection(centre);
+  const north = projection([centre[0], centre[1] + 0.25]);
+  if (!origin || !north) return;
+  const angle = (Math.atan2(north[1] - origin[1], north[0] - origin[0]) * 180) / Math.PI + 90;
+  $('#compass-needle').setAttribute('transform', `rotate(${angle} 40 40)`);
+}
 function announce(s) {
   $('#announcement').textContent = s;
 }
@@ -331,6 +342,7 @@ async function load({ focus = false } = {}) {
         throw Error('missing-data');
     }
     if (!modernData) modernData = await fetchJSON('/data/modern.json');
+    orientCompass();
     const index = manifest.snapshots.findLastIndex((s) => s.date <= state.date);
     const s = manifest.snapshots[index];
     const [current, prev] = await Promise.all([

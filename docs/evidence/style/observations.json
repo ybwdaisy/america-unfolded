@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-24",
+  "paper": "rgb(247, 243, 233)",
+  "ink": "rgb(31, 29, 26)",
+  "palette": {
+    "paper": "#f7f3e9",
+    "ink": "#1f1d1a",
+    "navy": "#2c3e50",
+    "rust": "#8b3a2b",
+    "brass": "#8a6b3e"
+  },
+  "displayFallback": "\"EB Garamond\", Georgia, \"Times New Roman\", serif",
+  "fontLoaded": true,
+  "compassTransform": "rotate(1.8386177014573235 40 40)",
+  "framePointerEvents": "none",
+  "timelineBottom": 895.4375,
+  "viewportHeight": 900
+}

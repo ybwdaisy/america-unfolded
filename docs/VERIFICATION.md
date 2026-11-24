@@ -27,7 +27,7 @@ Independent fresh-context review: `INDEPENDENT-REVIEW.md`. Two comparison defect
 
 Final screenshots: `evidence/desktop-final.png` and `evidence/mobile-final.png`. Additional narrow, landscape, 1959 and WebKit captures are available in the same directory. Only the final captures are used as acceptance evidence.
 
-Final targeted checks in `evidence/final-checks.json` cover separate-polity styling for Vermont/Texas republics, the Gadsden display-date correction, safe plain-text license evidence, absence of external requests from tested routes, and expanded phone chapter restoration. The final capture recorded 1,067,455 initial resource body bytes from local browser resource timing (uncompressed); they are not a production performance score.
+Final targeted checks in `evidence/final-checks.json` cover separate-polity styling for Vermont/Texas republics, the Gadsden display-date correction, safe plain-text license evidence, absence of external requests from tested routes, and expanded phone chapter restoration. The initial implementation capture recorded 1,067,455 resource body bytes from local browser resource timing (uncompressed); they are not a production performance score.
 
 ## Historical verification
 
@@ -55,3 +55,7 @@ The intended repository is private `ybwdaisy/america-unfolded`. Product work is 
 Deployment incident: the installed Vercel CLI 65.2.0 (native runtime) returned target=production and assigned the default alias despite `--target preview`. All three attempts were deleted via the API; each deletion returned state=DELETED. A subsequent API request with omitted target and another with explicit staging were also classified as production; both were removed. Automatic domain assignment was disabled. The owner then selected local preview and PR delivery only. No deployment is retained; further deployment requires a new request. This incident did not change main or any other project.
 
 Story focus is calculated from the bounds of cited source-region geometry. No unsourced geographic event pins or manually invented focus coordinates are included. A story step skips automatic recentering if the user moves the map during loading.
+
+## Classical style follow-up
+
+The owner-specified palette, serif fallback, compass, engraved frame and legend seals are documented in STYLE-UPDATE.md. The follow-up retained all historical data, routes and controls; 7 data/build checks and all 26 browser checks passed again. The rendered style sweep preserved 23 links and 4 fields with no open floor/reflex findings. Browser palette/font observations and before/after screenshots are in evidence/style/. Online deployment remains deferred.

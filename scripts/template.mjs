@@ -19,6 +19,17 @@ export const icon = (name) => {
   };
   return `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="${p[name]}"/></svg>`;
 };
+function compassRose() {
+  const ticks = Array.from(
+    { length: 24 },
+    (_, i) =>
+      `<line x1="40" y1="${i % 3 === 0 ? 19 : 21}" x2="40" y2="24" transform="rotate(${i * 15} 40 40)"/>`,
+  ).join('');
+  return `<svg class="plate-icon compass-rose" viewBox="0 0 80 80" width="48" height="48" aria-hidden="true"><title>Local north reference at the mainland’s geographic centre</title><circle class="compass-rim" cx="40" cy="40" r="28"/><circle class="compass-rim inner" cx="40" cy="40" r="25"/><g class="compass-ticks">${ticks}</g><g id="compass-needle"><path class="compass-secondary" d="M40 23l4 13 13 4-13 4-4 13-4-13-13-4 13-4z"/><path class="compass-light" d="M40 18l4 18 18 4-18 4-4 18-4-18-18-4 18-4z"/><path class="compass-dark" d="M40 18v22l-4-4z M62 40H40l4-4z M40 62V40l4 4z M18 40h22l-4 4z"/><text x="40" y="13" text-anchor="middle">N</text></g><circle class="compass-centre" cx="40" cy="40" r="2"/></svg>`;
+}
+function legendSeal() {
+  return `<svg class="legend-seal" viewBox="0 0 40 40" width="28" height="28" aria-hidden="true"><circle cx="20" cy="20" r="17"/><circle cx="20" cy="20" r="14"/><path d="M10 13l7-2 6 3 7-2v16l-7 2-6-3-7 2z M17 11v16 M23 14v16"/></svg>`;
+}
 export function eventArticle(e, compact = false) {
   const context = `<p>${esc(e.explanation)}</p><h3>Read the sources</h3><ul>${[
     ...e.sourceIds,
@@ -41,7 +52,7 @@ export function page({
 }) {
   const metaTitle = title || `${e.title} | America Unfolded`;
   const url = origin ? new URL(path, origin).href : null;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${esc(metaTitle)}</title><meta name="description" content="${esc(description || e.summary)}"><meta name="theme-color" content="#f5f0e5"><meta property="og:title" content="${esc(metaTitle)}"><meta property="og:description" content="${esc(description || e.summary)}"><meta property="og:type" content="website">${url ? `<link rel="canonical" href="${url}"><meta property="og:url" content="${url}">` : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preload" href="/fonts/eb-garamond.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/app.css"></head><body>
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${esc(metaTitle)}</title><meta name="description" content="${esc(description || e.summary)}"><meta name="theme-color" content="#f7f3e9"><meta property="og:title" content="${esc(metaTitle)}"><meta property="og:description" content="${esc(description || e.summary)}"><meta property="og:type" content="website">${url ? `<link rel="canonical" href="${url}"><meta property="og:url" content="${url}">` : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preload" href="/fonts/eb-garamond.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/app.css"></head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead"><a class="brand" href="/" aria-label="America Unfolded home">${icon('map')}<span>America Unfolded</span></a><p class="tagline">Explore American history through maps.</p><nav aria-label="Main"><a href="/sources/">Sources &amp; methods</a><a href="/about/">About</a></nav></header>
 <main id="main" ${atlas ? `data-atlas data-default-event="${e.id}" data-story="${story}"` : ''}>
@@ -49,7 +60,7 @@ ${
   atlas
     ? `<div class="atlas-heading"><div><h1>A nation, unfolded.</h1><p>Follow the making of the United States, 1776–1959.</p></div><a class="button primary" href="/story/how-america-took-shape/" id="start-story">${icon('book')} Follow the story</a></div>
 <section class="atlas" aria-label="Interactive historical atlas">
-<div class="map-toolbar"><div class="map-mode"><span class="plate-icon" aria-hidden="true">▱</span> Historical atlas <span id="mode-date"></span></div><div class="map-options"><label><input type="checkbox" id="modern">Modern state lines</label><label><input type="checkbox" id="compare">Before &amp; after</label><button type="button" id="share" class="text-button">${icon('share')}<span>Share view</span></button></div></div>
+<div class="map-toolbar"><div class="map-mode">${compassRose()} Historical atlas <span id="mode-date"></span></div><div class="map-options"><label><input type="checkbox" id="modern">Modern state lines</label><label><input type="checkbox" id="compare">Before &amp; after</label><button type="button" id="share" class="text-button">${icon('share')}<span>Share view</span></button></div></div>
 <div class="map-layout">
 <div class="map-column"><div class="comparison-caption" id="comparison-caption" hidden></div><div class="map-stage" id="map-stage" aria-busy="true">
 <div id="map-status" role="status" class="map-status"><h2>Unfolding the map…</h2><p>Loading the dated boundary snapshot.</p></div>
@@ -57,7 +68,7 @@ ${
 <div class="map-controls" aria-label="Map navigation"><button type="button" id="zoom-in" aria-label="Zoom in">${icon('plus')}</button><button type="button" id="zoom-out" aria-label="Zoom out">${icon('minus')}</button><button type="button" id="reset-view" aria-label="Reset map view">${icon('reset')}</button></div>
 <div class="map-print-label" aria-hidden="true">North America</div>
 <p class="inset-note">Alaska &amp; Hawaiʻi: relocated insets.<br>Alaska reduced in scale. Positions are not relative.</p>
-</div><div class="map-legend" aria-label="Map legend"><span><i class="swatch state"></i>State / federal district</span><span><i class="swatch territory"></i>Territory</span><span><i class="swatch claim"></i>Claim / pending transfer</span><span><i class="swatch polity"></i>Other polity</span><span id="modern-key" hidden><i class="line-swatch"></i>State lines (2000 reference)</span><span id="comparison-key" hidden><i class="swatch change"></i>Added in next snapshot</span></div><p class="scope-note">${esc(scopeNote)} <a href="/sources/">Map conventions</a></p></div>
+</div><div class="map-legend" aria-label="Map legend">${legendSeal()}<span><i class="swatch state"></i>State / federal district</span><span><i class="swatch territory"></i>Territory</span><span><i class="swatch claim"></i>Claim / pending transfer</span><span><i class="swatch polity"></i>Other polity</span><span id="modern-key" hidden><i class="line-swatch"></i>State lines (2000 reference)</span><span id="comparison-key" hidden><i class="swatch change"></i>Added in next snapshot</span></div><p class="scope-note">${esc(scopeNote)} <a href="/sources/">Map conventions</a></p></div>
 <aside class="chapter" id="chapter" aria-label="Historical details"><div class="chapter-top"><span id="chapter-position">Chapter 3 of ${events.length}</span><button type="button" id="close-details" aria-label="Close historical details">${icon('close')}</button></div><div id="chapter-content">${eventArticle(e, true)}</div><button type="button" id="read-chapter" class="text-button">Read chapter ${icon('next')}</button><div class="chapter-bottom"><a id="chapter-link" href="/events/${e.id}/">Open chapter page</a><button type="button" id="story-next" class="text-button" hidden>Continue ${icon('next')}</button></div></aside>
 <button type="button" id="open-details" class="reopen button" hidden>Open historical details</button>
 </div>
