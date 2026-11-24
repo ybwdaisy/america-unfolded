@@ -27,7 +27,7 @@ Independent fresh-context review: `INDEPENDENT-REVIEW.md`. Two comparison defect
 
 Final screenshots: `evidence/desktop-final.png` and `evidence/mobile-final.png`. Additional narrow, landscape, 1959 and WebKit captures are available in the same directory. Only the final captures are used as acceptance evidence.
 
-Final targeted checks in `evidence/final-checks.json` cover separate-polity styling for Vermont/Texas republics, the Gadsden display-date correction, safe plain-text license evidence, absence of external requests from tested routes, and expanded phone chapter restoration. The final capture recorded 1,067,892 initial resource body bytes from local browser resource timing (uncompressed); they are not a production performance score.
+Final targeted checks in `evidence/final-checks.json` cover separate-polity styling for Vermont/Texas republics, the Gadsden display-date correction, safe plain-text license evidence, absence of external requests from tested routes, and expanded phone chapter restoration. The final capture recorded 1,067,455 initial resource body bytes from local browser resource timing (uncompressed); they are not a production performance score.
 
 ## Historical verification
 
@@ -50,4 +50,8 @@ The map follows the source atlas's dates except the explicitly documented Gadsde
 
 ## Deployment and review
 
-The intended repository is private `ybwdaisy/america-unfolded`. Product work is on `feat/historical-atlas`; main remains the initial scaffold. The independent Vercel project is `america-unfolded`. Final PR and preview URLs are supplied in the handoff. No production deployment, auto-merge, domain purchase or paid subscription is authorized or performed.
+The intended repository is private `ybwdaisy/america-unfolded`. Product work is on `feat/historical-atlas`; main remains the initial scaffold. The independent Vercel project is `america-unfolded`. Final PR and preview URLs are supplied in the handoff. No production deployment is retained; no auto-merge, domain purchase or paid subscription was performed.
+
+Deployment incident: the installed Vercel CLI 65.2.0 (native runtime) returned target=production and assigned the default alias despite `--target preview`. All three attempts were deleted via the API; each deletion returned state=DELETED. A subsequent API request with omitted target and another with explicit staging were also classified as production; both were removed. Automatic domain assignment was disabled. Connected-tool preview deployment now awaits the team-access grant; no deployment is retained at this point. This incident did not change main or any other project.
+
+Story focus is calculated from the bounds of cited source-region geometry. No unsourced geographic event pins or manually invented focus coordinates are included. A story step skips automatic recentering if the user moves the map during loading.

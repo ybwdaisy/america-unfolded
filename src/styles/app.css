@@ -325,18 +325,6 @@ nav a {
   stroke-width: 2;
   stroke-opacity: 0.65;
 }
-.event-marker circle:first-child {
-  fill: var(--color-paper);
-  stroke: var(--color-accent);
-  stroke-width: 2;
-}
-.event-marker circle:last-child {
-  fill: var(--color-accent);
-  stroke: none;
-}
-.event-marker {
-  pointer-events: none;
-}
 .map-controls {
   position: absolute;
   top: var(--space-md);

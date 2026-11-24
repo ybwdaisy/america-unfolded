@@ -44,7 +44,7 @@
       "grade": "ANSWERED",
       "tier": "finish",
       "file": "src/styles/app.css",
-      "line": 610,
+      "line": 598,
       "evidence": "2 filled primary-button recipes: .play-button + .comparison-switch button[aria-press…",
       "fix": "One filled primary per page; demote the rest to outline/quiet variants"
     },
@@ -53,7 +53,7 @@
       "grade": "ANSWERED",
       "tier": "finish",
       "file": "src/styles/app.css",
-      "line": 636,
+      "line": 624,
       "evidence": "numeric selector .map-status h2 at display size without tabular figures",
       "fix": "Add font-variant-numeric: tabular-nums"
     },
@@ -71,7 +71,7 @@
       "grade": "DISMISSED",
       "tier": "reflex",
       "file": "src/styles/app.css",
-      "line": 851,
+      "line": 839,
       "evidence": "measure 24ch on .atlas-heading p (45-75ch range)",
       "fix": "Set prose measure between 45 and 75ch; a one-sentence lede or caption from 28ch"
     },
@@ -80,7 +80,7 @@
       "grade": "DISMISSED",
       "tier": "reflex",
       "file": "src/styles/app.css",
-      "line": 1204,
+      "line": 1192,
       "evidence": "measure 28ch on .atlas-heading p (45-75ch range)",
       "fix": "Set prose measure between 45 and 75ch; a one-sentence lede or caption from 28ch"
     }

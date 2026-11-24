@@ -88,7 +88,6 @@ export const events = [
     short: 'Independence',
     kind: 'Declaration',
     region: 'Philadelphia and the Atlantic colonies',
-    focus: [-75.15, 39.95],
     scale: 1.45,
     summary:
       'Thirteen colonies announced their separation from Great Britain. Independence was a declaration, not an agreed international boundary.',
@@ -108,7 +107,6 @@ export const events = [
     short: 'Treaty of Paris',
     kind: 'Treaty signed',
     region: 'Eastern North America',
-    focus: [-83, 37],
     scale: 1.15,
     summary:
       'Great Britain recognized the United States in a peace treaty. Its described boundaries reached west to the Mississippi River.',
@@ -129,7 +127,6 @@ export const events = [
     short: 'Louisiana Purchase',
     kind: 'Treaty signed',
     region: 'The Mississippi basin',
-    focus: [-97, 39],
     scale: 1.15,
     summary:
       'A treaty with France extended U.S. claims across a vast part of the Mississippi basin. The borders of the purchase were not fully settled.',
@@ -150,7 +147,6 @@ export const events = [
     short: 'Convention of 1818',
     kind: 'Convention signed',
     region: 'Northern Great Plains',
-    focus: [-101, 47],
     scale: 1.4,
     summary:
       'Britain and the United States agreed on a northern boundary west of the Lake of the Woods to the Rocky Mountains.',
@@ -167,7 +163,6 @@ export const events = [
     short: 'Florida treaty',
     kind: 'Treaty signed',
     region: 'Florida and the western boundary',
-    focus: [-84, 30],
     scale: 1.5,
     summary:
       'Spain agreed to cede Florida and settle the western limits of the Louisiana Purchase. Ratification and handover came later.',
@@ -188,7 +183,6 @@ export const events = [
     short: 'Florida statehood',
     kind: 'Statehood',
     region: 'Florida',
-    focus: [-83, 28.5],
     scale: 1.8,
     summary:
       'Florida entered the Union as a state, more than two decades after Spain ceded the territory.',
@@ -205,7 +199,6 @@ export const events = [
     short: 'Texas annexation',
     kind: 'Annexation and statehood',
     region: 'Texas and its disputed claims',
-    focus: [-101, 33],
     scale: 1.45,
     summary:
       'The United States admitted Texas as a state. Texas claimed lands far beyond its present borders, including areas disputed with Mexico.',
@@ -223,7 +216,6 @@ export const events = [
     short: 'Oregon Treaty',
     kind: 'Treaty signed',
     region: 'The Pacific Northwest',
-    focus: [-119, 46],
     scale: 1.45,
     summary:
       'A treaty with Britain divided the Oregon Country, extending the 49th-parallel boundary toward the Pacific.',
@@ -245,7 +237,6 @@ export const events = [
     short: 'Mexican Cession',
     kind: 'Treaty proclaimed',
     region: 'California and the Southwest',
-    focus: [-115, 37],
     scale: 1.25,
     summary:
       'The Treaty of Guadalupe Hidalgo ended the U.S.–Mexican War. Mexico ceded a large northern region to the United States.',
@@ -267,7 +258,6 @@ export const events = [
     short: 'California statehood',
     kind: 'Statehood',
     region: 'California and the western territories',
-    focus: [-119, 37],
     scale: 1.45,
     summary:
       'California became a state as Congress reorganized parts of the recently acquired West.',
@@ -284,7 +274,6 @@ export const events = [
     short: 'Gadsden Purchase',
     kind: 'Treaty enters into force',
     region: 'Southern Arizona and New Mexico',
-    focus: [-110, 32],
     scale: 1.7,
     summary:
       'A revised treaty with Mexico added land along the southern border, linked to plans for a railroad route.',
@@ -305,7 +294,6 @@ export const events = [
     short: 'Alaska Purchase',
     kind: 'Treaty signed',
     region: 'Alaska inset',
-    focus: [-152, 64],
     scale: 2.2,
     summary:
       'The United States signed a purchase treaty with Russia for Alaska. The formal transfer took place in October.',
@@ -326,7 +314,6 @@ export const events = [
     short: 'Hawaiʻi annexation',
     kind: 'U.S. resolution signed',
     region: 'Hawaiʻi inset',
-    focus: [-157, 20.5],
     scale: 3,
     summary:
       'A U.S. joint resolution asserted annexation of Hawaiʻi. The formal transfer followed in August, amid Native Hawaiian opposition.',
@@ -347,7 +334,6 @@ export const events = [
     short: 'Alaska statehood',
     kind: 'Statehood',
     region: 'Alaska inset',
-    focus: [-152, 64],
     scale: 2.2,
     summary:
       'Alaska’s admission changed its status from a U.S. territory to a state. It did not mark the purchase of Alaska.',
@@ -364,7 +350,6 @@ export const events = [
     short: 'Hawaiʻi statehood',
     kind: 'Statehood',
     region: 'Hawaiʻi inset',
-    focus: [-157, 20.5],
     scale: 3,
     summary:
       'A presidential proclamation admitted Hawaiʻi as the 50th state. The atlas’s story ends here.',

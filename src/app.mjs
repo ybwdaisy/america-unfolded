@@ -32,13 +32,14 @@ let manifest,
   regionReturn = null,
   loading = false,
   gestureMoved = false,
-  suppressMapClickUntil = 0;
+  suppressMapClickUntil = 0,
+  viewRevision = 0;
 const cache = new Map(),
   svg = select('#history-map');
 const projection = geoAlbersUsa().scale(1170).translate([500, 305]);
 const path = geoPath(projection);
 svg.html(
-  '<defs><pattern id="claim-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="7" height="7" class="claim-base"/><path d="M0 0V7" class="hatch-line"/></pattern></defs><g class="map-content"><g class="reference-land"></g><g class="inset-guides" aria-hidden="true"><rect x="4" y="445" width="244" height="150"/><rect x="250" y="499" width="116" height="96"/><text x="126" y="615">Alaska (inset)</text><text x="308" y="615">Hawaiʻi (inset)</text></g><g class="graticules"></g><g class="historic-regions"></g><g class="modern-lines"></g><g class="region-labels" aria-hidden="true"></g><g class="event-marker" aria-hidden="true"></g></g>',
+  '<defs><pattern id="claim-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="7" height="7" class="claim-base"/><path d="M0 0V7" class="hatch-line"/></pattern></defs><g class="map-content"><g class="reference-land"></g><g class="inset-guides" aria-hidden="true"><rect x="4" y="445" width="244" height="150"/><rect x="250" y="499" width="116" height="96"/><text x="126" y="615">Alaska (inset)</text><text x="308" y="615">Hawaiʻi (inset)</text></g><g class="graticules"></g><g class="historic-regions"></g><g class="modern-lines"></g><g class="region-labels" aria-hidden="true"></g></g>',
 );
 const content = svg.select('.map-content');
 const zoomBehavior = zoom()
@@ -56,6 +57,7 @@ const zoomBehavior = zoom()
     if (e.sourceEvent) {
       pause();
       gestureMoved = false;
+      viewRevision++;
     }
   })
   .on('zoom', (e) => {
@@ -182,7 +184,6 @@ function statusClass(f) {
 function renderMap() {
   const data = state.compare && state.phase === 'before' ? previousData : currentData;
   const previousIds = new Set((previousData?.features || []).map((f) => f.properties.ID_NUM));
-  const ev = eventById(state.event) || eventAt(state.date);
   svg
     .select('.historic-regions')
     .selectAll('path')
@@ -241,13 +242,6 @@ function renderMap() {
             'Alaska District': 'Alaska',
           }[f.properties.NAME] || f.properties.NAME,
     );
-  const point = projection(ev.focus);
-  const marker = svg.select('.event-marker');
-  marker.selectAll('*').remove();
-  if (point) {
-    marker.append('circle').attr('cx', point[0]).attr('cy', point[1]).attr('r', 7);
-    marker.append('circle').attr('cx', point[0]).attr('cy', point[1]).attr('r', 2);
-  }
   $('#map-stage').classList.toggle('no-history', !data);
   $('#comparison-key').hidden = !state.compare;
   $('#modern-key').hidden = !state.modern;
@@ -322,7 +316,8 @@ function renderDetails() {
   $('#chapter').hidden = !state.details;
   $('#read-chapter').hidden = !state.details;
 }
-async function load() {
+async function load({ focus = false } = {}) {
+  const focusRevision = viewRevision;
   const token = ++sequence;
   loading = true;
   $('#map-stage').setAttribute('aria-busy', 'true');
@@ -361,6 +356,23 @@ async function load() {
     renderMap();
     renderCaption();
     renderDetails();
+    if (focus && focusRevision === viewRevision) {
+      const e = eventById(state.event);
+      const regions =
+        currentData?.features.filter((f) => e.match.includes(f.properties.NAME)) || [];
+      if (regions.length) {
+        const bounds = path.bounds({ type: 'FeatureCollection', features: regions });
+        const center = [(bounds[0][0] + bounds[1][0]) / 2, (bounds[0][1] + bounds[1][1]) / 2];
+        if (center.every(Number.isFinite)) {
+          const k = e.scale;
+          svg.call(
+            zoomBehavior.transform,
+            zoomIdentity.translate(500 - k * center[0], 325 - k * center[1]).scale(k),
+          );
+          save('replace');
+        }
+      }
+    }
     $('#map-status').hidden = true;
     $('#map-stage').setAttribute('aria-busy', 'false');
     loading = false;
@@ -401,18 +413,8 @@ function setEvent(e, { push = true, focus = false } = {}) {
   state.details = true;
   state.expanded = false;
   state.phase = 'after';
-  if (focus) {
-    const p = projection(e.focus);
-    if (p) {
-      const k = e.scale;
-      svg.call(
-        zoomBehavior.transform,
-        zoomIdentity.translate(500 - k * p[0], 325 - k * p[1]).scale(k),
-      );
-    }
-  }
   if (push) save();
-  load();
+  load({ focus });
 }
 function chooseYear(value, push = true) {
   state.story = false;
@@ -424,7 +426,7 @@ function chooseYear(value, push = true) {
   state.region = null;
   state.phase = 'after';
   if (push) save();
-  load();
+  load({ focus });
 }
 function pause() {
   if (playing) {
@@ -507,16 +509,19 @@ $('#compare').onchange = (e) => {
 };
 $('#zoom-in').onclick = () => {
   pause();
+  viewRevision++;
   svg.call(zoomBehavior.scaleBy, 1.3);
   save();
 };
 $('#zoom-out').onclick = () => {
   pause();
+  viewRevision++;
   svg.call(zoomBehavior.scaleBy, 1 / 1.3);
   save();
 };
 $('#reset-view').onclick = () => {
   pause();
+  viewRevision++;
   svg.call(zoomBehavior.transform, zoomIdentity);
   save();
 };
@@ -528,6 +533,7 @@ $('#history-map').addEventListener('keydown', (e) => {
   if (delta) {
     e.preventDefault();
     pause();
+    viewRevision++;
     svg.call(zoomBehavior.translateBy, delta[0] / state.k, delta[1] / state.k);
     save();
   } else if (['+', '=', '-', 'Home'].includes(e.key)) {
