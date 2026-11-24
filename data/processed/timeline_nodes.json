@@ -1,0 +1,608 @@
+[
+  {
+    "id": "1776-declaration-of-independence",
+    "slug": "1776-declaration",
+    "year": 1776,
+    "exactDate": "July 4, 1776",
+    "title": "Declaration of Independence & The Thirteen Colonies",
+    "latinPlate": "TABULA I \u00b7 ANNO MDCCLXXVI",
+    "category": "Independence",
+    "legalType": "Unanimous Declaration of the Thirteen United States of America",
+    "shortSummary": "Delegates of the thirteen North American British colonies declared independence, establishing the United States along the Atlantic seaboard with historic trans-Appalachian claims.",
+    "historicalNarrative": "On July 4, 1776, the Second Continental Congress adopted the Declaration of Independence in Philadelphia, severing political ties with the Kingdom of Great Britain. The new republic comprised thirteen sovereign states: New Hampshire, Massachusetts (including present-day Maine), Rhode Island, Connecticut, New York (claiming present-day Vermont), New Jersey, Pennsylvania, Delaware, Maryland, Virginia (including present-day West Virginia and Kentucky), North Carolina (including Tennessee), South Carolina, and Georgia. Several states held royal charter claims extending indefinitely westward to the 'South Sea' (Pacific) or the Mississippi River, though British authority, royal proclamations (Proclamation of 1763), and Indigenous nations challenged these inland assertions throughout the Revolutionary War.",
+    "indigenousContext": "Long before European colonization, these eastern lands were the sovereign homelands of numerous Indigenous nations, including the Haudenosaunee (Iroquois Confederacy), Wampanoag, Lenape (Delaware), Powhatan, Cherokee, Muscogee (Creek), Choctaw, and Chickasaw. The Proclamation of 1763 by the British Crown had prohibited colonial settlement west of the Appalachian ridge to preserve peace with Native nations\u2014a constraint that deeply angered colonial land speculators and contributed to the revolutionary movement.",
+    "boundariesAndPrecision": "Approximate wartime perimeter. Boundaries between colonial charters were frequently overlapping or surveyed with rudimentary compass chains. Actual American military control was concentrated along the Atlantic seaboard and Piedmont, with frontier outposts contesting the interior.",
+    "citations": [
+      "Journals of the Continental Congress, 1774\u20131789, Vol. 5 (Library of Congress)",
+      "Declaration of Independence: A Transcription (U.S. National Archives)",
+      "Paullin, Charles O. 'Atlas of the Historical Geography of the United States' (Carnegie Institution, 1932)"
+    ],
+    "activeShapes": [
+      "thirteen_states_1776"
+    ],
+    "newlyAcquiredShapes": [
+      "thirteen_states_1776"
+    ],
+    "focusView": {
+      "x": 750,
+      "y": 240,
+      "zoom": 1.3
+    },
+    "modernStatesCovered": [
+      "NH",
+      "MA",
+      "RI",
+      "CT",
+      "NY",
+      "NJ",
+      "PA",
+      "DE",
+      "MD",
+      "VA",
+      "NC",
+      "SC",
+      "GA",
+      "ME",
+      "VT",
+      "WV"
+    ]
+  },
+  {
+    "id": "1783-treaty-of-paris",
+    "slug": "1783-treaty-of-paris",
+    "year": 1783,
+    "exactDate": "September 3, 1783",
+    "title": "Treaty of Paris (Original United States Territory)",
+    "latinPlate": "TABULA II \u00b7 ANNO MDCCLXXXIII",
+    "category": "Treaty",
+    "legalType": "Definitive Treaty of Peace between the United States and Great Britain",
+    "shortSummary": "Great Britain formally acknowledged American independence and ceded sovereign claims over ~890,000 square miles between the Atlantic Ocean and the Mississippi River.",
+    "historicalNarrative": "Signed in Paris by American commissioners John Adams, Benjamin Franklin, and John Jay, alongside David Hartley representing King George III, the Treaty of Paris formally brought the Revolutionary War to an end. Great Britain recognized the United States as free, sovereign, and independent states. The treaty established liberal boundaries for the young nation: extending north to British North America (along the Great Lakes and 45th parallel), west to the Mississippi River, and south to the 31st parallel north (bordering Spanish Florida). This doubled the geographic extent of the new nation beyond the original Appalachian settlements.",
+    "indigenousContext": "No Indigenous leaders were present, consulted, or mentioned in the Paris negotiations. Great Britain purported to transfer sovereignty over lands inhabited and defended by sovereign nations including the Shawnee, Miami, Wyandot, Delaware, Ojibwe, Potawatomi, Cherokee, and Creek. Native nations regarded the British cession of their lands as illegitimate, sparking protracted frontier resistance that culminated in the Northwest Indian War (1785\u20131795).",
+    "boundariesAndPrecision": "The treaty text relied on John Mitchell's 1755 Map of the British and French Dominions in North America. Mitchell's map contained several geographic errors\u2014most notably mislocating the source of the Mississippi River as lying north of the Lake of the Woods\u2014which necessitated subsequent boundary commissions and treaties well into the 19th century.",
+    "citations": [
+      "Treaty of Paris; September 3, 1783 (Treaties and Other International Acts of the United States, Vol. 2, Doc. 8)",
+      "Miller, Hunter, ed. Treaties and Other International Acts of the United States of America (U.S. Dept. of State, 1931)",
+      "National Archives: Treaties with Great Britain, Record Group 11"
+    ],
+    "activeShapes": [
+      14
+    ],
+    "newlyAcquiredShapes": [
+      14
+    ],
+    "focusView": {
+      "x": 680,
+      "y": 250,
+      "zoom": 1.2
+    },
+    "modernStatesCovered": [
+      "ME",
+      "NH",
+      "VT",
+      "MA",
+      "RI",
+      "CT",
+      "NY",
+      "NJ",
+      "PA",
+      "DE",
+      "MD",
+      "VA",
+      "WV",
+      "NC",
+      "SC",
+      "GA",
+      "KY",
+      "TN",
+      "OH",
+      "IN",
+      "IL",
+      "MI",
+      "WI",
+      "AL",
+      "MS"
+    ]
+  },
+  {
+    "id": "1787-northwest-ordinance",
+    "slug": "1787-northwest-ordinance",
+    "year": 1787,
+    "exactDate": "July 13, 1787",
+    "title": "Northwest Ordinance & Territorial Governance",
+    "latinPlate": "TABULA III \u00b7 ANNO MDCCLXXXVII",
+    "category": "Ordinance",
+    "legalType": "An Ordinance for the Government of the Territory of the United States, North-West of the River Ohio",
+    "shortSummary": "The Confederation Congress created the Northwest Territory, establishing the foundational principle that new territories would enter the Union as equal states, not subordinate colonies.",
+    "historicalNarrative": "Adopted by the Confederation Congress in New York while the Constitutional Convention was meeting in Philadelphia, the Northwest Ordinance established a formal administrative framework for the territory north of the Ohio River and east of the Mississippi. Crucially, it provided that territories would progress through defined stages of civil government until achieving admission to the Union 'on an equal footing with the original States in all respects whatever.' The ordinance contained a bill of rights, prohibited slavery in the territory (Article VI), encouraged public education, and established a rectangular township survey system that shaped the physical landscape of the American Midwest.",
+    "indigenousContext": "Article III famously pledged that 'The utmost good faith shall always be observed towards the Indians; their lands and property shall never be taken from them without their consent.' In reality, rapid military campaigns and coercive treaties (such as the 1795 Treaty of Greenville following the Battle of Fallen Timbers) steadily dispossessed the Western Confederacy of their ancestral homelands across Ohio, Indiana, and Illinois.",
+    "boundariesAndPrecision": "Defined naturally by the Ohio River to the south, the Mississippi River to the west, and the Great Lakes/British boundary to the north. State boundaries were later carved out between 1803 and 1848.",
+    "citations": [
+      "Journals of the Continental Congress, Vol. 32, pp. 334\u2013343 (Library of Congress)",
+      "Onuf, Peter S. 'Statehood and Union: A History of the Northwest Ordinance' (Indiana University Press, 1987)",
+      "U.S. National Archives: Northwest Ordinance, Milestone Documents"
+    ],
+    "activeShapes": [
+      14
+    ],
+    "newlyAcquiredShapes": [],
+    "focusView": {
+      "x": 620,
+      "y": 180,
+      "zoom": 1.4
+    },
+    "modernStatesCovered": [
+      "OH",
+      "IN",
+      "IL",
+      "MI",
+      "WI",
+      "MN"
+    ]
+  },
+  {
+    "id": "1803-louisiana-purchase",
+    "slug": "1803-louisiana-purchase",
+    "year": 1803,
+    "exactDate": "April 30, 1803",
+    "title": "The Louisiana Purchase",
+    "latinPlate": "TABULA IV \u00b7 ANNO MDCCCIII",
+    "category": "Purchase",
+    "legalType": "Treaty between the United States of America and the French Republic",
+    "shortSummary": "The United States purchased ~828,000 square miles from France for $15 million, doubling the geographic area of the nation from the Mississippi River to the Rocky Mountains.",
+    "historicalNarrative": "Fearing that French control of the strategic port of New Orleans under Napoleon Bonaparte would strangle American commerce along the Mississippi, President Thomas Jefferson dispatched James Monroe and Robert R. Livingston to Paris to negotiate the purchase of New Orleans and West Florida. Facing renewed war with Britain and having lost an army to yellow fever and rebellion in Saint-Domingue (Haiti), Napoleon unexpectedly offered the entire territory of French Louisiana. The treaty was concluded on April 30, 1803, for 68 million francs ($11.25 million) plus the assumption of American citizen claims ($3.75 million), totaling $15 million (under 3 cents per acre). The acquisition transformed the United States from an Atlantic-facing confederation into a continental power.",
+    "indigenousContext": "France held actual occupation over only a handful of riverine outposts, trading posts, and small settlements (such as New Orleans and St. Louis). The vast majority of the Great Plains and Missouri River basin was sovereign territory possessed, inhabited, and governed by dozens of powerful Indigenous nations, including the Sioux (Lakota/Dakota), Osage, Mandan, Hidatsa, Arikara, Pawnee, Cheyenne, Arapaho, Crow, and Blackfoot. What the U.S. legally purchased from France was not physical land ownership, but the exclusive imperial 'preemptive right' among European colonial powers to negotiate or conquer those lands from their Native owners.",
+    "boundariesAndPrecision": "The treaty famously transferred Louisiana 'with the same extent that it now has in the hands of Spain, and that it had when France possessed it.' When Livingston inquired about the precise western and northern boundaries, French Foreign Minister Talleyrand cynically remarked, 'I can give you no direction; you have made a noble bargain for yourselves, and I suppose you will make the most of it.' The borders remained ambiguous until the Convention of 1818 and Adams-On\u00eds Treaty of 1819.",
+    "citations": [
+      "Treaty between the United States of America and the French Republic (8 Stat. 200; Treaty Series 86)",
+      "DeConde, Alexander. 'This Affair of Louisiana' (Louisiana State University Press, 1976)",
+      "U.S. National Archives: Louisiana Purchase Treaty, General Records of the U.S. Government, RG 11"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      7,
+      8,
+      9
+    ],
+    "newlyAcquiredShapes": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "focusView": {
+      "x": 480,
+      "y": 200,
+      "zoom": 1.15
+    },
+    "modernStatesCovered": [
+      "AR",
+      "MO",
+      "IA",
+      "MN",
+      "ND",
+      "SD",
+      "NE",
+      "KS",
+      "OK",
+      "TX",
+      "NM",
+      "CO",
+      "WY",
+      "MT",
+      "LA"
+    ]
+  },
+  {
+    "id": "1818-convention-with-britain",
+    "slug": "1818-convention",
+    "year": 1818,
+    "exactDate": "October 20, 1818",
+    "title": "Convention of 1818 (Anglo-American Treaty)",
+    "latinPlate": "TABULA V \u00b7 ANNO MDCCCXVIII",
+    "category": "Convention",
+    "legalType": "Convention of Commerce, Fisheries, and Boundary between His Britannic Majesty and the United States",
+    "shortSummary": "Established the 49th parallel north as the boundary from the Lake of the Woods to the Rocky Mountains, ceding the Red River Valley to the U.S. and instituting joint occupation of Oregon.",
+    "historicalNarrative": "Following the War of 1812, diplomats Albert Gallatin and Richard Rush negotiated in London to settle unresolved boundary disputes between the United States and British North America (Canada). The resulting convention established a straight astronomical boundary line along the 49th parallel north (49\u00b0 N latitude) from the 'Northwesternmost point of the Lake of the Woods' westward to the 'Stony Mountains' (Rocky Mountains). Under this agreement, Britain ceded to the United States the portion of the Red River of the North basin lying south of 49\u00b0, while the United States ceded to Britain the northernmost tip of the Louisiana Purchase lying north of 49\u00b0 (the Milk River and Poplar River drainages). The treaty also agreed to ten years of joint commercial access and occupation in the contested Pacific Northwest (Oregon Country).",
+    "indigenousContext": "The 49th parallel was drawn as an abstract mathematical line across thousands of miles of Indigenous homelands, bisecting traditional territories of the Blackfoot Confederacy, M\u00e9tis Nation, Assiniboine (Nakoda), Plains Cree, and Anishinaabe (Ojibwe). Native peoples dubbed this artificial line the 'Medicine Line' because crossing it caused British or American soldiers and lawmen to abruptly halt their pursuit.",
+    "boundariesAndPrecision": "Surveyed along the 49th parallel north. Because the 1783 Mitchell map error left an irregular chimney at the Lake of the Woods, the boundary dropped due south from the lake's inlet to intersect the 49th parallel, creating the curious geographic exclave known as the Northwest Angle of Minnesota.",
+    "citations": [
+      "Convention with Great Britain, 1818 (8 Stat. 248; Treaty Series 112)",
+      "Lass, William E. 'Minnesota's Boundary with Canada: Its Evolution Since 1783' (Minnesota Historical Society Press, 1980)",
+      "Library of Congress: British-American Diplomacy, Convention of 1818"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      8,
+      9,
+      2
+    ],
+    "newlyAcquiredShapes": [
+      2
+    ],
+    "focusView": {
+      "x": 470,
+      "y": 80,
+      "zoom": 1.4
+    },
+    "modernStatesCovered": [
+      "MN",
+      "ND",
+      "SD"
+    ]
+  },
+  {
+    "id": "1819-adams-onis-treaty",
+    "slug": "1819-adams-onis",
+    "year": 1819,
+    "exactDate": "February 22, 1819",
+    "title": "Adams-On\u00eds Treaty (Florida & Transcontinental Line)",
+    "latinPlate": "TABULA VI \u00b7 ANNO MDCCCXIX",
+    "category": "Treaty",
+    "legalType": "Treaty of Amity, Settlement, and Limits Between the United States of America and His Catholic Majesty",
+    "shortSummary": "Spain ceded East and West Florida to the United States and established a definitive transcontinental boundary from the Gulf of Mexico northwest to the 42nd parallel and Pacific Ocean.",
+    "historicalNarrative": "Negotiated by Secretary of State John Quincy Adams and Spanish envoy Luis de On\u00eds following General Andrew Jackson's military incursions during the First Seminole War, the Adams-On\u00eds Treaty (also known as the Transcontinental Treaty) resolved decades of border friction with Spain. Spain formally ceded East Florida and recognized American possession of West Florida. In exchange, the United States assumed up to $5 million in damage claims filed by American citizens against the Spanish government. Crucially, the treaty established a clear stepwise boundary separating the United States from the Viceroyalty of New Spain (Mexico): ascending the Sabine River to 32\u00b0 N, north to the Red River, up the Red River to 100\u00b0 W, north to the Arkansas River, following it to its source, north to 42\u00b0 N, and west along the 42nd parallel to the Pacific Ocean. Spain abandoned all claims north of 42\u00b0, granting the U.S. its first internationally recognized treaty claim reaching the Pacific.",
+    "indigenousContext": "Florida had served for generations as an autonomous sanctuary for the Seminole Nation and Black Seminoles (formerly enslaved self-emancipated Africans). American planters and the U.S. military targeted Florida precisely to eliminate this refuge and enforce chattel slavery. The transfer initiated decades of violent conflict, known as the Seminole Wars, culminating in the forced removal of thousands of Seminoles to Indian Territory.",
+    "boundariesAndPrecision": "Based on John Melish's 1816 Map of the United States. Ratified by Spain in 1820 and the U.S. Senate in February 1821; formal transfer of Florida occurred in July 1821.",
+    "citations": [
+      "Treaty of Amity, Settlement, and Limits with Spain (8 Stat. 252; Treaty Series 327)",
+      "Bemis, Samuel Flagg. 'John Quincy Adams and the Foundations of American Foreign Policy' (Alfred A. Knopf, 1949)",
+      "Avalon Project at Yale Law School: Treaty of Amity, Settlement, and Limits (1819)"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      8,
+      9,
+      2,
+      3,
+      13,
+      17
+    ],
+    "newlyAcquiredShapes": [
+      3,
+      13,
+      17
+    ],
+    "focusView": {
+      "x": 720,
+      "y": 420,
+      "zoom": 1.4
+    },
+    "modernStatesCovered": [
+      "FL",
+      "AL",
+      "MS",
+      "LA"
+    ]
+  },
+  {
+    "id": "1845-texas-annexation",
+    "slug": "1845-texas-annexation",
+    "year": 1845,
+    "exactDate": "December 29, 1845",
+    "title": "Annexation of Texas",
+    "latinPlate": "TABULA VII \u00b7 ANNO MDCCCXLV",
+    "category": "Annexation",
+    "legalType": "Joint Resolution of Congress for Annexing Texas to the United States (5 Stat. 797)",
+    "shortSummary": "The independent Republic of Texas was admitted directly into the Union as the 28th state, precipitating intense boundary disputes with Mexico over the Rio Grande corridor.",
+    "historicalNarrative": "In 1836, American settlers and Tejanos in the Mexican department of Coahuila y Tejas revolted against the centralist government of Antonio L\u00f3pez de Santa Anna, establishing the self-proclaimed Republic of Texas. While Texas sought immediate annexation to the United States, concerns over expanding slavery and war with Mexico delayed admission for nearly a decade. Driven by the expansionist doctrine of 'Manifest Destiny' and President James K. Polk's election, Congress passed a Joint Resolution of Annexation in March 1845. Texas accepted terms and was formally admitted as a state on December 29, 1845. The annexation triggered immediate diplomatic severance by Mexico, which had never recognized Texan independence.",
+    "indigenousContext": "The territory claimed by Texas encompassed the sovereign homelands of the powerful Comanche Empire (Comancher\u00eda), Kiowa, Apache (Lipan and Mescalero), Tonkawa, and Caddo. The Republic of Texas pursued aggressive, exterminationist policies against Indigenous peoples, driving many tribes from their ancestral hunting grounds through state-sponsored ranger violence.",
+    "boundariesAndPrecision": "The annexation incorporated a massive boundary dispute. The Republic of Texas claimed all territory south and west to the Rio Grande (including Santa Fe and eastern New Mexico). Mexico maintained that the historic boundary of Texas was the Nueces River, roughly 150 miles to the northeast. President Polk deployed U.S. troops under General Zachary Taylor into the disputed Nueces Strip in early 1846, sparking skirmishes that Polk used to justify a declaration of war against Mexico.",
+    "citations": [
+      "Joint Resolution for annexing Texas to the United States, Approved March 1, 1845 (5 Stat. 797)",
+      "An Act for the admission of the State of Texas into the Union, Approved Dec. 29, 1845 (9 Stat. 108)",
+      "Pletcher, David M. 'The Diplomacy of Annexation: Texas, Oregon, and the Mexican War' (University of Missouri Press, 1973)"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      8,
+      2,
+      3,
+      13,
+      17,
+      15,
+      9
+    ],
+    "newlyAcquiredShapes": [
+      15,
+      9
+    ],
+    "focusView": {
+      "x": 460,
+      "y": 340,
+      "zoom": 1.3
+    },
+    "modernStatesCovered": [
+      "TX",
+      "NM",
+      "CO",
+      "OK",
+      "KS",
+      "WY"
+    ]
+  },
+  {
+    "id": "1846-oregon-treaty",
+    "slug": "1846-oregon-treaty",
+    "year": 1846,
+    "exactDate": "June 15, 1846",
+    "title": "The Oregon Treaty",
+    "latinPlate": "TABULA VIII \u00b7 ANNO MDCCCXLVI",
+    "category": "Treaty",
+    "legalType": "Treaty with Great Britain, in Regard to Limits Westward of the Rocky Mountains",
+    "shortSummary": "Extended the 49th parallel international boundary from the Rocky Mountains west to the Pacific Ocean, ending decades of joint British-American occupation.",
+    "historicalNarrative": "Since the Convention of 1818, Oregon Country\u2014a vast region spanning from the 42nd parallel (Mexican border) to 54\u00b040' N (Russian America)\u2014had been subject to joint British and American commercial presence, dominated by the Hudson's Bay Company. By the 1840s, thousands of American pioneers traveled the Oregon Trail to settle the fertile Willamette Valley. Expansionist Democrats championed the slogan 'Fifty-Four Forty or Fight!', demanding the entire Pacific Northwest up to Alaska. However, facing imminent war with Mexico, the Polk administration compromised with British Foreign Secretary Lord Aberdeen. The Oregon Treaty of June 1846 extended the existing 49th parallel border to the Strait of Georgia, curving south through the Strait of Juan de Fuca to ensure Britain retained all of Vancouver Island. The treaty added ~286,000 square miles to the United States, providing direct access to deep-water Pacific ports.",
+    "indigenousContext": "The Pacific Northwest was home to dense, linguistically diverse, and wealthy maritime and riverine Indigenous societies, including the Coast Salish, Nuu-chah-nulth, Chinook, Nez Perce (Nimiipuu), Cayuse, Walla Walla, Yakama, and Umatilla. Within a decade of the treaty, Territorial Governor Isaac Stevens coerced local chiefs into signing the 'Stevens Treaties' (1854\u20131855), ceding millions of acres while attempting to restrict Native fishing and gathering rights, triggering the Puget Sound War and Yakama War.",
+    "boundariesAndPrecision": "Extended along the 49th parallel. Ambiguities over the water boundary through Haro Strait versus Rosario Strait left the ownership of the San Juan Islands disputed until 1872, when German Emperor Wilhelm I arbitrated in favor of the United States following the bloodless 'Pig War' standoff.",
+    "citations": [
+      "Treaty with Great Britain in Regard to Limits Westward of the Rocky Mountains (9 Stat. 869; Treaty Series 120)",
+      "Merk, Frederick. 'The Oregon Question: Essays in Anglo-American Diplomacy and Politics' (Harvard University Press, 1967)",
+      "National Archives: Treaties with Great Britain, Record Group 11"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      8,
+      2,
+      3,
+      13,
+      17,
+      15,
+      9,
+      11
+    ],
+    "newlyAcquiredShapes": [
+      11
+    ],
+    "focusView": {
+      "x": 220,
+      "y": 100,
+      "zoom": 1.35
+    },
+    "modernStatesCovered": [
+      "OR",
+      "WA",
+      "ID",
+      "MT",
+      "WY"
+    ]
+  },
+  {
+    "id": "1848-treaty-of-guadalupe-hidalgo",
+    "slug": "1848-mexican-cession",
+    "year": 1848,
+    "exactDate": "February 2, 1848",
+    "title": "Mexican Cession (Treaty of Guadalupe Hidalgo)",
+    "latinPlate": "TABULA IX \u00b7 ANNO MDCCCXLVIII",
+    "category": "Treaty",
+    "legalType": "Treaty of Peace, Friendship, Limits, and Settlement with the Republic of Mexico",
+    "shortSummary": "Ended the Mexican-American War. Mexico ceded ~525,000 square miles (55% of its territory) including California and the American Southwest for $15 million.",
+    "historicalNarrative": "The Mexican-American War (1846\u20131848) concluded following the capture of Mexico City by General Winfield Scott. Signed at the Basilica of Guadalupe in Villa de Guadalupe Hidalgo by American diplomat Nicholas Trist and Mexican plenipotentiaries, the treaty established the Rio Grande as the boundary of Texas and ceded Alta California and Santa Fe de Nuevo M\u00e9xico to the United States. This Mexican Cession encompassed present-day California, Nevada, Utah, most of Arizona and New Mexico, and parts of Colorado and Wyoming. In return, the United States paid Mexico $15 million in cash and assumed up to $3.25 million of Mexican government debts owed to U.S. citizens. Gold was discovered at Sutter's Mill in California just days before the treaty was signed, triggering the 1849 Gold Rush and catapulting California into immediate statehood in 1850.",
+    "indigenousContext": "The cession treated ancestral homelands of hundreds of sovereign Indigenous nations\u2014including the Navajo (Din\u00e9), Apache, Hopi, Zuni, Ute, Paiute, Shoshone, Pima, Tohono O'odham, and diverse California tribes\u2014as transferred real estate. California's statehood unleashed an officially sanctioned campaign of extermination, forced servitude, and bounty-hunting against Native Californians, reducing the Indigenous population from an estimated 150,000 in 1848 to under 30,000 by 1870 (widely documented by historians as the California Genocide).",
+    "boundariesAndPrecision": "The boundary followed the Rio Grande to the southern border of New Mexico, westward to the Gila River, down the Gila to the Colorado River, and along a straight surveyed line westward to the Pacific Ocean south of San Diego. Based on J. Disturnell's 1847 Map of the United Mexican States, which contained substantial positional inaccuracies for the town of Paso del Norte (El Paso).",
+    "citations": [
+      "Treaty of Peace, Friendship, Limits, and Settlement with the Republic of Mexico (9 Stat. 922; Treaty Series 207)",
+      "Griswold del Castillo, Richard. 'The Treaty of Guadalupe Hidalgo: A Legacy of Conflict' (University of Oklahoma Press, 1990)",
+      "National Archives: Treaty of Guadalupe Hidalgo, Milestone Documents"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      2,
+      3,
+      13,
+      17,
+      15,
+      9,
+      11,
+      10,
+      8
+    ],
+    "newlyAcquiredShapes": [
+      10,
+      8
+    ],
+    "focusView": {
+      "x": 220,
+      "y": 240,
+      "zoom": 1.25
+    },
+    "modernStatesCovered": [
+      "CA",
+      "NV",
+      "UT",
+      "AZ",
+      "NM",
+      "CO",
+      "WY"
+    ]
+  },
+  {
+    "id": "1853-gadsden-purchase",
+    "slug": "1853-gadsden-purchase",
+    "year": 1853,
+    "exactDate": "December 30, 1853",
+    "title": "The Gadsden Purchase (Venta de La Mesilla)",
+    "latinPlate": "TABULA X \u00b7 ANNO MDCCCLIII",
+    "category": "Purchase",
+    "legalType": "Treaty between the United States of America and the Mexican Republic (10 Stat. 1031)",
+    "shortSummary": "The U.S. purchased 29,670 square miles in southern Arizona and New Mexico for $10 million to secure an all-weather southern transcontinental railroad route.",
+    "historicalNarrative": "In the early 1850s, American railroad promoters and southern politicians (notably Secretary of War Jefferson Davis) sought a viable low-elevation, snow-free transcontinental railroad corridor south of the Gila River to connect New Orleans and Texas to San Diego. Boundary disputes resulting from the flawed Disturnell map in the 1848 treaty, along with Mexican demands for reparations regarding cross-border Native raids under Article XI, threatened renewed hostilities. President Franklin Pierce dispatched rail promoter James Gadsden to negotiate with Mexican President Antonio L\u00f3pez de Santa Anna. Finalized in December 1853 and ratified in amended form in June 1854, the treaty transferred 29,670 square miles of desert terrain in the Mesilla Valley for $10 million. This acquisition established the final, permanent international border of the contiguous 48 states.",
+    "indigenousContext": "The Mesilla Valley and Sonoran borderlands were the sovereign territories of the Tohono O'odham, Akimel O'odham (Pima), Chiricahua Apache, and Western Apache. The new international border split traditional Tohono O'odham homelands and sacred pilgrimage routes in half, imposing foreign customs and military checkpoints across families and communities that persist to this day.",
+    "boundariesAndPrecision": "Rigorous astronomical and geodetic joint boundary commission survey headed by Major William H. Emory (U.S.) and Don Jos\u00e9 Salazar Ylarregui (Mexico), marked by stone monuments along the 31\u00b020' N and 31\u00b047' N parallels.",
+    "citations": [
+      "Treaty with Mexico (Gadsden Treaty), Dec. 30, 1853 (10 Stat. 1031; Treaty Series 208)",
+      "Kluger, James R. 'The Boundary: The Gadsden Purchase, 1853\u20131854' (University of Arizona Press, 1999)",
+      "Avalon Project at Yale Law School: Gadsden Purchase Treaty"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      2,
+      3,
+      13,
+      17,
+      15,
+      9,
+      11,
+      10,
+      8,
+      4
+    ],
+    "newlyAcquiredShapes": [
+      4
+    ],
+    "focusView": {
+      "x": 280,
+      "y": 330,
+      "zoom": 1.5
+    },
+    "modernStatesCovered": [
+      "AZ",
+      "NM"
+    ]
+  },
+  {
+    "id": "1867-alaska-purchase",
+    "slug": "1867-alaska-purchase",
+    "year": 1867,
+    "exactDate": "March 30, 1867",
+    "title": "The Alaska Purchase (Cession of Russian America)",
+    "latinPlate": "TABULA XI \u00b7 ANNO MDCCCLXVII",
+    "category": "Purchase",
+    "legalType": "Treaty concerning the Cession of the Russian Possessions in North America",
+    "shortSummary": "The United States purchased ~586,412 square miles from the Russian Empire for $7.2 million (approx. 2 cents per acre), expanding American territory into the Arctic.",
+    "historicalNarrative": "Following Russia's defeat in the Crimean War and facing mounting logistical difficulties in defending and profiting from its North American colonies (managed by the Russian-American Company), Tsar Alexander II determined to sell Russian America. In late March 1867, Russian Minister Eduard de Stoeckl and U.S. Secretary of State William H. Seward negotiated throughout the night to conclude a treaty of cession for $7.2 million in gold. While political opponents initially derided the purchase as 'Seward's Folly' or 'Seward's Icebox,' the acquisition eliminated imperial Russian presence from the continent, secured strategic maritime access to the North Pacific and Bering Strait, and later yielded immense mineral, oil, timber, and salmon wealth.",
+    "indigenousContext": "Russia never exercised effective control over the interior of Alaska; its small trading presence was limited to coastal settlements like Sitka and Kodiak. Alaska was home to deeply established Indigenous cultures: the Tlingit, Haida, and Tsimshian in the southeast; the Yup'ik, Cup'ik, and Inupiat along the western and Arctic coasts; the Unangax\u0302 (Aleut) across the Aleutian chain; and diverse Athabascan (Dene) peoples in the vast interior. The treaty made no provision for Native land rights, declaring that 'uncivilized native tribes' would merely be subject to U.S. laws. Indigenous land claims remained unrecognized until the Alaska Native Claims Settlement Act (ANCSA) of 1971.",
+    "boundariesAndPrecision": "The treaty defined the boundary with British Canada along the 141st meridian west and the maritime border through the Bering Strait between Big Diomede (Russian) and Little Diomede (American) islands. Official formal transfer ceremony occurred at Sitka on October 18, 1867.",
+    "citations": [
+      "Treaty with Russia: Cession of Alaska (15 Stat. 539; Treaty Series 301)",
+      "Jensen, Ronald J. 'The Alaska Purchase and Russian-American Relations' (University of Washington Press, 1975)",
+      "National Archives: Check for Purchase of Alaska, Milestone Documents"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      2,
+      3,
+      13,
+      17,
+      15,
+      9,
+      11,
+      10,
+      8,
+      4,
+      1
+    ],
+    "newlyAcquiredShapes": [
+      1
+    ],
+    "focusView": {
+      "x": 115,
+      "y": 510,
+      "zoom": 1.3
+    },
+    "modernStatesCovered": [
+      "AK"
+    ]
+  },
+  {
+    "id": "1898-annexation-of-hawaii",
+    "slug": "1898-hawaii-annexation",
+    "year": 1898,
+    "exactDate": "July 7, 1898",
+    "title": "Annexation of the Hawaiian Islands",
+    "latinPlate": "TABULA XII \u00b7 ANNO MDCCCXCVIII",
+    "category": "Annexation",
+    "legalType": "Joint Resolution to Provide for Annexing the Hawaiian Islands (Newlands Resolution; 30 Stat. 750)",
+    "shortSummary": "The United States annexed the Republic of Hawaii by joint resolution of Congress amidst the Spanish-American War, securing strategic mid-Pacific naval position.",
+    "historicalNarrative": "In January 1893, a coalition of American and European sugar planters and businessmen, backed by armed U.S. Marines dispatched by Minister John L. Stevens, executed a coup d'\u00e9tat overthrowing Queen Lili\u02bbuokalani and the constitutional monarchy of the Hawaiian Kingdom. An investigation commissioned by President Grover Cleveland (the Blount Report) concluded the overthrow was an act of war and illegal under international law, and Cleveland refused to annex the islands. The oligarchic leaders established the Republic of Hawaii and waited for a favorable administration. During the Spanish-American War of 1898, as Admiral George Dewey's fleet engaged Spanish forces in Manila Bay (Philippines), expansionist leaders argued Hawaii was militarily indispensable as a Pacific coaling station. Unable to achieve the required two-thirds treaty majority in the Senate, Congress pushed through annexation via the Newlands Resolution by a simple majority vote on July 7, 1898.",
+    "indigenousContext": "Over 21,000 Native Hawaiians (Kanaka Maoli)\u2014representing more than half the adult Native population\u2014signed the 1897 K\u016b\u02bb\u0113 Petitions (Anti-Annexation Petitions), traveling across the islands to protest the loss of their independent nation and sovereign monarch. In 1993, the U.S. Congress passed the Apology Resolution (Public Law 103-150), officially acknowledging that the Hawaiian Kingdom was overthrown without the consent of the Native Hawaiian people and that their inherent sovereignty was never relinquished.",
+    "boundariesAndPrecision": "The Hawaiian archipelago comprises eight major islands (Hawai\u02bbi, Maui, O\u02bbahu, Kaua\u02bbi, Moloka\u02bbi, L\u0101na\u02bbi, Ni\u02bbihau, Kaho\u02bbolawe) and numerous northwestern atolls, spanning ~6,423 square miles in the central Pacific.",
+    "citations": [
+      "Joint Resolution to provide for annexing the Hawaiian Islands to the United States (30 Stat. 750)",
+      "Silva, Noenoe K. 'Aloha Betrayed: Native Hawaiian Resistance to American Colonialism' (Duke University Press, 2004)",
+      "National Archives: Joint Resolution to Provide for Annexing the Hawaiian Islands (Newlands Resolution)"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      2,
+      3,
+      13,
+      17,
+      15,
+      9,
+      11,
+      10,
+      8,
+      4,
+      1,
+      5
+    ],
+    "newlyAcquiredShapes": [
+      5
+    ],
+    "focusView": {
+      "x": 295,
+      "y": 535,
+      "zoom": 1.4
+    },
+    "modernStatesCovered": [
+      "HI"
+    ]
+  },
+  {
+    "id": "1959-alaska-hawaii-statehood",
+    "slug": "1959-statehood",
+    "year": 1959,
+    "exactDate": "August 21, 1959",
+    "title": "Alaska & Hawaii Statehood (The 50-State Union)",
+    "latinPlate": "TABULA XIII \u00b7 ANNO MCMLIX",
+    "category": "Statehood",
+    "legalType": "Alaska Statehood Act (72 Stat. 339) & Hawaii Admission Act (73 Stat. 4)",
+    "shortSummary": "Alaska (Jan. 3) and Hawaii (Aug. 21) were admitted to the Union as the 49th and 50th states, establishing the modern geographic framework of the United States.",
+    "historicalNarrative": "After decades as incorporated organized territories governed with limited political representation, Alaska and Hawaii achieved full statehood in 1959. Alaska's admission on January 3, 1959, broke the 47-year hiatus since Arizona's admission in 1912, adding the largest state in land area. Hawaii's admission followed on August 21, 1959, after a landslide territorial plebiscite and congressional compromise pairing a traditionally Democratic territory (Alaska) with a traditionally Republican one (Hawaii, though political allegiances soon shifted). The admission of the two non-contiguous territories completed the modern union of 50 states, permanently represented by the 50-star American flag that debuted on July 4, 1960.",
+    "indigenousContext": "Statehood institutionalized state jurisdiction over immense natural resources and lands. In Alaska, disputes over land ownership led directly to the Alaska Native Claims Settlement Act of 1971. In Hawaii, the transition entrenched the Department of Hawaiian Home Lands and Office of Hawaiian Affairs, while continuing to spark Native Hawaiian sovereignty and self-determination movements.",
+    "boundariesAndPrecision": "Formal statutory boundaries established by the Alaska Statehood Act (Public Law 85-508) and Hawaii Admission Act (Public Law 86-3). With these admissions, all 50 modern state jurisdictions were finalized.",
+    "citations": [
+      "An Act to provide for the admission of the State of Alaska into the Union (72 Stat. 339; Public Law 85-508)",
+      "An Act to provide for the admission of the State of Hawaii into the Union (73 Stat. 4; Public Law 86-3)",
+      "U.S. National Archives: Alaska and Hawaii Statehood Documents"
+    ],
+    "activeShapes": [
+      14,
+      6,
+      2,
+      3,
+      13,
+      17,
+      15,
+      9,
+      11,
+      10,
+      8,
+      4,
+      1,
+      5
+    ],
+    "newlyAcquiredShapes": [
+      1,
+      5
+    ],
+    "focusView": {
+      "x": 480,
+      "y": 270,
+      "zoom": 1.0
+    },
+    "modernStatesCovered": [
+      "AK",
+      "HI"
+    ]
+  }
+]
