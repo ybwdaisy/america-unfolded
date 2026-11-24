@@ -42,5 +42,27 @@
       "scripts/build.mjs",
       "public/favicon.svg"
     ]
+  },
+  "mapFirstUpdate": {
+    "date": "2026-11-24",
+    "depth": "layout refinement",
+    "scope": "app",
+    "preserved": [
+      "All event and data files",
+      "All control IDs and link destinations",
+      "Existing no-blank-frame snapshot rendering",
+      "Local preview and existing PR only"
+    ],
+    "changed": [
+      "Compact masthead; story entry in map toolbar",
+      "Expanded desktop map; chapter sidebar",
+      "Mobile timeline immediately below map; legends and inline chapter follow",
+      "Single-column tablet workspace",
+      "Title and description relocated to visible chapter index"
+    ],
+    "files": [
+      "scripts/template.mjs",
+      "src/styles/app.css"
+    ]
   }
 }

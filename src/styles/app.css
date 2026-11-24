@@ -1,8 +1,8 @@
-/* Hallmark · shape: app screen · genre: editorial · theme: custom American atlas (by request) · redesign: restyle
+/* Hallmark · shape: app screen · genre: editorial · theme: custom American atlas (by request) · redesign: full · scope: app
  * paper: ivory #F7F3E9 · ink: #1F1D1A · accent: rust #8B3A2B · display: EB Garamond · body: Public Sans
  * nav: atlas masthead with reading links · signature: dated map with margin narrative and time ruler
  * states: loading, missing, error, full · axes: light/roman-serif/warm · posture: workbench · contrast: rendered sweep passed · v2.0.0 */
-/* Hallmark · pre-emit critique: map legibility leads; weak point: narrow-screen density, addressed with an inline expandable chapter. Independent finish review: 2 comparison findings, both fixed and regression-verified. */
+/* Hallmark · pre-emit critique: map legibility leads; weak point: narrow-screen density, addressed with an inline expandable chapter. Map-first finish review: 2 visual findings, 2 resolved in recaptures; existing controls regression-verified. */
 /* Hallmark · waive 65 · user pins the ivory/serif/brick palette · this historical atlas follows the explicit visual brief. */
 /* Hallmark · waive 49b · institutional source titles are real descriptive phrases · full source names wrap to preserve useful attribution in the chapter column. */
 /* Hallmark · dismissed 25 · atlas one-sentence captions use a 28ch measure; full reading pages keep the 70ch prose measure. */
@@ -1405,4 +1405,274 @@ dd {
 }
 .map-status.is-map-notice h2 {
   font-size: var(--text-lg);
+}
+
+/* Map-first workbench: compact chrome; dated boundaries and all controls retained. */
+.atlas-view {
+  --container: 1800px;
+  --gutter: 16px;
+}
+.atlas-view .masthead {
+  min-height: 76px;
+  gap: var(--space-lg);
+}
+.atlas-view .brand {
+  font-size: 2rem;
+}
+.atlas-view .tagline {
+  max-width: none;
+  padding-left: var(--space-lg);
+}
+.atlas-introduction {
+  font-size: var(--text-display);
+  line-height: 1.08;
+  font-weight: 500;
+  margin-bottom: var(--space-sm);
+}
+.atlas-view .atlas {
+  margin-top: var(--space-sm);
+}
+.atlas-view .map-toolbar {
+  min-height: 60px;
+  gap: var(--space-sm);
+}
+.story-launch {
+  color: var(--color-navy);
+  border-color: var(--color-brass);
+  padding-inline: var(--space-sm);
+}
+@media (min-width: 761px) {
+  .atlas-view .map-layout {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    height: max(480px, calc(100dvh - 270px));
+    min-height: 0;
+  }
+  .atlas-view .map-layout:has(.chapter[hidden]) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .atlas-view .map-column {
+    min-height: 0;
+  }
+  .atlas-view .map-stage {
+    height: auto;
+    min-height: 0;
+    flex: 1;
+  }
+  .atlas-view .map-stage > svg {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    max-height: none;
+  }
+  .atlas-view .chapter {
+    max-height: none;
+    min-height: 0;
+    padding: var(--space-md) var(--space-lg);
+  }
+  .atlas-view .chapter h2 {
+    font-size: 2.25rem;
+    line-height: 1.08;
+  }
+  .atlas-view .timeline {
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: var(--space-lg);
+  }
+  .atlas-view .year-entry {
+    display: none;
+  }
+  .atlas-view .map-legend {
+    padding-block: var(--space-xs);
+  }
+  .atlas-view .scope-note {
+    padding-top: 0;
+  }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .atlas-view .map-layout {
+    grid-template-columns: minmax(0, 1fr) 290px;
+  }
+  .atlas-view .map-mode {
+    font-size: var(--text-xs);
+  }
+  .atlas-view .map-options {
+    gap: var(--space-xs);
+    font-size: var(--text-xs);
+  }
+  .atlas-view .story-launch,
+  .atlas-view #share {
+    font-size: var(--text-xs);
+    padding-inline: var(--space-xs);
+  }
+  .atlas-view .chapter {
+    padding-inline: var(--space-md);
+  }
+}
+@media (max-width: 760px) {
+  .atlas-view {
+    --gutter: 8px;
+  }
+  .atlas-view .masthead {
+    min-height: 68px;
+    padding-block: var(--space-xs);
+    gap: 0;
+  }
+  .atlas-view .brand {
+    font-size: 1.875rem;
+  }
+  .atlas-view .atlas {
+    margin-top: var(--space-xs);
+  }
+  .atlas-view .map-toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--space-2xs) var(--space-xs);
+  }
+  .atlas-view .map-mode {
+    display: none;
+  }
+  .atlas-view .map-options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 var(--space-xs);
+    align-items: center;
+  }
+  .atlas-view .story-launch {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    font-size: var(--text-xs);
+    padding-inline: var(--space-xs);
+  }
+  .atlas-view #share {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .atlas-view .map-options label {
+    font-size: var(--text-xs);
+    min-height: 44px;
+  }
+  .atlas-view .map-column {
+    display: contents;
+  }
+  .atlas-view .comparison-caption {
+    order: 1;
+  }
+  .atlas-view .map-stage {
+    order: 2;
+  }
+  .atlas-view .map-stage,
+  .atlas-view .map-stage > svg {
+    height: clamp(270px, 42svh, 360px);
+    min-height: 0;
+    max-height: none;
+  }
+  .atlas-view .timeline {
+    order: 3;
+    padding: var(--space-xs);
+  }
+  .atlas-view .map-legend {
+    order: 4;
+    border-top: 0;
+    padding: var(--space-xs);
+  }
+  .atlas-view .scope-note {
+    order: 5;
+    padding: 0 var(--space-xs) var(--space-xs);
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .atlas-view .story-bar {
+    order: 6;
+  }
+  .atlas-view .chapter,
+  .atlas-view .reopen {
+    order: 7;
+  }
+  .atlas-view .year-readout span {
+    max-width: none;
+  }
+  .atlas-view .time-track p {
+    margin-top: var(--space-2xs);
+  }
+  .atlas-view .inset-note {
+    font-size: var(--text-xs);
+    max-width: 30ch;
+    right: auto;
+  }
+}
+@media (max-width: 760px) and (orientation: landscape) {
+  .atlas-view .map-stage,
+  .atlas-view .map-stage > svg {
+    height: 340px;
+  }
+}
+@media (min-width: 1500px) {
+  .atlas-view .timeline {
+    grid-template-columns: 470px minmax(0, 1fr);
+  }
+  .atlas-view .time-controls {
+    flex-wrap: nowrap;
+  }
+  .atlas-view .year-entry {
+    display: flex;
+    width: auto;
+    margin-top: 0;
+    flex: none;
+  }
+}
+/* Tablets and landscape phones keep the chapter below the map workspace. */
+@media (min-width: 761px) and (max-width: 1000px) {
+  .atlas-view .atlas {
+    display: flex;
+    flex-direction: column;
+  }
+  .atlas-view .map-layout,
+  .atlas-view .map-column {
+    display: contents;
+  }
+  .atlas-view .map-toolbar {
+    order: 0;
+  }
+  .atlas-view .comparison-caption {
+    order: 1;
+  }
+  .atlas-view .map-stage {
+    order: 2;
+    flex: none;
+    height: clamp(380px, 50svh, 580px);
+  }
+  .atlas-view .timeline {
+    order: 3;
+  }
+  .atlas-view .map-legend {
+    order: 4;
+  }
+  .atlas-view .scope-note {
+    order: 5;
+  }
+  .atlas-view .story-bar {
+    order: 6;
+  }
+  .atlas-view .chapter {
+    order: 7;
+    border-left: 0;
+    border-top: 1px solid var(--color-rule);
+    overflow: visible;
+  }
+  .atlas-view .reopen {
+    order: 7;
+    position: static;
+    margin: var(--space-sm);
+    align-self: flex-start;
+  }
+}
+
+/* A dedicated caption row keeps inset labels clear at every aspect ratio. */
+.atlas-view .inset-note {
+  position: static;
+  order: 2;
+  max-width: none;
+  padding: var(--space-2xs) var(--space-md);
+  flex: none;
 }

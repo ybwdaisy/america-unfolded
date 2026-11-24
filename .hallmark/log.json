@@ -1,6 +1,17 @@
 [
   {
     "mode": "redesign",
+    "depth": "layout refinement",
+    "scope": "app",
+    "theme": "Owner-specified classical American atlas",
+    "shape": "map-first workbench",
+    "signature": "Dated map with timeline and inline mobile chapter",
+    "preserved": "All control IDs, links, sources, data and existing snapshot renderer",
+    "review": "Independent finish review: 2 final findings, 2 resolved; wide year input restored",
+    "sweep": "0 FAIL, 0 WARN; 3 existing source-wrap waivers and 3 answered finish observations"
+  },
+  {
+    "mode": "redesign",
     "depth": "restyle",
     "scope": "app",
     "theme": "Owner-specified classical American atlas",
