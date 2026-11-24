@@ -28,6 +28,21 @@
     },
     {
       "browser": "Chrome",
+      "test": "quiet years advance without rewriting map geometry or styles",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
+      "test": "yearly playback has no gaps, pauses, and restores its current year",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
+      "test": "last annual step stops at the documented 1959 endpoint",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
       "test": "playback prefetches and switches without loader frames",
       "result": "pass"
     },
@@ -54,6 +69,21 @@
     {
       "browser": "iPhone WebKit",
       "test": "failed next snapshot retains a truthful old view and retries",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "quiet years advance without rewriting map geometry or styles",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "yearly playback has no gaps, pauses, and restores its current year",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "last annual step stops at the documented 1959 endpoint",
       "result": "pass"
     }
   ]

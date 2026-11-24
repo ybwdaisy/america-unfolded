@@ -140,14 +140,72 @@ for (const [name, engine, options] of [
     await ready(p);
     assert.equal(await p.locator('#current-year').innerText(), '1818');
   });
+  await check('quiet years advance without rewriting map geometry or styles', async (p) => {
+    await p.goto(base + '/?date=1805-12-31&event=louisiana-purchase');
+    await ready(p);
+    await p.clock.install();
+    await p.evaluate(() => {
+      window.quietMap = document.querySelector('.historic-regions').innerHTML;
+      window.quietMutations = 0;
+      window.quietObserver = new MutationObserver(
+        (records) => (window.quietMutations += records.length),
+      );
+      window.quietObserver.observe(document.querySelector('#history-map'), {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
+    });
+    await p.locator('#play').click();
+    await p.clock.runFor(950);
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1806');
+    assert.match(await p.locator('#snapshot-label').innerText(), /Jul 4, 1805/);
+    assert.equal(await p.evaluate(() => window.quietMutations), 0);
+    assert.equal(
+      await p.locator('.historic-regions').innerHTML(),
+      await p.evaluate(() => window.quietMap),
+    );
+    await p.locator('#play').click();
+  });
+  await check('yearly playback has no gaps, pauses, and restores its current year', async (p) => {
+    await p.clock.install();
+    await p.locator('#play').click();
+    for (const year of [1804, 1805, 1806, 1807]) {
+      await p.clock.runFor(950);
+      await ready(p);
+      assert.equal(await p.locator('#current-year').innerText(), String(year));
+    }
+    await p.locator('#play').click();
+    await p.clock.runFor(2000);
+    assert.equal(await p.locator('#current-year').innerText(), '1807');
+    const url = p.url();
+    await p.reload();
+    await ready(p);
+    assert.equal(p.url(), url);
+    assert.equal(await p.locator('#current-year').innerText(), '1807');
+  });
+  await check('last annual step stops at the documented 1959 endpoint', async (p) => {
+    await p.goto(base + '/?date=1958-12-31&event=hawaii-annexation');
+    await ready(p);
+    await p.clock.install();
+    await p.locator('#play').click();
+    await p.clock.runFor(950);
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1959');
+    assert.equal(new URL(p.url()).searchParams.get('date'), '1959-08-21');
+    assert.equal(await p.locator('#play').getAttribute('aria-label'), 'Play timeline');
+    assert.equal(await p.locator('.region[aria-label^="Hawaii, State"]').count(), 1);
+  });
   if (name === 'Chrome')
     await check('playback prefetches and switches without loader frames', async (p) => {
       await observe(p);
-      const prefetched = p.waitForResponse((r) => r.url().endsWith('snapshot-1818-10-20.json'));
+      const prefetched = p.waitForResponse((r) => r.url().endsWith('snapshot-1804-12-31.json'));
       await p.locator('#play').click();
       await prefetched;
       assert.equal(await p.locator('#current-year').innerText(), '1803');
-      await p.waitForFunction(() => document.querySelector('#current-year').textContent === '1818');
+      await p.waitForFunction(() => document.querySelector('#current-year').textContent === '1804');
       await p.locator('#play').click();
       await p.waitForTimeout(240);
       await assertContinuous(p);

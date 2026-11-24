@@ -109,12 +109,12 @@ await check('share copies a restorable URL', async () => {
 await check('playback advances and pause stops it', async () => {
   await page.locator('#play').click();
   assert.equal(await page.locator('#play').getAttribute('aria-label'), 'Pause timeline');
-  await page.waitForTimeout(4700);
+  await page.waitForFunction(() => document.querySelector('#current-year').textContent === '1806');
   await ready(page);
-  assert.equal(await page.locator('#current-year').innerText(), '1818');
+  assert.equal(await page.locator('#current-year').innerText(), '1806');
   await page.locator('#play').click();
   const date = await page.locator('#current-year').innerText();
-  await page.waitForTimeout(4700);
+  await page.waitForTimeout(1200);
   assert.equal(await page.locator('#current-year').innerText(), date);
 });
 await check('guided story changes chapter and map focus', async () => {

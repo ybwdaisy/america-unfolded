@@ -3,6 +3,7 @@ import { select } from 'd3-selection';
 import { feature as topoFeature } from 'topojson-client';
 import { zoom, zoomIdentity } from 'd3-zoom';
 import { events, eventById, eventAt, scopeNote } from './data/events.mjs';
+import { dateForYear, nextYearDate, YEAR_INTERVAL, REDUCED_YEAR_INTERVAL } from './timeline.mjs';
 import { eventArticle, esc, icon } from '../scripts/template.mjs';
 const $ = (s) => document.querySelector(s),
   root = $('[data-atlas]');
@@ -307,11 +308,11 @@ function regionClass(f) {
   const previousIds = new Set((previousData?.features || []).map((item) => item.properties.ID_NUM));
   return `region ${statusClass(f)}${state.compare && state.phase === 'after' && !previousIds.has(f.properties.ID_NUM) ? ' changed' : ''}${state.region === String(f.properties.ID_NUM) ? ' selected' : ''}`;
 }
-function prefetchNextEvent() {
+function prefetchNextYear() {
   if (!playing || !manifest) return;
-  const next = events.find((e) => e.date > state.date);
-  if (!next) return;
-  const i = manifest.snapshots.findLastIndex((s) => s.date <= next.date);
+  const date = nextYearDate(state.date);
+  if (!date) return;
+  const i = manifest.snapshots.findLastIndex((s) => s.date <= date);
   void Promise.allSettled([snapshot(manifest.snapshots[i]), snapshot(manifest.snapshots[i - 1])]);
 }
 function renderMap({ animate = false } = {}) {
@@ -399,7 +400,8 @@ function renderCaption() {
     e = eventById(state.event) || eventAt(state.date);
   const controlYear = isScrubbing && pendingYear ? pendingYear : year;
   $('#current-year').textContent = controlYear;
-  $('#current-event').textContent = e.short;
+  $('#current-event').textContent = year === e.date.slice(0, 4) ? e.short : `Latest: ${e.short}`;
+  $('#current-event').title = `Latest key event: ${fmt(e.date)}`;
   $('#year-range').value = controlYear;
   $('#year-input').value = year;
   $('#mode-date').textContent = fmt(state.date);
@@ -485,6 +487,7 @@ async function load({ focus = false } = {}) {
     if (token !== sequence) return;
     clearTimeout(loadingNoticeTimer);
     const changedSnapshot = currentData?.date !== current?.date;
+    const samePair = hasPresentedMap && currentData === current && previousData === prev;
     currentSnapshot = s;
     presentedDate = requested.date;
     currentData = current;
@@ -503,7 +506,15 @@ async function load({ focus = false } = {}) {
         .join('path')
         .attr('d', path);
     }
-    renderMap({ animate: hasPresentedMap && changedSnapshot });
+    // A quiet year changes the clock, not the SVG. Pending-transfer styles still
+    // update when their exact date threshold is crossed within the same snapshot.
+    const visibleData = state.compare && state.phase === 'before' ? previousData : currentData;
+    const nodes = [...svg.select('.historic-regions').node().children];
+    const sameAppearance =
+      nodes.length === (visibleData?.features.length || 0) &&
+      nodes.every((node) => node.getAttribute('class') === regionClass(node.__data__));
+    if (!samePair || requested.phase !== presentedPhase || !sameAppearance)
+      renderMap({ animate: hasPresentedMap && changedSnapshot });
     renderCaption();
     renderDetails();
     if (focus && focusRevision === viewRevision) {
@@ -528,7 +539,7 @@ async function load({ focus = false } = {}) {
     loading = false;
     hasPresentedMap = true;
     presentedSelection = { date: state.date, event: state.event };
-    prefetchNextEvent();
+    prefetchNextYear();
   } catch (error) {
     if (token !== sequence) return;
     clearTimeout(loadingNoticeTimer);
@@ -603,10 +614,10 @@ function setEvent(e, { push = true, focus = false } = {}) {
 }
 function chooseYear(value, push = true) {
   state.story = false;
-  const n = Math.max(1776, Math.min(1959, Math.round(Number(value))));
-  if (!Number.isFinite(n)) return;
+  const date = dateForYear(value);
+  if (!date) return;
   pause();
-  state.date = n === 1959 ? '1959-08-21' : `${n}-12-31`;
+  state.date = date;
   state.event = eventAt(state.date).id;
   state.region = null;
   state.phase = 'after';
@@ -641,27 +652,31 @@ $('#play').onclick = () => {
     pause();
     return;
   }
+  state.story = false;
   if (state.date >= events.at(-1).date) setEvent(events[0]);
   const tick = () => {
     if (loading) return;
-    const next = adjacent(1);
-    if (!next) {
+    const date = nextYearDate(state.date);
+    if (!date) {
       pause();
       return;
     }
-    state.date = next.date;
-    state.event = next.id;
+    state.date = date;
+    state.event = eventAt(date).id;
     state.region = null;
     state.phase = 'after';
     save('replace');
     load();
-    if (next === events.at(-1)) pause();
+    if (!nextYearDate(date)) pause();
   };
   $('#play').innerHTML = '<span aria-hidden="true">Ⅱ</span>';
   $('#play').setAttribute('aria-label', 'Pause timeline');
-  playing = setInterval(tick, matchMedia('(prefers-reduced-motion: reduce)').matches ? 6500 : 4500);
-  prefetchNextEvent();
-  announce('Timeline playing. Use Pause to stop.');
+  playing = setInterval(
+    tick,
+    matchMedia('(prefers-reduced-motion: reduce)').matches ? REDUCED_YEAR_INTERVAL : YEAR_INTERVAL,
+  );
+  prefetchNextYear();
+  announce('Playing one year at a time, using year-end views. Use Pause to stop.');
 };
 let yearTimer, pendingYear;
 $('#year-range').oninput = (e) => {

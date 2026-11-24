@@ -69,3 +69,7 @@ The 7 data/build checks and existing 26 browser checks passed. Eleven additional
 ## Map-first workspace follow-up
 
 See MAP-FIRST-UPDATE.md for the layout changes, preservation matrix, fresh measurements and independent review. The final layout passed the build, 7 data/build checks, 26 browser checks and 11 transition checks. Hallmark rendered app sweep returned 0 FAIL and 0 WARN. The independent reviewer confirmed both final visual findings resolved. Current before/after and full-page captures use the `evidence/map-first-` prefix. History, licensing records and snapshot rendering logic were not changed. Physical iPhone Safari and specialist historical review remain outstanding.
+
+## Annual playback follow-up
+
+Playback now advances by year, not chapter. The final build, 9 data/timeline checks, 26 browser checks and 17 transition checks passed. Added browser cases cover consecutive years, unchanged SVG through a quiet year, pause/share-URL reload restoration and automatic stop at August 21, 1959 in Chrome and iPhone-emulated WebKit. A full-range unit check covers every year from 1776 through 1959. See TIMELINE-TRANSITIONS.md and evidence/transition-results.json. No historical source, boundary geometry or licensing record changed. Local preview and the existing PR remain the only delivery targets.
