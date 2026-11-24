@@ -2,13 +2,13 @@ import { geoAlbersUsa, geoPath, geoGraticule10, geoCentroid } from 'd3-geo';
 import { select } from 'd3-selection';
 import { feature as topoFeature } from 'topojson-client';
 import { zoom, zoomIdentity } from 'd3-zoom';
-import { events, eventById, eventAt, scopeNote } from './data/events.mjs';
+import { events, eventById, eventAt, scopeNote, defaultEvent } from './data/events.mjs';
 import { dateForYear, nextYearDate, YEAR_INTERVAL, REDUCED_YEAR_INTERVAL } from './timeline.mjs';
 import { eventArticle, esc, icon } from '../scripts/template.mjs';
 const $ = (s) => document.querySelector(s),
   root = $('[data-atlas]');
 const storyEvents = events.filter((e) => e.story);
-const initial = eventById(root.dataset.defaultEvent) || events[2];
+const initial = eventById(root.dataset.defaultEvent) || eventById(defaultEvent);
 let state = {
   date: initial.date,
   event: initial.id,
@@ -410,7 +410,7 @@ function renderCaption() {
   const data = state.compare && state.phase === 'before' ? previousData : currentData;
   $('#snapshot-label').textContent = data
     ? `Selected ${fmt(state.date)}. ${state.compare && state.phase === 'before' ? 'Before map' : 'Snapshot'}: ${fmt(data.date)}. Source record dates; no interpolation.`
-    : 'No historical boundary snapshot is available before Sep 3, 1783. Showing modern geographic context only.';
+    : 'No historical boundary snapshot before Sep 3, 1783. Modern geographic context only.';
   $('#previous').disabled = state.date <= events[0].date;
   $('#next').disabled = state.date >= events.at(-1).date;
   $('#compare').disabled = !currentSnapshot;

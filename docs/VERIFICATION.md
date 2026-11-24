@@ -73,3 +73,9 @@ See MAP-FIRST-UPDATE.md for the layout changes, preservation matrix, fresh measu
 ## Annual playback follow-up
 
 Playback now advances by year, not chapter. The final build, 9 data/timeline checks, 26 browser checks and 17 transition checks passed. Added browser cases cover consecutive years, unchanged SVG through a quiet year, pause/share-URL reload restoration and automatic stop at August 21, 1959 in Chrome and iPhone-emulated WebKit. A full-range unit check covers every year from 1776 through 1959. See TIMELINE-TRANSITIONS.md and evidence/transition-results.json. No historical source, boundary geometry or licensing record changed. Local preview and the existing PR remain the only delivery targets.
+
+## Start-year follow-up
+
+The unparameterized home page now opens the Independence chapter at July 4, 1776, rather than using Louisiana Purchase as its default. The template, app fallback and exported default ID share the same Independence entry, and the server-rendered chapter position is calculated from that entry. Existing exact event paths and saved query dates still restore their requested view. The pre-1783 map remains modern geographic context with an explicit missing-historical-snapshot explanation; no 1776 boundary was added.
+
+Build and 9 data/timeline checks passed. All 27 browser checks passed, including a fresh home load at 1776, chapter 1, reload, and the first annual step to 1777 with no invented geometry. All 17 transition checks passed using an explicit Louisiana chapter fixture for the existing geometry scenarios. The shortened pre-1783 caption keeps the 900px desktop timeline within the first viewport. Chrome and iPhone-emulated WebKit remain browser-engine tests, not physical Safari hardware certification.

@@ -2,6 +2,7 @@ import { chromium, webkit, devices } from 'playwright';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 const base = process.env.BASE_URL || 'http://localhost:4173';
+const louisiana = base + '/events/louisiana-purchase/';
 const results = [];
 const evidence = 'docs/evidence';
 await fs.mkdir(evidence, { recursive: true });
@@ -27,6 +28,30 @@ const page = await context.newPage();
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 await page.goto(base);
+await ready(page);
+await check(
+  'home starts at 1776 and preserves the honest missing-boundary explanation',
+  async () => {
+    assert.equal(await page.locator('#current-year').innerText(), '1776');
+    assert.match(await page.locator('#chapter-content h2').innerText(), /independence/i);
+    assert.match(await page.locator('#chapter-position').innerText(), /Chapter 1 of/);
+    assert.equal(await page.locator('.historic-regions path').count(), 0);
+    assert.match(
+      await page.locator('#snapshot-label').innerText(),
+      /No historical boundary snapshot/,
+    );
+    await page.reload();
+    await ready(page);
+    assert.equal(await page.locator('#current-year').innerText(), '1776');
+    await page.locator('#play').click();
+    await page.waitForFunction(
+      () => document.querySelector('#current-year').textContent === '1777',
+    );
+    await page.locator('#play').click();
+    assert.equal(await page.locator('.historic-regions path').count(), 0);
+  },
+);
+await page.goto(louisiana);
 await ready(page);
 await check('initial dated map and chapter agree', async () => {
   assert.match(await page.locator('#snapshot-label').innerText(), /Apr 30, 1803/);
@@ -192,7 +217,7 @@ await check('missing-data error and retry recover', async () => {
       body: '{"type":"FeatureCollection","features":[]}',
     }),
   );
-  await p.goto(base);
+  await p.goto(louisiana);
   await p.locator('#retry-map').waitFor();
   assert.match(await p.locator('#map-status h2').innerText(), /missing/);
   await p.unroute('**/data/snapshot-1803-04-30.json');
@@ -365,7 +390,7 @@ try {
   const wb = await webkit.launch({ headless: true });
   const wc = await wb.newContext({ ...devices['iPhone 13'] });
   const wp = await wc.newPage();
-  await wp.goto(base);
+  await wp.goto(louisiana);
   await ready(wp);
   await check('iPhone WebKit: map, timeline, details and history', async () => {
     await wp.locator('#next').click();

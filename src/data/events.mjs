@@ -361,7 +361,7 @@ export const events = [
     story: true,
   },
 ];
-export const defaultEvent = 'louisiana-purchase';
+export const defaultEvent = 'independence';
 export const scopeNote =
   'Reconstructed jurisdictions and claims, not actual control. Other overseas territories and Indigenous boundaries are not mapped.';
 export const eventById = (id) => events.find((e) => e.id === id);

@@ -1,4 +1,4 @@
-import { events, sources, scopeNote } from '../src/data/events.mjs';
+import { events, sources, scopeNote, defaultEvent } from '../src/data/events.mjs';
 export const esc = (s) =>
   String(s).replace(
     /[&<>"']/g,
@@ -41,7 +41,7 @@ export function eventArticle(e, compact = false) {
   return `<h2>${esc(e.title)}</h2><p class="article-lead">${esc(e.summary)}</p><dl>${e.dates.map(([l, d]) => `<div><dt>${esc(l)}</dt><dd><time datetime="${d}">${d}</time></dd></div>`).join('')}</dl>${compact ? `<details class="context-disclosure"><summary>Context &amp; sources</summary>${context}</details>` : context}`;
 }
 export function page({
-  e = events[2],
+  e = events.find((event) => event.id === defaultEvent),
   path = '/',
   article = '',
   title,
@@ -68,7 +68,7 @@ ${
 <div class="map-controls" aria-label="Map navigation"><button type="button" id="zoom-in" aria-label="Zoom in">${icon('plus')}</button><button type="button" id="zoom-out" aria-label="Zoom out">${icon('minus')}</button><button type="button" id="reset-view" aria-label="Reset map view">${icon('reset')}</button></div>
 <div class="map-print-label" aria-hidden="true">North America</div>
 </div><p class="inset-note">Alaska &amp; Hawaiʻi: relocated insets. Alaska reduced in scale. Positions are not relative.</p><div class="map-legend" aria-label="Map legend">${legendSeal()}<span><i class="swatch state"></i>State / federal district</span><span><i class="swatch territory"></i>Territory</span><span><i class="swatch claim"></i>Claim / pending transfer</span><span><i class="swatch polity"></i>Other polity</span><span id="modern-key" hidden><i class="line-swatch"></i>State lines (2000 reference)</span><span id="comparison-key" hidden><i class="swatch change"></i>Added in next snapshot</span></div><p class="scope-note">${esc(scopeNote)} <a href="/sources/">Map conventions</a></p></div>
-<aside class="chapter" id="chapter" aria-label="Historical details"><div class="chapter-top"><span id="chapter-position">Chapter 3 of ${events.length}</span><button type="button" id="close-details" aria-label="Close historical details">${icon('close')}</button></div><div id="chapter-content">${eventArticle(e, true)}</div><button type="button" id="read-chapter" class="text-button">Read chapter ${icon('next')}</button><div class="chapter-bottom"><a id="chapter-link" href="/events/${e.id}/">Open chapter page</a><button type="button" id="story-next" class="text-button" hidden>Continue ${icon('next')}</button></div></aside>
+<aside class="chapter" id="chapter" aria-label="Historical details"><div class="chapter-top"><span id="chapter-position">Chapter ${events.indexOf(e) + 1} of ${events.length}</span><button type="button" id="close-details" aria-label="Close historical details">${icon('close')}</button></div><div id="chapter-content">${eventArticle(e, true)}</div><button type="button" id="read-chapter" class="text-button">Read chapter ${icon('next')}</button><div class="chapter-bottom"><a id="chapter-link" href="/events/${e.id}/">Open chapter page</a><button type="button" id="story-next" class="text-button" hidden>Continue ${icon('next')}</button></div></aside>
 <button type="button" id="open-details" class="reopen button" hidden>Open historical details</button>
 </div>
 <div class="timeline" aria-label="Historical timeline"><div class="time-controls"><button type="button" id="previous" aria-label="Previous key event">${icon('prev')}</button><button type="button" id="play" class="play-button" aria-label="Play timeline" title="Play year by year using year-end views">${icon('play')}</button><button type="button" id="next" aria-label="Next key event">${icon('next')}</button><div class="year-readout"><output id="current-year">${e.date.slice(0, 4)}</output><span id="current-event">${esc(e.short)}</span></div><label class="year-entry">Go to year<input id="year-input" type="number" name="year" min="1776" max="1959" value="${e.date.slice(0, 4)}" inputmode="numeric"></label></div><div class="time-track"><label for="year-range" class="visually-hidden">Choose a year, from 1776 to 1959</label><input id="year-range" name="timeline-year" type="range" min="1776" max="1959" step="1" value="${e.date.slice(0, 4)}"><div class="year-ticks" aria-hidden="true"><span>1776</span><span>1800</span><span>1850</span><span>1900</span><span>1959</span></div><p id="snapshot-label" role="status" aria-live="polite">Map snapshot: ${e.date}. No interpolation between dated records.</p></div></div>

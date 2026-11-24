@@ -4,6 +4,10 @@
   "browsers": "Installed Chrome; Playwright WebKit with iPhone emulation (not a physical iPhone)",
   "results": [
     {
+      "name": "home starts at 1776 and preserves the honest missing-boundary explanation",
+      "result": "pass"
+    },
+    {
       "name": "initial dated map and chapter agree",
       "result": "pass"
     },

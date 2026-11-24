@@ -57,7 +57,7 @@ for (const [name, engine, options] of [
     const errors = [];
     p.on('pageerror', (e) => errors.push(e.message));
     try {
-      await p.goto(base);
+      await p.goto(base + '/events/louisiana-purchase/');
       await ready(p);
       await run(p);
       assert.deepEqual(errors, []);
