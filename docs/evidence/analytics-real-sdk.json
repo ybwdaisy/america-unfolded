@@ -1,0 +1,16 @@
+{
+  "collectionBlocked": true,
+  "ingestionVerified": false,
+  "sdk": [
+    "https://www.googletagmanager.com/gtag/js?id=G-G1BH7EZXL9"
+  ],
+  "eventNames": [
+    "page_view",
+    "map_explore_start",
+    "map_year_select",
+    "map_detail_view"
+  ],
+  "locations": [
+    "https://usa.ybwdaisy.com/"
+  ]
+}

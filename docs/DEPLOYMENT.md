@@ -23,3 +23,13 @@ The owner explicitly chose **local preview and PR only** after the environment-c
 Final API inspection confirmed `hasDeployments: false`, `latestDeployments: []`, `targets: {}`, `autoAssignCustomDomains: false`, and Git deployment mode `disabled`. A sanitized state snapshot is saved in `evidence/deployment-state.json`.
 
 The website is available as a local preview at http://localhost:4173. All code, data, source/permission evidence, browser captures and tests are reviewable in the private repository PR. Main is unchanged from its initial scaffold.
+
+## Subsequent production authorization — 2026-11-24
+
+The owner later explicitly requested GitHub submission, Vercel production publication, usa.ybwdaisy.com, GA4/GSC, SEO and Site Pulse integration. This supersedes the earlier local-only publication boundary, while the PR remains available for review and is not automatically merged. The owner connected the existing independent Vercel project to the private GitHub repository. Automatic Git deployments remain disabled; the tested feature commit is released manually.
+
+The usa subdomain was added to this project. Aliyun had 17 existing records; only usa CNAME → 58cdf4874bafc68d.vercel-dns-017.com was added, TTL 10 minutes. Public DNS returned that CNAME and Vercel reported configuredBy=CNAME and misconfigured=false. Apex, www, mail, verification and other products' records were preserved. No domain purchase or paid feature was used.
+
+Production environment: SITE_ORIGIN=https://usa.ybwdaisy.com and GA_MEASUREMENT_ID=G-G1BH7EZXL9. Preview shares the canonical origin but excludes the measurement ID and emits noindex/robots Disallow. Runtime code independently checks the exact production origin, production configuration, consent and QA/automation state.
+
+The earlier CLI connectivity failure was resolved with command-scoped use of the existing system proxy (127.0.0.1:7897) and the official JavaScript CLI runtime; no proxy configuration or routing was modified. See ANALYTICS.md for independently created Google resources and the public funnel contract. Final deployment ID, commit and HTTP acceptance are appended after publication.

@@ -1,18 +1,24 @@
 import { build } from 'esbuild';
+import { manifestFiles, checkOnlineContract, projectRoot } from './funnel-manifest.mjs';
 import fs from 'node:fs/promises';
 import { page, eventArticle, esc } from './template.mjs';
 import { events, sources } from '../src/data/events.mjs';
+const environment = process.env.VERCEL_ENV || 'local';
+if (process.env.CI === 'true' || process.env.VERCEL === '1') await checkOnlineContract();
+await manifestFiles(projectRoot, { write: true });
+const analyticsId = environment === 'production' ? process.env.GA_MEASUREMENT_ID || '' : '';
+if (analyticsId && !/^G-[A-Z0-9]+$/.test(analyticsId)) throw Error('Invalid GA4 measurement ID');
 const out = 'dist';
 await fs.rm(out, { recursive: true, force: true });
 await fs.mkdir(`${out}/assets`, { recursive: true });
 await fs.cp('public', out, { recursive: true });
 await build({
-  entryPoints: ['src/app.mjs'],
+  entryPoints: ['src/app.mjs', 'src/analytics.mjs'],
   bundle: true,
   minify: true,
   format: 'esm',
   target: ['safari16', 'chrome110'],
-  outfile: `${out}/assets/app.js`,
+  outdir: `${out}/assets`,
 });
 await build({
   entryPoints: ['src/styles/app.css'],
@@ -25,12 +31,15 @@ await build({
 // Use the actual deployment hostname until a domain is approved; never invent a canonical host.
 const origin =
   process.env.SITE_ORIGIN ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:4173');
+  (process.env.VERCEL ? 'https://usa.ybwdaisy.com' : 'http://localhost:4173');
 const routes = [];
 async function write(path, args) {
   const target = out + (path === '/' ? '/index.html' : `${path}index.html`);
   await fs.mkdir(target.slice(0, target.lastIndexOf('/')), { recursive: true });
-  await fs.writeFile(target, page({ ...args, path, origin }));
+  await fs.writeFile(
+    target,
+    page({ ...args, path, origin, analyticsId, environment, noindex: environment === 'preview' }),
+  );
   routes.push(path);
 }
 await write('/', {
@@ -63,7 +72,14 @@ await write('/about/', {
   title: 'About this free historical atlas | America Unfolded',
   description:
     'About America Unfolded, a free map-based introduction to U.S. territorial formation.',
-  article: `<a href="/">Return to the atlas</a><h1>History has a place.</h1><p class="article-lead">America Unfolded is a free introduction to how the United States took shape.</p><p>Use the time ruler to choose a year, or turn through key events. Select a region to inspect its source record. Follow the story for a short guided route from the 1783 treaty to the admission of Hawaiʻi.</p><h2>A deliberately bounded atlas</h2><p>This first edition focuses on territorial formation from 1776 to 1959. It is not a complete American history, an account of every overseas territory, or a map of all historical sovereignty. See <a href="/sources/">sources and methods</a> for date conventions and important omissions.</p><h2>Use the controls</h2><p>Drag to pan and pinch to zoom. Use the buttons to zoom or reset. With the map focused, arrow keys pan, + and − zoom, and Home resets. Tab reaches regions and other controls; Enter opens a focused region. Escape closes details. The year slider supports the standard arrow, Home and End keys. Playback starts only on request and pauses when you interact with the map or leave the tab.</p><h2>Private by design</h2><p>No login, database, payment service, AI chat or third-party analytics is included. A shared URL stores the selected date, chapter, map position, comparison and reference-line settings. No browsing history is sent to this project’s own backend; the site is static.</p><h2>Built for correction</h2><p>Historical data and interface logic are separate. Each chapter links to evidence; regional panels retain the source atlas’s citations. This edition includes no commissioned imagery. Fonts are hosted with the site.</p><p>Source code is managed in an independent private repository. Production publication and domain registration are reserved for the project owner’s review.</p>`,
+  article: `<a href="/">Return to the atlas</a><h1>History has a place.</h1><p class="article-lead">America Unfolded is a free introduction to how the United States took shape.</p><p>Use the time ruler to choose a year, or turn through key events. Select a region to inspect its source record. Follow the story for a short guided route from the 1783 treaty to the admission of Hawaiʻi.</p><h2>A deliberately bounded atlas</h2><p>This first edition focuses on territorial formation from 1776 to 1959. It is not a complete American history, an account of every overseas territory, or a map of all historical sovereignty. See <a href="/sources/">sources and methods</a> for date conventions and important omissions.</p><h2>Use the controls</h2><p>Drag to pan and pinch to zoom. Use the buttons to zoom or reset. With the map focused, arrow keys pan, + and − zoom, and Home resets. Tab reaches regions and other controls; Enter opens a focused region. Escape closes details. The year slider supports the standard arrow, Home and End keys. Playback starts only on request and pauses when you interact with the map or leave the tab.</p><h2>Privacy and optional analytics</h2><p>No login, database, payment service or AI chat is included. Optional Google Analytics runs only on usa.ybwdaisy.com after permission; local, preview, automated and marked QA sessions do not load it. No map coordinates, query strings, free text or identity fields are sent. <a href="/privacy/">Read the privacy and analytics choices</a>. A shared URL stores the selected date, chapter, map position, comparison and reference-line settings. No browsing history is sent to this project’s own backend; the site is static.</p><h2>Built for correction</h2><p>Historical data and interface logic are separate. Each chapter links to evidence; regional panels retain the source atlas’s citations. This edition includes no commissioned imagery. Fonts are hosted with the site.</p><p>Source code is managed in an independent private repository. Production publication and domain registration are reserved for the project owner’s review.</p>`,
+});
+await write('/privacy/', {
+  atlas: false,
+  title: 'Privacy & analytics choices | America Unfolded',
+  description:
+    'Optional analytics, local settings and privacy choices for the free America Unfolded historical atlas.',
+  article: `<a href="/">Return to the atlas</a><h1>Privacy &amp; analytics choices</h1><p>This free atlas needs no account and has no advertising, payments, database or AI chat.</p><h2>Your map stays in your browser</h2><p>Sharing a view places the date, selected source record, comparison and map position in its URL. The map reads that URL to restore your view. We do not send these query parameters or coordinates to Google Analytics. Your analytics choice and a testing exclusion flag are stored locally for this hostname.</p><h2>Optional Google Analytics</h2><p>If you allow analytics, Google Analytics 4 records page views and fixed actions such as selecting a year, opening a region, reading a source, following the story, using comparison or successfully copying a share link. Google may process technical connection, device and approximate location data. We do not send your name, email, user ID, free text, full referrer, search query or map coordinates. Advertising storage, Google Signals and ad personalization are disabled in the site's tag configuration. Analytics cookies are scoped to usa.ybwdaisy.com; other ybwdaisy.com products have separate settings.</p><p>Choose No thanks to keep using the atlas without loading the Google tag. Analytics choices in the footer lets you change your mind. Withdrawal blocks further site events and expires this site's analytics cookies; it does not erase data already processed by Google.</p><h2>Testing and hosting</h2><p>Local development, Vercel previews, automated browsers and sessions marked with analytics_test=1 or qa=1 do not load analytics or send events. Hosting services may process normal request logs needed to deliver the site; these are separate from analytics. No third-party tracking is required to read historical chapters.</p><p><a href="https://policies.google.com/privacy">Google Privacy Policy</a> and <a href="/about/">project notes</a>.</p>`,
 });
 await fs.mkdir(`${out}/licenses`, { recursive: true });
 for (const file of await fs.readdir('docs/licenses')) {
@@ -76,17 +92,23 @@ await fs.writeFile(
 );
 await fs.writeFile(
   `${out}/robots.txt`,
-  `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`,
+  environment === 'preview'
+    ? 'User-agent: *\nDisallow: /\n'
+    : `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`,
 );
 await fs.writeFile(
   `${out}/404.html`,
   page({
     atlas: false,
     origin,
+    analyticsId,
+    environment,
+    noindex: true,
     path: '/404.html',
     title: 'Page not found | America Unfolded',
     article:
       '<h1>This chapter is not here.</h1><p>The URL may be incomplete or the chapter may have moved.</p><p><a href="/">Return to the atlas</a></p>',
   }),
 );
+await manifestFiles(projectRoot, { dist: true });
 console.log(`Built ${routes.length} crawlable routes. Canonical origin: ${origin}`);

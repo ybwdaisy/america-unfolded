@@ -1,0 +1,55 @@
+{
+  "kind": "Offline SDK stub and local-origin fixture",
+  "collectionBlocked": true,
+  "ingestionVerified": false,
+  "results": [
+    {
+      "name": "localhost never collects",
+      "result": "pass"
+    },
+    {
+      "name": "preview hostname never collects",
+      "result": "pass"
+    },
+    {
+      "name": "preview configuration never collects",
+      "result": "pass"
+    },
+    {
+      "name": "webdriver cannot be opted into collection",
+      "result": "pass"
+    },
+    {
+      "name": "explicit QA never collects",
+      "result": "pass"
+    },
+    {
+      "name": "short QA marker never collects",
+      "result": "pass"
+    },
+    {
+      "name": "stored QA never collects",
+      "result": "pass"
+    },
+    {
+      "name": "consent required; denied state survives navigation; permission queues exactly one safe page view",
+      "result": "pass"
+    },
+    {
+      "name": "map research, compare and successful share have real, ordered events",
+      "result": "pass"
+    },
+    {
+      "name": "complete guided story emits each step once and completion once",
+      "result": "pass"
+    },
+    {
+      "name": "playback frames do not emit year-selection events; withdrawal stops all events",
+      "result": "pass"
+    },
+    {
+      "name": "unknown events and unapproved values cannot enter the analytics contract",
+      "result": "pass"
+    }
+  ]
+}

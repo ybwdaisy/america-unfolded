@@ -3,11 +3,25 @@ import { select } from 'd3-selection';
 import { feature as topoFeature } from 'topojson-client';
 import { zoom, zoomIdentity } from 'd3-zoom';
 import { events, eventById, eventAt, scopeNote, defaultEvent } from './data/events.mjs';
+import { track, explore } from './analytics.mjs';
 import { dateForYear, nextYearDate, YEAR_INTERVAL, REDUCED_YEAR_INTERVAL } from './timeline.mjs';
 import { eventArticle, esc, icon } from '../scripts/template.mjs';
 const $ = (s) => document.querySelector(s),
   root = $('[data-atlas]');
 const storyEvents = events.filter((e) => e.story);
+let storyStarted = false,
+  storyCompleted = false;
+const storySeen = new Set();
+function recordDetail(type) {
+  const el = $('#chapter'),
+    box = el.getBoundingClientRect();
+  if (!el.hidden && box.top < innerHeight && box.bottom > 0)
+    track('map_detail_view', {
+      detail_type: type,
+      chapter_id: state.event,
+      year: Number(state.date.slice(0, 4)),
+    });
+}
 const initial = eventById(root.dataset.defaultEvent) || eventById(defaultEvent);
 let state = {
   date: initial.date,
@@ -74,6 +88,7 @@ const zoomBehavior = zoom()
   ])
   .on('start', (e) => {
     if (e.sourceEvent) {
+      explore('map');
       pause();
       gestureMoved = false;
       viewRevision++;
@@ -384,6 +399,8 @@ function renderMap({ animate = false } = {}) {
     (b) =>
       (b.onclick = () => {
         pause();
+        if (state.phase !== b.dataset.phase)
+          track('map_compare_change', { phase: b.dataset.phase });
         state.phase = b.dataset.phase;
         state.region = null;
         renderMap();
@@ -450,7 +467,7 @@ function renderDetails() {
   $('#chapter').hidden = !state.details;
   $('#read-chapter').hidden = !state.details;
 }
-async function load({ focus = false } = {}) {
+async function load({ focus = false, userAction = null } = {}) {
   const focusRevision = viewRevision;
   const token = ++sequence;
   const requested = { date: state.date, event: state.event, phase: state.phase };
@@ -517,6 +534,21 @@ async function load({ focus = false } = {}) {
       renderMap({ animate: hasPresentedMap && changedSnapshot });
     renderCaption();
     renderDetails();
+    if (userAction === 'timeline' || userAction === 'chapter') {
+      track('map_year_select', {
+        year: Number(state.date.slice(0, 4)),
+        chapter_id: state.event,
+        method: userAction,
+      });
+      recordDetail('chapter');
+    }
+    if (userAction === 'story' && state.story) {
+      if (!storyStarted) storyStarted = !!track('story_start', { chapter_id: state.event });
+      if (!storySeen.has(state.event) && track('story_step_view', { chapter_id: state.event }))
+        storySeen.add(state.event);
+      if (!storyCompleted && state.event === storyEvents.at(-1).id)
+        storyCompleted = !!track('story_complete');
+    }
     if (focus && focusRevision === viewRevision) {
       const e = eventById(state.event);
       const regions =
@@ -564,7 +596,7 @@ async function load({ focus = false } = {}) {
       () => {
         Object.assign(state, requested);
         save('replace');
-        load({ focus });
+        load({ focus, userAction });
       },
     );
     $('#map-stage').setAttribute('aria-busy', 'false');
@@ -575,6 +607,7 @@ async function load({ focus = false } = {}) {
 }
 
 function openRegion(f, target) {
+  explore('map');
   pause();
   if (loading && hasPresentedMap) {
     ++sequence;
@@ -586,6 +619,7 @@ function openRegion(f, target) {
     $('#map-status').hidden = true;
     renderCaption();
   }
+  track('map_region_select', { chapter_id: state.event, year: Number(state.date.slice(0, 4)) });
   regionReturn = target;
   state.region = String(f.properties.ID_NUM);
   state.details = true;
@@ -597,8 +631,10 @@ function openRegion(f, target) {
   $('#close-details').focus({ preventScroll: true });
   if (matchMedia('(max-width: 760px)').matches)
     $('#chapter').scrollIntoView({ block: 'start', behavior: 'instant' });
+  recordDetail('region');
 }
-function setEvent(e, { push = true, focus = false } = {}) {
+function setEvent(e, { push = true, focus = false, action = 'chapter' } = {}) {
+  if (action && action !== 'story') explore(action);
   clearTimeout(yearTimer);
   yearTimer = null;
   isScrubbing = false;
@@ -610,7 +646,7 @@ function setEvent(e, { push = true, focus = false } = {}) {
   state.expanded = false;
   state.phase = 'after';
   if (push) save();
-  load({ focus });
+  load({ focus, userAction: action });
 }
 function chooseYear(value, push = true) {
   state.story = false;
@@ -621,8 +657,11 @@ function chooseYear(value, push = true) {
   state.event = eventAt(state.date).id;
   state.region = null;
   state.phase = 'after';
-  if (push) save();
-  load();
+  if (push) {
+    explore('timeline');
+    save();
+  }
+  load({ userAction: push ? 'timeline' : null });
 }
 function pause() {
   if (playing) {
@@ -649,11 +688,14 @@ $('#next').onclick = () => {
 };
 $('#play').onclick = () => {
   if (playing) {
+    track('map_play_pause');
     pause();
     return;
   }
+  explore('play');
+  track('map_play_start');
   state.story = false;
-  if (state.date >= events.at(-1).date) setEvent(events[0]);
+  if (state.date >= events.at(-1).date) setEvent(events[0], { action: null });
   const tick = () => {
     if (loading) return;
     const date = nextYearDate(state.date);
@@ -705,6 +747,8 @@ $('#modern').onchange = (e) => {
   save();
 };
 $('#compare').onchange = (e) => {
+  explore('compare');
+  if (e.target.checked) track('map_compare_open');
   pause();
   state.compare = e.target.checked;
   state.phase = 'after';
@@ -715,18 +759,21 @@ $('#compare').onchange = (e) => {
   save();
 };
 $('#zoom-in').onclick = () => {
+  explore('map');
   pause();
   viewRevision++;
   svg.call(zoomBehavior.scaleBy, 1.3);
   save();
 };
 $('#zoom-out').onclick = () => {
+  explore('map');
   pause();
   viewRevision++;
   svg.call(zoomBehavior.scaleBy, 1 / 1.3);
   save();
 };
 $('#reset-view').onclick = () => {
+  explore('map');
   pause();
   viewRevision++;
   svg.call(zoomBehavior.transform, zoomIdentity);
@@ -765,12 +812,14 @@ $('#open-details').onclick = () => {
   renderDetails();
   save();
   $('#close-details').focus({ preventScroll: true });
+  recordDetail(state.region ? 'region' : 'chapter');
 };
 $('#read-chapter').onclick = () => {
   state.expanded = true;
   save();
   $('#chapter').classList.add('expanded');
   $('#close-details').focus({ preventScroll: true });
+  recordDetail('chapter');
 };
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && state.details) closeDetails();
@@ -781,6 +830,7 @@ $('#share').onclick = async () => {
   const button = $('#share span');
   try {
     await navigator.clipboard.writeText(location.href);
+    track('map_share_success', { chapter_id: state.event, year: Number(state.date.slice(0, 4)) });
     button.textContent = 'Link copied';
     announce('View link copied to clipboard.');
     setTimeout(() => (button.textContent = 'Share view'), 2500);
@@ -815,7 +865,10 @@ document.querySelectorAll('[data-event]').forEach(
 $('#start-story').onclick = (e) => {
   e.preventDefault();
   state.story = true;
-  setEvent(storyEvents[0], { focus: true });
+  storyStarted = false;
+  storyCompleted = false;
+  storySeen.clear();
+  setEvent(storyEvents[0], { focus: true, action: 'story' });
 };
 $('#story-next').onclick = () => {
   const i = storyEvents.findIndex((e) => e.id === state.event);
@@ -824,7 +877,7 @@ $('#story-next').onclick = () => {
     renderCaption();
     save();
     announce('You have reached the end of the story.');
-  } else setEvent(storyEvents[i + 1], { focus: true });
+  } else setEvent(storyEvents[i + 1], { focus: true, action: 'story' });
 };
 $('#story-next-compact').onclick = () => $('#story-next').click();
 $('#end-story').onclick = () => {
@@ -849,4 +902,4 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('pagehide', pause);
 readURL();
 save('replace');
-load();
+load({ userAction: state.story && state.event === storyEvents[0].id ? 'story' : null });

@@ -49,10 +49,31 @@ export function page({
   story = false,
   atlas = true,
   origin,
+  analyticsId = '',
+  environment = 'local',
+  noindex = false,
 }) {
   const metaTitle = title || `${e.title} | America Unfolded`;
   const url = origin ? new URL(path, origin).href : null;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${esc(metaTitle)}</title><meta name="description" content="${esc(description || e.summary)}"><meta name="theme-color" content="#f7f3e9"><meta property="og:title" content="${esc(metaTitle)}"><meta property="og:description" content="${esc(description || e.summary)}"><meta property="og:type" content="website">${url ? `<link rel="canonical" href="${url}"><meta property="og:url" content="${url}">` : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preload" href="/fonts/eb-garamond.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/app.css"></head><body${atlas ? ' class="atlas-view"' : ''}>
+  const schema = url
+    ? {
+        '@context': 'https://schema.org',
+        '@type': path.startsWith('/events/') ? 'Article' : 'WebPage',
+        name: metaTitle,
+        headline: path.startsWith('/events/') ? e.title : metaTitle,
+        description: description || e.summary,
+        url,
+        inLanguage: 'en',
+        isPartOf: { '@type': 'WebSite', name: 'America Unfolded', url: origin + '/' },
+        ...(path.startsWith('/events/')
+          ? {
+              citation: e.sourceIds.map((id) => sources[id].url),
+              about: { '@type': 'Thing', name: e.title },
+            }
+          : {}),
+      }
+    : null;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${esc(metaTitle)}</title><meta name="description" content="${esc(description || e.summary)}"><meta name="america-analytics" content="${esc(analyticsId)}" data-environment="${esc(environment)}"><meta name="america-page" content="${esc(path)}">${noindex ? '<meta name="robots" content="noindex, nofollow">' : '<meta name="robots" content="index, follow">'}${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, '\\u003c')}</script>` : ''}<meta name="theme-color" content="#f7f3e9"><meta property="og:title" content="${esc(metaTitle)}"><meta property="og:description" content="${esc(description || e.summary)}"><meta property="og:type" content="${path.startsWith('/events/') ? 'article' : 'website'}"><meta property="og:site_name" content="America Unfolded"><meta name="twitter:card" content="summary">${url ? `<link rel="canonical" href="${url}"><meta property="og:url" content="${url}">` : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preload" href="/fonts/eb-garamond.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/app.css"></head><body${atlas ? ' class="atlas-view"' : ''}>
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead"><a class="brand" href="/" aria-label="America Unfolded home">${icon('map')}<span>America Unfolded</span></a><p class="tagline">Explore American history through maps.</p><nav aria-label="Main"><a href="/sources/">Sources &amp; methods</a><a href="/about/">About</a></nav></header>
 <main id="main" ${atlas ? `data-atlas data-default-event="${e.id}" data-story="${story}"` : ''}>
@@ -74,9 +95,9 @@ ${
 <div class="timeline" aria-label="Historical timeline"><div class="time-controls"><button type="button" id="previous" aria-label="Previous key event">${icon('prev')}</button><button type="button" id="play" class="play-button" aria-label="Play timeline" title="Play year by year using year-end views">${icon('play')}</button><button type="button" id="next" aria-label="Next key event">${icon('next')}</button><div class="year-readout"><output id="current-year">${e.date.slice(0, 4)}</output><span id="current-event">${esc(e.short)}</span></div><label class="year-entry">Go to year<input id="year-input" type="number" name="year" min="1776" max="1959" value="${e.date.slice(0, 4)}" inputmode="numeric"></label></div><div class="time-track"><label for="year-range" class="visually-hidden">Choose a year, from 1776 to 1959</label><input id="year-range" name="timeline-year" type="range" min="1776" max="1959" step="1" value="${e.date.slice(0, 4)}"><div class="year-ticks" aria-hidden="true"><span>1776</span><span>1800</span><span>1850</span><span>1900</span><span>1959</span></div><p id="snapshot-label" role="status" aria-live="polite">Map snapshot: ${e.date}. No interpolation between dated records.</p></div></div>
 <div class="story-bar" id="story-bar" hidden><span id="story-progress"></span><button type="button" class="text-button" id="story-next-compact">Next chapter</button><button type="button" class="text-button" id="end-story">Leave story</button></div>
 </section>
-<section class="event-index" aria-labelledby="index-title"><div class="index-intro"><h1 class="atlas-introduction">A nation, unfolded.</h1><p>Follow the making of the United States, 1776–1959.</p><h2 id="index-title">Turn to a moment in history.</h2><p>A treaty, a transfer, a state.<br>Each is a different kind of change.</p><a href="/sources/">How to read this atlas</a></div><ol>${events.map((a, i) => `<li><a href="/events/${a.id}/" data-event="${a.id}"><time datetime="${a.date}">${a.date.slice(0, 4)}</time><span>${esc(a.short)}</span><span class="event-kind">${esc(a.kind)}</span>${icon('next')}</a></li>`).join('')}</ol></section>
+<section class="event-index" aria-labelledby="index-title"><div class="index-intro"><h1 class="atlas-introduction">${path.startsWith('/events/') ? esc(e.title) : 'A nation, unfolded.'}</h1><p>Follow the making of the United States, 1776–1959.</p><h2 id="index-title">Turn to a moment in history.</h2><p>A treaty, a transfer, a state.<br>Each is a different kind of change.</p><a href="/sources/">How to read this atlas</a></div><ol>${events.map((a, i) => `<li><a href="/events/${a.id}/" data-event="${a.id}"><time datetime="${a.date}">${a.date.slice(0, 4)}</time><span>${esc(a.short)}</span><span class="event-kind">${esc(a.kind)}</span>${icon('next')}</a></li>`).join('')}</ol></section>
 <noscript><section class="reading-page"><h2>The atlas without JavaScript</h2><p>The interactive map requires JavaScript. The chapters, dates, source links and methods below remain readable.</p>${eventArticle(e)}</section></noscript>`
     : `<article class="reading-page">${article}</article>`
 }
-</main><footer class="footer"><span>America Unfolded</span><p>A free atlas for curious minds.</p><nav aria-label="Footer"><a href="/sources/">Data &amp; licenses</a><a href="/about/">Project notes</a><a href="/story/how-america-took-shape/">The story</a></nav></footer><p id="announcement" class="visually-hidden" role="status" aria-live="polite"></p>${atlas ? '<script type="module" src="/assets/app.js"></script>' : ''}</body></html>`;
+</main><section class="analytics-consent" id="analytics-consent" aria-label="Optional analytics" hidden><p>Help improve this free atlas with optional analytics. Your choice does not affect the map. <a href="/privacy/">Privacy details</a></p><div><button type="button" data-analytics-consent="granted">Allow analytics</button><button type="button" data-analytics-consent="denied">No thanks</button></div></section><footer class="footer"><span>America Unfolded</span><p>A free atlas for curious minds.</p><nav aria-label="Footer"><a href="/sources/">Data &amp; licenses</a><a href="/about/">Project notes</a><a href="/privacy/">Privacy</a><button id="analytics-settings" type="button" class="text-button" hidden>Analytics choices</button><a href="/story/how-america-took-shape/">The story</a></nav></footer><p id="announcement" class="visually-hidden" role="status" aria-live="polite"></p><script type="module" src="/assets/${atlas ? 'app' : 'analytics'}.js"></script></body></html>`;
 }
