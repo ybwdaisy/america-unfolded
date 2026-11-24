@@ -205,8 +205,13 @@
   }
 
   /**
-   * Render geographic basemap: neighboring countries and Great Lakes
-   * Provides spatial context so territories are recognizable as North America
+   * Render geographic basemap: US outline + neighboring countries + Great Lakes
+   * Provides spatial context so territories are recognizable as North America.
+   * Draw order (bottom → top):
+   *   1. US full outline (conusBaseline) — muted ghost fill, so current USA shape is always visible
+   *   2. Individual state grid lines — very faint, inside the US outline
+   *   3. Neighboring countries (Canada, Mexico, Cuba, Bahamas)
+   *   4. Great Lakes water bodies
    */
   function renderBasemap() {
     const basemapLayer = document.getElementById('basemap-layer');
@@ -216,7 +221,26 @@
 
     const SVG_NS = 'http://www.w3.org/2000/svg';
 
-    // Neighboring countries: Canada, Mexico, Cuba, Bahamas
+    // 1. US full combined outline — always rendered as a ghost reference
+    if (bm.conusBaseline) {
+      const usBase = document.createElementNS(SVG_NS, 'path');
+      usBase.setAttribute('d', bm.conusBaseline);
+      usBase.setAttribute('class', 'basemap-us-outline');
+      usBase.setAttribute('aria-hidden', 'true');
+      basemapLayer.appendChild(usBase);
+    }
+
+    // 2. Individual modern state grid (very faint internal lines for spatial reference)
+    stateShapes.forEach(st => {
+      if (!st.path) return;
+      const path = document.createElementNS(SVG_NS, 'path');
+      path.setAttribute('d', st.path);
+      path.setAttribute('class', 'basemap-state-grid');
+      path.setAttribute('aria-hidden', 'true');
+      basemapLayer.appendChild(path);
+    });
+
+    // 3. Neighboring countries: Canada, Mexico, Cuba, Bahamas
     ['canada', 'mexico', 'cuba', 'bahamas'].forEach(key => {
       const d = bm[key];
       if (!d) return;
@@ -227,7 +251,7 @@
       basemapLayer.appendChild(path);
     });
 
-    // Great Lakes as water bodies
+    // 4. Great Lakes as water bodies
     (bm.greatLakes || []).forEach(lake => {
       if (!lake.path) return;
       const path = document.createElementNS(SVG_NS, 'path');
@@ -319,7 +343,7 @@
           fillColor = '#8B3829'; // Vibrant terracotta for newly added land
           path.setAttribute('class', 'territory-path is-new-acquisition is-active-step');
         } else {
-          fillColor = '#C8BEAE'; // Muted antique paper stone for previous land
+          fillColor = '#7A8F7E'; // Muted sage — clearly distinct from US basemap fill
           path.setAttribute('class', 'territory-path');
         }
       } else {

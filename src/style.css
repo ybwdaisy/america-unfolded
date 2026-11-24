@@ -50,6 +50,9 @@
   --color-water-stroke: #8AAABB;
   --color-basemap-country: #DDD7CA;
   --color-basemap-country-stroke: #9A9080;
+  --color-basemap-us-fill: #E0D9CC;
+  --color-basemap-us-stroke: #A89E8E;
+  --color-basemap-state-grid: #C8BFAF;
 
   --color-focus: #26384C;
   --color-overlay: rgba(31, 28, 24, 0.5);
@@ -337,6 +340,21 @@ html, body {
 }
 
 /* SVG Vector Territory Styles */
+.basemap-us-outline {
+  fill: var(--color-basemap-us-fill);
+  stroke: var(--color-basemap-us-stroke);
+  stroke-width: 1px;
+  pointer-events: none;
+}
+
+.basemap-state-grid {
+  fill: none;
+  stroke: var(--color-basemap-state-grid);
+  stroke-width: 0.4px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 .basemap-country {
   fill: var(--color-basemap-country);
   stroke: var(--color-basemap-country-stroke);
