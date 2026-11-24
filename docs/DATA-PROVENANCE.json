@@ -1,0 +1,28 @@
+{
+  "retrieved": "2026-11-24",
+  "url": "https://publications.newberry.org/ahcb/downloads/gis/US_AtlasHCB_StateTerr_Gen01.zip",
+  "sha256": "db6f124d913bdda718fbf4153d5b1abe569cb9b60cb2a4d73b25afb5a258c457",
+  "features": 220,
+  "snapshots": 125,
+  "generalization": "Source generalized to 0.01 degree. Source coordinates converted deterministically, with no hand-drawn shapes or temporal interpolation. Winding reversed for D3; source properties preserved. See encoding field for quantization details.",
+  "licenseEvidence": [
+    "https://publications.newberry.org/ahcb/downloads/states.html",
+    "https://www.loc.gov/item/2018487899/"
+  ],
+  "encoding": {
+    "format": "TopoJSON",
+    "quantization": 100000,
+    "note": "Deterministic grid encoding, finer than source 0.01-degree generalization. Collapsed sub-grid rings omitted and winding preserved; not new historical survey coordinates.",
+    "collapsedRingOccurrences": 1429,
+    "reorientedRingOccurrences": 84
+  },
+  "displayOverrides": [
+    {
+      "record": "Gadsden Purchase",
+      "originalStart": "1853-12-30",
+      "displayStart": "1854-06-30",
+      "reason": "Final approved footprint differs from original proposal. No 1853 proposal geometry supplied.",
+      "source": "https://avalon.law.yale.edu/19th_century/mx1853.asp"
+    }
+  ]
+}
