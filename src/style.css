@@ -46,6 +46,11 @@
   --color-indigenous-bg: #FAF6ED;
   --color-indigenous-border: #D5C9B3;
 
+  --color-water: #B4CAD5;
+  --color-water-stroke: #8AAABB;
+  --color-basemap-country: #DDD7CA;
+  --color-basemap-country-stroke: #9A9080;
+
   --color-focus: #26384C;
   --color-overlay: rgba(31, 28, 24, 0.5);
 
@@ -332,6 +337,20 @@ html, body {
 }
 
 /* SVG Vector Territory Styles */
+.basemap-country {
+  fill: var(--color-basemap-country);
+  stroke: var(--color-basemap-country-stroke);
+  stroke-width: 0.6px;
+  pointer-events: none;
+}
+
+.basemap-water {
+  fill: var(--color-water);
+  stroke: var(--color-water-stroke);
+  stroke-width: 0.4px;
+  pointer-events: none;
+}
+
 .territory-path {
   stroke: var(--color-paper-border-dark);
   stroke-width: 0.8px;

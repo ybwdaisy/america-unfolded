@@ -176,6 +176,9 @@ def generate_index_html():
 
         <!-- Viewport Group for Pan and Zoom -->
         <g id="map-viewport-group">
+          <!-- Basemap: Neighboring Countries & Water -->
+          <g id="basemap-layer"></g>
+
           <!-- Graticules & Inset Frames -->
           <g id="decorations-layer"></g>
 

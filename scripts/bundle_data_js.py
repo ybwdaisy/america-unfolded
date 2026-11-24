@@ -17,6 +17,9 @@ with open(os.path.join(proc_dir, 'state_shapes.json')) as f:
 with open(os.path.join(proc_dir, 'timeline_nodes.json')) as f:
     timeline_nodes = json.load(f)
 
+with open(os.path.join(proc_dir, 'basemap_shapes.json')) as f:
+    basemap_shapes = json.load(f)
+
 out_file = os.path.join(base_dir, 'src/data.js')
 
 with open(out_file, 'w') as f:
@@ -25,7 +28,8 @@ with open(out_file, 'w') as f:
     f.write("window.AMERICA_DATA = {\n")
     f.write(f"  territoryShapes: {json.dumps(territory_shapes, indent=2)},\n")
     f.write(f"  stateShapes: {json.dumps(state_shapes, indent=2)},\n")
-    f.write(f"  timelineNodes: {json.dumps(timeline_nodes, indent=2)}\n")
+    f.write(f"  timelineNodes: {json.dumps(timeline_nodes, indent=2)},\n")
+    f.write(f"  basemapShapes: {json.dumps(basemap_shapes, indent=2)}\n")
     f.write("};\n")
 
 print(f"Bundled data into {out_file} successfully.")

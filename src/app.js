@@ -101,6 +101,7 @@
    * Initialize SVG and render static features
    */
   function initMap() {
+    renderBasemap();
     renderMapDecorations();
     renderStateBoundaries();
     parseUrlState();
@@ -201,6 +202,40 @@
     hiNote.setAttribute('class', 'inset-note');
     hiNote.textContent = 'Position adjusted for presentation';
     decGroup.appendChild(hiNote);
+  }
+
+  /**
+   * Render geographic basemap: neighboring countries and Great Lakes
+   * Provides spatial context so territories are recognizable as North America
+   */
+  function renderBasemap() {
+    const basemapLayer = document.getElementById('basemap-layer');
+    if (!basemapLayer) return;
+    const bm = window.AMERICA_DATA && window.AMERICA_DATA.basemapShapes;
+    if (!bm) return;
+
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+
+    // Neighboring countries: Canada, Mexico, Cuba, Bahamas
+    ['canada', 'mexico', 'cuba', 'bahamas'].forEach(key => {
+      const d = bm[key];
+      if (!d) return;
+      const path = document.createElementNS(SVG_NS, 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('class', 'basemap-country');
+      path.setAttribute('aria-hidden', 'true');
+      basemapLayer.appendChild(path);
+    });
+
+    // Great Lakes as water bodies
+    (bm.greatLakes || []).forEach(lake => {
+      if (!lake.path) return;
+      const path = document.createElementNS(SVG_NS, 'path');
+      path.setAttribute('d', lake.path);
+      path.setAttribute('class', 'basemap-water');
+      path.setAttribute('aria-hidden', 'true');
+      basemapLayer.appendChild(path);
+    });
   }
 
   /**
