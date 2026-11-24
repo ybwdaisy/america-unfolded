@@ -16,8 +16,10 @@ All three were immediately removed after inspection. Each delete response return
 
 Non-mutating `--generate curl` diagnostics confirmed that both the native and JavaScript CLI runtimes generated the explicit staging request body. No credentials from those diagnostics were printed or saved. The underlying classification behavior remains unresolved; another deployment through this route should not be attempted blindly.
 
-## Remaining step
+## Final delivery scope
 
-The connected Vercel tool returned 403 for this team and requested a user-approved team-access grant. A one-time consent link was supplied to the owner. Once the grant is complete, inspect the project and use the connected tool to create an explicitly preview deployment, then verify target and readiness. If any response again says production, remove that deployment and leave the project undeployed.
+The owner explicitly chose **local preview and PR only** after the environment-classification incident. Online deployment is deferred. No team-access grant or further deployment is required for this delivery, and no further deployment should be attempted without a new request.
 
-The website remains available as a local preview at http://localhost:4173. All code, data, source/permission evidence, browser captures and tests are reviewable in the private repository PR. Main is unchanged from its initial scaffold.
+Final API inspection confirmed `hasDeployments: false`, `latestDeployments: []`, `targets: {}`, `autoAssignCustomDomains: false`, and Git deployment mode `disabled`. A sanitized state snapshot is saved in `evidence/deployment-state.json`.
+
+The website is available as a local preview at http://localhost:4173. All code, data, source/permission evidence, browser captures and tests are reviewable in the private repository PR. Main is unchanged from its initial scaffold.

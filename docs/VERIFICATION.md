@@ -45,13 +45,13 @@ The map follows the source atlas's dates except the explicitly documented Gadsde
 4. Alaska and Hawaiʻi are relocated insets. Alaska is scaled down to 0.35 of the mainland projection scale.
 5. Before/after compares adjacent record snapshots. Red means newly present records, including administrative replacements, not exclusively newly acquired land.
 6. Full hardware testing in iPhone Safari remains outstanding. Desktop Chrome/WebKit emulation cannot establish every device/OS gesture behavior.
-7. No production publication or custom domain is included. Automatic Git deployment is disabled. Preview access may require the owner's Vercel session.
+7. No production publication or custom domain is included. Automatic Git deployment is disabled. No hosted preview is retained.
 8. Vercel's GitHub installation could not see the private repository during setup; explicit CLI preview deployment is used. This does not alter other projects.
 
 ## Deployment and review
 
-The intended repository is private `ybwdaisy/america-unfolded`. Product work is on `feat/historical-atlas`; main remains the initial scaffold. The independent Vercel project is `america-unfolded`. Final PR and preview URLs are supplied in the handoff. No production deployment is retained; no auto-merge, domain purchase or paid subscription was performed.
+The intended repository is private `ybwdaisy/america-unfolded`. Product work is on `feat/historical-atlas`; main remains the initial scaffold. The independent Vercel project is `america-unfolded`. The final PR and local-preview URL are supplied in the handoff. Online deployment was deferred by the owner. No production deployment is retained; no auto-merge, domain purchase or paid subscription was performed.
 
-Deployment incident: the installed Vercel CLI 65.2.0 (native runtime) returned target=production and assigned the default alias despite `--target preview`. All three attempts were deleted via the API; each deletion returned state=DELETED. A subsequent API request with omitted target and another with explicit staging were also classified as production; both were removed. Automatic domain assignment was disabled. Connected-tool preview deployment now awaits the team-access grant; no deployment is retained at this point. This incident did not change main or any other project.
+Deployment incident: the installed Vercel CLI 65.2.0 (native runtime) returned target=production and assigned the default alias despite `--target preview`. All three attempts were deleted via the API; each deletion returned state=DELETED. A subsequent API request with omitted target and another with explicit staging were also classified as production; both were removed. Automatic domain assignment was disabled. The owner then selected local preview and PR delivery only. No deployment is retained; further deployment requires a new request. This incident did not change main or any other project.
 
 Story focus is calculated from the bounds of cited source-region geometry. No unsourced geographic event pins or manually invented focus coordinates are included. A story step skips automatic recentering if the user moves the map during loading.
