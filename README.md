@@ -59,7 +59,7 @@ Each event has a crawlable `/events/<slug>/` page with readable text and sources
 
 This repository is private. Product changes belong on a feature branch and in a PR. The independent Vercel project is **america-unfolded**, with automatic Git deployment disabled in `vercel.json`. The owner selected local preview and PR delivery only; online deployment is deferred. The installed CLI/API path misclassified non-production requests; those deployments were removed. Do not deploy through that path until the environment behavior is resolved; see docs/DEPLOYMENT.md. No production deployment is retained, and no domain was registered.
 
-The Vercel project's GitHub integration could not see the private repository during setup, so the preview uses the authenticated CLI. No other project, environment variable, database, auth or payment resource is shared.
+The Vercel project's GitHub integration could not see the private repository during setup; no Git connection was established, and hosted preview is deferred. No other project, environment variable, database, auth or payment resource is shared.
 
 ## License
 

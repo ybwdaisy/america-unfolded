@@ -45,8 +45,8 @@ The map follows the source atlas's dates except the explicitly documented Gadsde
 4. Alaska and Hawaiʻi are relocated insets. Alaska is scaled down to 0.35 of the mainland projection scale.
 5. Before/after compares adjacent record snapshots. Red means newly present records, including administrative replacements, not exclusively newly acquired land.
 6. Full hardware testing in iPhone Safari remains outstanding. Desktop Chrome/WebKit emulation cannot establish every device/OS gesture behavior.
-7. No production publication or custom domain is included. Automatic Git deployment is disabled. No hosted preview is retained.
-8. Vercel's GitHub installation could not see the private repository during setup; explicit CLI preview deployment is used. This does not alter other projects.
+7. No production deployment is retained and no custom domain is included. Automatic Git deployment is disabled. No hosted preview is retained.
+8. Vercel's GitHub installation could not see the private repository during setup; no Git connection or hosted preview is retained. This does not alter other projects.
 
 ## Deployment and review
 
