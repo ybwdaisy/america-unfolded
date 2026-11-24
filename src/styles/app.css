@@ -1383,3 +1383,6 @@ dd {
     column-gap: var(--space-xs);
   }
 }
+.brand {
+  min-height: 44px;
+}
