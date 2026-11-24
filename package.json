@@ -7,7 +7,8 @@
     "build": "node scripts/build.mjs",
     "dev": "node scripts/dev.mjs",
     "test": "node --test tests/data.test.mjs",
-    "test:browser": "node tests/browser.mjs"
+    "test:browser": "node tests/browser.mjs",
+    "test:transitions": "node tests/transitions.browser.mjs"
   },
   "dependencies": {
     "d3-geo": "3.1.1",

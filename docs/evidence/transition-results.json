@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-24",
+  "results": [
+    {
+      "browser": "Chrome",
+      "test": "slow next snapshot keeps the existing map visible",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
+      "test": "slider preserves pan and zoom and never shows a blank frame",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
+      "test": "rapid scrubbing commits only the latest request",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
+      "test": "reduced motion skips snapshot fades",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
+      "test": "failed next snapshot retains a truthful old view and retries",
+      "result": "pass"
+    },
+    {
+      "browser": "Chrome",
+      "test": "playback prefetches and switches without loader frames",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "slow next snapshot keeps the existing map visible",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "slider preserves pan and zoom and never shows a blank frame",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "rapid scrubbing commits only the latest request",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "reduced motion skips snapshot fades",
+      "result": "pass"
+    },
+    {
+      "browser": "iPhone WebKit",
+      "test": "failed next snapshot retains a truthful old view and retries",
+      "result": "pass"
+    }
+  ]
+}

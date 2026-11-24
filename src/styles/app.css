@@ -314,7 +314,8 @@ nav a {
   vector-effect: non-scaling-stroke;
   pointer-events: none;
 }
-.region-labels text {
+.region-labels text,
+.previous-labels text {
   font-family: var(--font-display);
   font-size: 13px;
   fill: var(--color-ink);
@@ -1053,7 +1054,8 @@ dd {
   .reading-page h2 {
     font-size: 1.875rem;
   }
-  .region-labels text {
+  .region-labels text,
+  .previous-labels text {
     font-size: 15px;
   }
 }
@@ -1385,4 +1387,22 @@ dd {
 }
 .brand {
   min-height: 44px;
+}
+
+.map-previous,
+.map-previous * {
+  pointer-events: none;
+}
+.map-status.is-map-notice {
+  inset: var(--space-md) var(--space-md) auto auto;
+  max-width: min(28rem, calc(100% - 2 * var(--space-md)));
+  padding: var(--space-md);
+  gap: var(--space-sm);
+  border: 1px solid var(--color-accent);
+  background: var(--color-paper);
+  text-align: left;
+  align-items: flex-start;
+}
+.map-status.is-map-notice h2 {
+  font-size: var(--text-lg);
 }

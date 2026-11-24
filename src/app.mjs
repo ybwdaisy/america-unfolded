@@ -33,11 +33,29 @@ let manifest,
   loading = false,
   gestureMoved = false,
   suppressMapClickUntil = 0,
-  viewRevision = 0;
+  viewRevision = 0,
+  hasPresentedMap = false,
+  presentedSelection = null,
+  presentedDate = null,
+  presentedPhase = 'after',
+  loadingNoticeTimer,
+  isScrubbing = false,
+  snapshotAnimations = [],
+  previousFrame = null;
 const cache = new Map(),
   svg = select('#history-map');
 const projection = geoAlbersUsa().scale(1170).translate([500, 305]);
 const path = geoPath(projection);
+const pathCache = new WeakMap();
+const labelCache = new WeakMap();
+function regionPath(feature) {
+  if (!pathCache.has(feature)) pathCache.set(feature, path(feature));
+  return pathCache.get(feature);
+}
+function labelPoint(feature) {
+  if (!labelCache.has(feature)) labelCache.set(feature, projection(geoCentroid(feature)));
+  return labelCache.get(feature);
+}
 svg.html(
   '<defs><pattern id="claim-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="7" height="7" class="claim-base"/><path d="M0 0V7" class="hatch-line"/></pattern></defs><g class="map-content"><g class="reference-land"></g><g class="inset-guides" aria-hidden="true"><rect x="4" y="445" width="244" height="150"/><rect x="250" y="499" width="116" height="96"/><text x="126" y="615">Alaska (inset)</text><text x="308" y="615">Hawaiʻi (inset)</text></g><g class="graticules"></g><g class="historic-regions"></g><g class="modern-lines"></g><g class="region-labels" aria-hidden="true"></g></g>',
 );
@@ -162,25 +180,34 @@ async function fetchJSON(url) {
 }
 async function snapshot(s) {
   if (!s) return null;
-  if (!cache.has(s.file))
-    cache.set(
-      s.file,
-      fetchJSON('/data/' + s.file).catch((e) => {
-        cache.delete(s.file);
-        throw e;
-      }),
-    );
-  return cache.get(s.file);
+  if (cache.has(s.file)) {
+    const request = cache.get(s.file);
+    cache.delete(s.file);
+    cache.set(s.file, request);
+    return request;
+  }
+  const request = fetchJSON('/data/' + s.file).catch((error) => {
+    if (cache.get(s.file) === request) cache.delete(s.file);
+    throw error;
+  });
+  cache.set(s.file, request);
+  // Keep recent views and upcoming playback frames without retaining the entire atlas on a phone.
+  while (cache.size > 8) cache.delete(cache.keys().next().value);
+  return request;
 }
-function showStatus(title, message, retry = false) {
+function showStatus(title, message, retry = false, retryAction = null) {
   const el = $('#map-status');
   el.hidden = false;
+  el.classList.toggle('is-map-notice', hasPresentedMap);
   el.innerHTML = `<h2>${title}</h2><p>${message}</p>${retry ? '<button type="button" id="retry-map" class="button">Retry loading</button>' : ''}`;
-  if (retry) $('#retry-map').onclick = () => load();
+  if (retry) $('#retry-map').onclick = retryAction || (() => load());
 }
 function statusClass(f) {
   const p = f.properties,
-    d = state.compare && state.phase === 'before' ? previousData?.date || state.date : state.date;
+    d =
+      state.compare && state.phase === 'before'
+        ? previousData?.date || state.date
+        : presentedDate || state.date;
   const pending =
     (p.NAME === 'Louisiana Purchase' && d < '1803-12-20') ||
     (p.NAME === 'Florida Unorg. FT' && d < '1821-02-22') ||
@@ -192,20 +219,111 @@ function statusClass(f) {
     return 'claim';
   return p.TERR_TYPE === 'State' || p.TERR_TYPE === 'District of Columbia' ? 'state' : 'territory';
 }
-function renderMap() {
+function finishSnapshotTransition() {
+  for (const animation of snapshotAnimations) animation.cancel();
+  snapshotAnimations = [];
+  previousFrame?.remove();
+  previousFrame = null;
+}
+function prepareSnapshotTransition(data, enabled) {
+  finishSnapshotTransition();
+  if (!enabled || matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
+  const old = new Map(
+    [...svg.select('.historic-regions').node().children].map((node) => [
+      node.__data__.properties.ID_NUM,
+      node,
+    ]),
+  );
+  if (![...old.values()].every((node) => typeof node.animate === 'function')) return null;
+  const nextIds = new Set((data?.features || []).map((f) => f.properties.ID_NUM));
+  const changing = new Set(
+    (data?.features || [])
+      .filter((f) => {
+        const node = old.get(f.properties.ID_NUM);
+        return (
+          !node ||
+          node.getAttribute('class').replace(' selected', '') !==
+            regionClass(f).replace(' selected', '')
+        );
+      })
+      .map((f) => f.properties.ID_NUM),
+  );
+  const exiting = new Set([...old.keys()].filter((id) => !nextIds.has(id)));
+  if (!changing.size && !exiting.size) return null;
+  const createGroup = (className) => {
+    const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    node.setAttribute('class', className);
+    return node;
+  };
+  const frame = createGroup('map-previous');
+  frame.setAttribute('aria-hidden', 'true');
+  const oldRegions = createGroup('previous-regions'),
+    oldLabels = createGroup('previous-labels');
+  frame.append(oldRegions, oldLabels);
+  const fadeOut = [];
+  const copy = (node, parent, fade) => {
+    const clone = node.cloneNode(true);
+    for (const element of [clone, ...clone.querySelectorAll('*')]) {
+      element.removeAttribute('tabindex');
+      element.removeAttribute('role');
+      element.removeAttribute('aria-label');
+      if (element.tagName.toLowerCase() === 'title') element.remove();
+    }
+    parent.append(clone);
+    if (fade) fadeOut.push(clone);
+  };
+  for (const [id, node] of old)
+    if (exiting.has(id) || changing.has(id)) copy(node, oldRegions, exiting.has(id));
+  for (const node of svg.select('.region-labels').node().children) {
+    if (exiting.has(node.__data__.properties.ID_NUM)) copy(node, oldLabels, true);
+  }
+  content.node().insertBefore(frame, svg.select('.historic-regions').node());
+  previousFrame = frame;
+  return () => {
+    // Unchanged regions stay opaque. Exact dated paths change only in opacity, never in vertices.
+    const timing = { duration: 160, easing: 'ease-out' };
+    const start = (node, from, to) => {
+      const animation = node.animate([{ opacity: from }, { opacity: to }], timing);
+      snapshotAnimations.push(animation);
+      return animation.finished.catch(() => {});
+    };
+    const finished = fadeOut.map((node) => start(node, 1, 0));
+    for (const node of svg.select('.historic-regions').node().children) {
+      if (changing.has(node.__data__.properties.ID_NUM)) finished.push(start(node, 0, 1));
+    }
+    for (const node of svg.select('.region-labels').node().children) {
+      if (!old.has(node.__data__.properties.ID_NUM)) finished.push(start(node, 0, 1));
+    }
+    Promise.all(finished).then(() => {
+      frame.remove();
+      if (previousFrame === frame) {
+        previousFrame = null;
+        snapshotAnimations = [];
+      }
+    });
+  };
+}
+function regionClass(f) {
+  const previousIds = new Set((previousData?.features || []).map((item) => item.properties.ID_NUM));
+  return `region ${statusClass(f)}${state.compare && state.phase === 'after' && !previousIds.has(f.properties.ID_NUM) ? ' changed' : ''}${state.region === String(f.properties.ID_NUM) ? ' selected' : ''}`;
+}
+function prefetchNextEvent() {
+  if (!playing || !manifest) return;
+  const next = events.find((e) => e.date > state.date);
+  if (!next) return;
+  const i = manifest.snapshots.findLastIndex((s) => s.date <= next.date);
+  void Promise.allSettled([snapshot(manifest.snapshots[i]), snapshot(manifest.snapshots[i - 1])]);
+}
+function renderMap({ animate = false } = {}) {
   const data = state.compare && state.phase === 'before' ? previousData : currentData;
-  const previousIds = new Set((previousData?.features || []).map((f) => f.properties.ID_NUM));
+  const reveal = prepareSnapshotTransition(data, animate);
   svg
     .select('.historic-regions')
     .selectAll('path')
     .data(data?.features || [], (f) => f.properties.ID_NUM)
     .join('path')
-    .attr('d', path)
-    .attr(
-      'class',
-      (f) =>
-        `region ${statusClass(f)}${state.compare && state.phase === 'after' && !previousIds.has(f.properties.ID_NUM) ? ' changed' : ''}${state.region === String(f.properties.ID_NUM) ? ' selected' : ''}`,
-    )
+    .attr('d', regionPath)
+    .attr('class', regionClass)
     .attr('role', 'button')
     .attr('tabindex', 0)
     .attr(
@@ -233,17 +351,17 @@ function renderMap() {
     .selectAll('path')
     .data(state.modern ? modernData?.features || [] : [])
     .join('path')
-    .attr('d', path);
+    .attr('d', regionPath);
   const labels = (data?.features || []).filter(
-    (f) => f.properties.AREA_SQMI > 20000 && projection(geoCentroid(f)),
+    (f) => f.properties.AREA_SQMI > 20000 && labelPoint(f),
   );
   svg
     .select('.region-labels')
     .selectAll('text')
-    .data(labels)
+    .data(labels, (f) => f.properties.ID_NUM)
     .join('text')
-    .attr('x', (f) => projection(geoCentroid(f))[0])
-    .attr('y', (f) => projection(geoCentroid(f))[1])
+    .attr('x', (f) => labelPoint(f)[0])
+    .attr('y', (f) => labelPoint(f)[1])
     .text((f) =>
       f.properties.TERR_TYPE === 'State'
         ? f.properties.ABBR_NAME
@@ -273,13 +391,16 @@ function renderMap() {
         save();
       }),
   );
+  presentedPhase = state.phase;
+  reveal?.();
 }
 function renderCaption() {
   const year = state.date.slice(0, 4),
     e = eventById(state.event) || eventAt(state.date);
-  $('#current-year').textContent = year;
+  const controlYear = isScrubbing && pendingYear ? pendingYear : year;
+  $('#current-year').textContent = controlYear;
   $('#current-event').textContent = e.short;
-  $('#year-range').value = year;
+  $('#year-range').value = controlYear;
   $('#year-input').value = year;
   $('#mode-date').textContent = fmt(state.date);
   $('#modern').checked = state.modern;
@@ -330,9 +451,19 @@ function renderDetails() {
 async function load({ focus = false } = {}) {
   const focusRevision = viewRevision;
   const token = ++sequence;
+  const requested = { date: state.date, event: state.event, phase: state.phase };
+  clearTimeout(loadingNoticeTimer);
   loading = true;
   $('#map-stage').setAttribute('aria-busy', 'true');
-  showStatus('Unfolding the map…', 'Loading the dated boundary snapshot.');
+  if (!hasPresentedMap) showStatus('Unfolding the map…', 'Loading the dated boundary snapshot.');
+  else {
+    $('#map-status').hidden = true;
+    loadingNoticeTimer = setTimeout(() => {
+      if (token === sequence)
+        $('#snapshot-label').textContent =
+          `Loading ${fmt(requested.date)}… Showing ${fmt(presentedDate)} until ready.`;
+    }, 200);
+  }
   try {
     if (!manifest) {
       const res = await fetch('/data/manifest.json');
@@ -341,31 +472,38 @@ async function load({ focus = false } = {}) {
       if (!Array.isArray(manifest.snapshots) || !manifest.snapshots.length)
         throw Error('missing-data');
     }
-    if (!modernData) modernData = await fetchJSON('/data/modern.json');
-    orientCompass();
-    const index = manifest.snapshots.findLastIndex((s) => s.date <= state.date);
+    if (!modernData) {
+      modernData = await fetchJSON('/data/modern.json');
+      orientCompass();
+    }
+    const index = manifest.snapshots.findLastIndex((s) => s.date <= requested.date);
     const s = manifest.snapshots[index];
     const [current, prev] = await Promise.all([
       snapshot(s),
       snapshot(manifest.snapshots[index - 1]),
     ]);
     if (token !== sequence) return;
+    clearTimeout(loadingNoticeTimer);
+    const changedSnapshot = currentData?.date !== current?.date;
     currentSnapshot = s;
+    presentedDate = requested.date;
     currentData = current;
     previousData = prev;
-    svg
-      .select('.reference-land')
-      .selectAll('path')
-      .data(modernData.features)
-      .join('path')
-      .attr('d', path);
-    svg
-      .select('.graticules')
-      .selectAll('path')
-      .data([geoGraticule10()])
-      .join('path')
-      .attr('d', path);
-    renderMap();
+    if (!hasPresentedMap) {
+      svg
+        .select('.reference-land')
+        .selectAll('path')
+        .data(modernData.features)
+        .join('path')
+        .attr('d', path);
+      svg
+        .select('.graticules')
+        .selectAll('path')
+        .data([geoGraticule10()])
+        .join('path')
+        .attr('d', path);
+    }
+    renderMap({ animate: hasPresentedMap && changedSnapshot });
     renderCaption();
     renderDetails();
     if (focus && focusRevision === viewRevision) {
@@ -388,23 +526,55 @@ async function load({ focus = false } = {}) {
     $('#map-status').hidden = true;
     $('#map-stage').setAttribute('aria-busy', 'false');
     loading = false;
+    hasPresentedMap = true;
+    presentedSelection = { date: state.date, event: state.event };
+    prefetchNextEvent();
   } catch (error) {
     if (token !== sequence) return;
+    clearTimeout(loadingNoticeTimer);
     loading = false;
     pause();
-    svg.select('.historic-regions').selectAll('*').remove();
-    svg.select('.region-labels').selectAll('*').remove();
+    if (hasPresentedMap) {
+      state.date = presentedSelection.date;
+      state.event = presentedSelection.event;
+      state.phase = presentedPhase;
+      state.region = null;
+      renderMap();
+      renderCaption();
+      renderDetails();
+      save('replace');
+    }
     showStatus(
       error.message === 'missing-data' ? 'Boundary data is missing' : 'The map could not be loaded',
-      'The dated map file is unavailable. Retry, or use the readable chapters below.',
+      hasPresentedMap
+        ? `Could not load ${fmt(requested.date)}. Keeping the map for ${fmt(presentedDate)}.`
+        : 'The dated map file is unavailable. Retry, or use the readable chapters below.',
       true,
+      () => {
+        Object.assign(state, requested);
+        save('replace');
+        load({ focus });
+      },
     );
     $('#map-stage').setAttribute('aria-busy', 'false');
-    announce('Map loading failed. Retry loading is available.');
+    announce(
+      'Map loading failed. The previous map is retained when available. Retry loading is available.',
+    );
   }
 }
+
 function openRegion(f, target) {
   pause();
+  if (loading && hasPresentedMap) {
+    ++sequence;
+    clearTimeout(loadingNoticeTimer);
+    state.date = presentedSelection.date;
+    state.event = presentedSelection.event;
+    loading = false;
+    $('#map-stage').setAttribute('aria-busy', 'false');
+    $('#map-status').hidden = true;
+    renderCaption();
+  }
   regionReturn = target;
   state.region = String(f.properties.ID_NUM);
   state.details = true;
@@ -418,6 +588,9 @@ function openRegion(f, target) {
     $('#chapter').scrollIntoView({ block: 'start', behavior: 'instant' });
 }
 function setEvent(e, { push = true, focus = false } = {}) {
+  clearTimeout(yearTimer);
+  yearTimer = null;
+  isScrubbing = false;
   pause();
   state.date = e.date;
   state.event = e.id;
@@ -438,7 +611,7 @@ function chooseYear(value, push = true) {
   state.region = null;
   state.phase = 'after';
   if (push) save();
-  load({ focus });
+  load();
 }
 function pause() {
   if (playing) {
@@ -487,18 +660,25 @@ $('#play').onclick = () => {
   $('#play').innerHTML = '<span aria-hidden="true">Ⅱ</span>';
   $('#play').setAttribute('aria-label', 'Pause timeline');
   playing = setInterval(tick, matchMedia('(prefers-reduced-motion: reduce)').matches ? 6500 : 4500);
+  prefetchNextEvent();
   announce('Timeline playing. Use Pause to stop.');
 };
-let yearTimer;
+let yearTimer, pendingYear;
 $('#year-range').oninput = (e) => {
   pause();
-  clearTimeout(yearTimer);
-  const value = e.target.value;
-  $('#current-year').textContent = value;
-  yearTimer = setTimeout(() => chooseYear(value, false), 90);
+  isScrubbing = true;
+  pendingYear = e.target.value;
+  $('#current-year').textContent = pendingYear;
+  if (!yearTimer)
+    yearTimer = setTimeout(() => {
+      yearTimer = null;
+      chooseYear(pendingYear, false);
+    }, 80);
 };
 $('#year-range').onchange = (e) => {
+  isScrubbing = false;
   clearTimeout(yearTimer);
+  yearTimer = null;
   chooseYear(e.target.value);
 };
 $('#year-range').addEventListener('pointerdown', () => pause());
@@ -641,6 +821,9 @@ $('#end-story').onclick = () => {
 $('#chapter').addEventListener('focusin', pause);
 $('#chapter').addEventListener('pointerenter', pause);
 window.addEventListener('popstate', () => {
+  isScrubbing = false;
+  clearTimeout(yearTimer);
+  yearTimer = null;
   pause();
   readURL();
   load();

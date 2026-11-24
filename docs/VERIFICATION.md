@@ -59,3 +59,9 @@ Story focus is calculated from the bounds of cited source-region geometry. No un
 ## Classical style follow-up
 
 The owner-specified palette, serif fallback, compass, engraved frame and legend seals are documented in STYLE-UPDATE.md. The follow-up retained all historical data, routes and controls; 7 data/build checks and all 26 browser checks passed again. The rendered style sweep preserved 23 links and 4 fields with no open floor/reflex findings. Browser palette/font observations and before/after screenshots are in evidence/style/. Online deployment remains deferred.
+
+## Timeline continuity follow-up
+
+The repeated opaque loading overlay was removed from subsequent date changes. The previous map remains visible until the requested snapshot is ready; changed regions fade for 160ms while unchanged source regions stay opaque. No boundary geometry is interpolated. Scrubbing preserves the map transform and the latest request wins; reduced motion skips fades. Playback warms the next event pair and recent-map caching is bounded to eight snapshots.
+
+The 7 data/build checks and existing 26 browser checks passed. Eleven additional Chrome/iPhone-WebKit transition checks passed, including animation-frame sampling under delayed responses, playback prefetch, rapid scrubbing, camera preservation, reduced motion and retaining/retrying the last valid map after a failed switch. Details are in evidence/transition-results.json. These remain browser-engine/emulation tests, not physical iPhone certification.

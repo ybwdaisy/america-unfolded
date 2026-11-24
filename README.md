@@ -21,6 +21,7 @@ Open http://localhost:4173. The server builds once on startup; after source edit
 npm test
 npx playwright install webkit
 npm run test:browser
+npm run test:transitions
 ```
 
 Browser tests use an installed Google Chrome and Playwright WebKit. Mobile tests use iPhone emulation and synthetic touch gestures; they do not certify a physical iPhone or the Safari app. See [docs/VERIFICATION.md](docs/VERIFICATION.md) for the actual recorded results and limitations.
@@ -66,3 +67,5 @@ The Vercel project's GitHub integration could not see the private repository dur
 Original application code and prose: MIT. Newberry data: current reuse statement / Library of Congress CC0 designation. Fonts: SIL OFL 1.1. D3: ISC; TopoJSON: ISC. See the detailed inventory for the older packaged Newberry notice and current evidence. Reference-project GPL code and CHGIS layers are not included.
 
 Gadsden display correction: the atlas’s record starts December 30, 1853, but the final footprint shown here was reduced during ratification. The map withholds that geometry until June 30, 1854, retaining the original START_DATE and adding DISPLAY_START. Source: https://avalon.law.yale.edu/19th_century/mx1853.asp . No earlier proposal polygon is invented.
+
+Timeline rendering retains the visible map while the next dated snapshot loads. Only changed regions use a 160ms opacity transition; boundary vertices are never interpolated. Playback prefetches the next event pair, and an eight-snapshot recent-view cache limits phone memory. The reduced-motion preference skips fades. See docs/TIMELINE-TRANSITIONS.md.
