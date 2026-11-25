@@ -8,6 +8,14 @@
       "result": "pass"
     },
     {
+      "name": "year input and playback speed toggle work on standard 1440px desktop",
+      "result": "pass"
+    },
+    {
+      "name": "1805 Oregon Country does not leak into the Alaska inset box",
+      "result": "pass"
+    },
+    {
       "name": "initial dated map and chapter agree",
       "result": "pass"
     },

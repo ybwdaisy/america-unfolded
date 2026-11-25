@@ -36,6 +36,7 @@ await check(
     assert.match(await page.locator('#chapter-content h2').innerText(), /independence/i);
     assert.match(await page.locator('#chapter-position').innerText(), /Chapter 1 of/);
     assert.equal(await page.locator('.historic-regions path').count(), 0);
+    assert.equal(await page.locator('#empty-history-callout').isVisible(), true);
     assert.match(
       await page.locator('#snapshot-label').innerText(),
       /No historical boundary snapshot/,
@@ -49,8 +50,34 @@ await check(
     );
     await page.locator('#play').click();
     assert.equal(await page.locator('.historic-regions path').count(), 0);
+    await page.locator('#jump-first-snapshot').click();
+    await ready(page);
+    assert.equal(await page.locator('#current-year').innerText(), '1783');
+    assert.equal(await page.locator('#empty-history-callout').isVisible(), false);
   },
 );
+await check('year input and playback speed toggle work on standard 1440px desktop', async () => {
+  assert.equal(await page.locator('#year-input').isVisible(), true);
+  assert.equal(await page.locator('#play-speed').innerText(), '1×');
+  await page.locator('#play-speed').click();
+  assert.equal(await page.locator('#play-speed').innerText(), '2×');
+  await page.locator('#play-speed').click();
+  assert.equal(await page.locator('#play-speed').innerText(), '4×');
+  await page.locator('#play-speed').click();
+  assert.equal(await page.locator('#play-speed').innerText(), '1×');
+});
+await check('1805 Oregon Country does not leak into the Alaska inset box', async () => {
+  await page.goto(base + '/?date=1805-12-31&event=louisiana-purchase');
+  await ready(page);
+  const oregonBox = await page.locator('.region[aria-label^="Oregon Country,"]').boundingBox();
+  const alaskaInset = await page.locator('.inset-guides rect').first().boundingBox();
+  assert.ok(oregonBox && alaskaInset);
+  assert.ok(
+    oregonBox.y + oregonBox.height < alaskaInset.y,
+    `Oregon Country bottom ${oregonBox.y + oregonBox.height} overlaps Alaska inset top ${alaskaInset.y}`,
+  );
+  assert.equal(await page.locator('.region-labels text', { hasText: 'Disputed area' }).count(), 1);
+});
 await page.goto(louisiana);
 await ready(page);
 await check('initial dated map and chapter agree', async () => {

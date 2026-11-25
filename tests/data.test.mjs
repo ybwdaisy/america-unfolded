@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { feature } from 'topojson-client';
 import { events, sources } from '../src/data/events.mjs';
-import { geoAlbersUsa, geoPath, geoArea } from 'd3-geo';
+import { geoAlbersUsa, geoAlbers, geoPath, geoArea } from 'd3-geo';
 const manifest = JSON.parse(await fs.readFile('public/data/manifest.json', 'utf8'));
 async function at(date) {
   const s = manifest.snapshots.filter((x) => x.date <= date).at(-1);
@@ -88,4 +88,20 @@ test('license evidence is plain text and cannot execute upstream analytics', asy
   const html = await fs.readFile('dist/sources/index.html', 'utf8');
   assert.ok(html.includes('/licenses/newberry-download-page.txt'));
   assert.ok(!html.includes('googletagmanager.com'));
+  assert.ok(!html.includes('No third-party map tiles, images, tracking,'));
+});
+
+test('mainland projection keeps Oregon Country out of the Alaska inset box', async () => {
+  const mainland = geoAlbers()
+    .parallels([29.5, 45.5])
+    .rotate([96, 0])
+    .center([-0.6, 38.7])
+    .scale(1170)
+    .translate([500, 305]);
+  const mainlandPath = geoPath(mainland);
+  const data = await at('1805-07-04');
+  const oregon = data.features.find((f) => f.properties.NAME === 'Oregon Country');
+  assert.ok(oregon, 'Oregon Country present in 1805 snapshot');
+  const bounds = mainlandPath.bounds(oregon);
+  assert.ok(bounds[1][1] < 300, `Oregon Country maxY leaked downward: ${bounds[1][1]}`);
 });
