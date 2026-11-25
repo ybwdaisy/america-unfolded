@@ -92,6 +92,10 @@
       "result": "pass"
     },
     {
+      "name": "turning off comparison while a year snapshot is loading does not cancel the year load",
+      "result": "pass"
+    },
+    {
       "name": "event pages and sources remain readable without JavaScript",
       "result": "pass"
     },

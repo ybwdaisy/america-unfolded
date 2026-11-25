@@ -43,9 +43,11 @@ let manifest,
   previousData,
   currentSnapshot,
   sequence = 0,
+  compareSequence = 0,
   playing = null,
   regionReturn = null,
   loading = false,
+  compareLoading = false,
   gestureMoved = false,
   suppressMapClickUntil = 0,
   viewRevision = 0,
@@ -524,6 +526,8 @@ function renderDetails() {
 async function load({ focus = false, userAction = null } = {}) {
   const focusRevision = viewRevision;
   const token = ++sequence;
+  ++compareSequence;
+  compareLoading = false;
   const requested = { date: state.date, event: state.event, phase: state.phase };
   clearTimeout(loadingNoticeTimer);
   loading = true;
@@ -836,19 +840,33 @@ async function setCompare(checked, { retry = false } = {}) {
     if (checked) track('map_compare_open');
   }
   pause();
+  const compareToken = ++compareSequence;
   if (!checked) {
-    ++sequence;
-    clearTimeout(loadingNoticeTimer);
-    loading = false;
-    $('#map-stage').setAttribute('aria-busy', 'false');
-    $('#map-status').hidden = true;
+    if (compareLoading) {
+      clearTimeout(loadingNoticeTimer);
+      compareLoading = false;
+      $('#map-status').hidden = true;
+      if (!loading) $('#map-stage').setAttribute('aria-busy', 'false');
+    }
     state.compare = false;
     state.phase = 'after';
     state.region = null;
-    renderMap();
-    renderCaption();
-    renderDetails();
+    if (!loading) {
+      renderMap();
+      renderCaption();
+      renderDetails();
+    } else {
+      renderMap();
+    }
     save();
+    return;
+  }
+  if (loading) {
+    state.compare = true;
+    state.phase = 'after';
+    state.region = null;
+    save();
+    void load();
     return;
   }
   const idx =
@@ -866,38 +884,48 @@ async function setCompare(checked, { retry = false } = {}) {
     save();
     return;
   }
-  const token = ++sequence;
+  const loadToken = sequence;
   const targetSnapshot = currentSnapshot;
   const prevEntry = manifest.snapshots[idx - 1];
   clearTimeout(loadingNoticeTimer);
-  loading = true;
+  compareLoading = true;
   $('#map-stage').setAttribute('aria-busy', 'true');
   $('#map-status').hidden = true;
   loadingNoticeTimer = setTimeout(() => {
-    if (token === sequence)
+    if (compareToken === compareSequence && loadToken === sequence)
       $('#snapshot-label').textContent =
         `Loading ${fmt(prevEntry.date)} for comparison… Keeping ${fmt(presentedDate)} until ready.`;
   }, 200);
   try {
     const prev = await snapshot(prevEntry);
-    if (token !== sequence || currentSnapshot !== targetSnapshot) return;
+    if (
+      compareToken !== compareSequence ||
+      loadToken !== sequence ||
+      currentSnapshot !== targetSnapshot
+    )
+      return;
     clearTimeout(loadingNoticeTimer);
+    compareLoading = false;
     previousData = prev;
     previousSnapshotIndex = idx - 1;
     state.compare = true;
     state.phase = 'after';
     state.region = null;
-    loading = false;
     $('#map-status').hidden = true;
-    $('#map-stage').setAttribute('aria-busy', 'false');
+    if (!loading) $('#map-stage').setAttribute('aria-busy', 'false');
     renderMap();
     renderCaption();
     renderDetails();
     save();
   } catch (error) {
-    if (token !== sequence || currentSnapshot !== targetSnapshot) return;
+    if (
+      compareToken !== compareSequence ||
+      loadToken !== sequence ||
+      currentSnapshot !== targetSnapshot
+    )
+      return;
     clearTimeout(loadingNoticeTimer);
-    loading = false;
+    compareLoading = false;
     state.compare = false;
     state.phase = 'after';
     $('#compare').checked = false;
@@ -916,7 +944,7 @@ async function setCompare(checked, { retry = false } = {}) {
         void setCompare(true, { retry: true });
       },
     );
-    $('#map-stage').setAttribute('aria-busy', 'false');
+    if (!loading) $('#map-stage').setAttribute('aria-busy', 'false');
     announce('Before map loading failed. The current map is retained. Retry loading is available.');
   }
 }

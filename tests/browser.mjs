@@ -340,6 +340,37 @@ await check('failed comparison fetch keeps current map and recovers on retry', a
   assert.match(await p.locator('#snapshot-label').innerText(), /Jan 3, 1959/);
   await p.close();
 });
+await check(
+  'turning off comparison while a year snapshot is loading does not cancel the year load',
+  async () => {
+    const p = await context.newPage();
+    await p.goto(louisiana);
+    await ready(p);
+    await p.locator('#compare').check();
+    let release1818;
+    const gate = new Promise((resolve) => {
+      release1818 = resolve;
+    });
+    await p.route('**/data/snapshot-1818-10-20.json', async (r) => {
+      await gate;
+      await r.continue();
+    });
+    await p.locator('#next').click();
+    await p.waitForFunction(
+      () => document.querySelector('#map-stage')?.getAttribute('aria-busy') === 'true',
+    );
+    await p.locator('#compare').uncheck();
+    assert.equal(await p.locator('#compare').isChecked(), false);
+    release1818();
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1818');
+    assert.match(await p.locator('#snapshot-label').innerText(), /Oct 20, 1818/);
+    assert.equal(await p.locator('.region[aria-label^="Missouri Territory,"]').count(), 1);
+    assert.equal(await p.locator('#compare').isChecked(), false);
+    await p.unroute('**/data/snapshot-1818-10-20.json');
+    await p.close();
+  },
+);
 await check('event pages and sources remain readable without JavaScript', async () => {
   const c = await b.newContext({ javaScriptEnabled: false });
   const p = await c.newPage();
