@@ -84,6 +84,14 @@
       "result": "pass"
     },
     {
+      "name": "late comparison response after switching year does not overwrite previousData",
+      "result": "pass"
+    },
+    {
+      "name": "failed comparison fetch keeps current map and recovers on retry",
+      "result": "pass"
+    },
+    {
       "name": "event pages and sources remain readable without JavaScript",
       "result": "pass"
     },

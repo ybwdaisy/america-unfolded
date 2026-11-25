@@ -439,7 +439,7 @@ function renderMap({ animate = false } = {}) {
     );
   $('#map-stage').classList.toggle('no-history', !data);
   const emptyCallout = $('#empty-history-callout');
-  if (emptyCallout) emptyCallout.hidden = Boolean(data);
+  if (emptyCallout) emptyCallout.hidden = Boolean(currentData);
   $('#comparison-key').hidden = !state.compare;
   $('#modern-key').hidden = !state.modern;
   const cap = $('#comparison-caption');
@@ -830,28 +830,98 @@ $('#modern').onchange = (e) => {
   renderMap();
   save();
 };
-$('#compare').onchange = async (e) => {
-  explore('compare');
-  if (e.target.checked) track('map_compare_open');
-  pause();
-  state.compare = e.target.checked;
-  state.phase = 'after';
-  state.region = null;
-  if (state.compare && manifest && currentSnapshot) {
-    const idx = manifest.snapshots.findIndex((s) => s.file === currentSnapshot.file);
-    if (idx > 0 && previousSnapshotIndex !== idx - 1) {
-      try {
-        previousData = await snapshot(manifest.snapshots[idx - 1]);
-        previousSnapshotIndex = idx - 1;
-      } catch {
-        previousData = null;
-      }
-    }
+async function setCompare(checked, { retry = false } = {}) {
+  if (!retry) {
+    explore('compare');
+    if (checked) track('map_compare_open');
   }
-  renderMap();
-  renderCaption();
-  renderDetails();
-  save();
+  pause();
+  if (!checked) {
+    ++sequence;
+    clearTimeout(loadingNoticeTimer);
+    loading = false;
+    $('#map-stage').setAttribute('aria-busy', 'false');
+    $('#map-status').hidden = true;
+    state.compare = false;
+    state.phase = 'after';
+    state.region = null;
+    renderMap();
+    renderCaption();
+    renderDetails();
+    save();
+    return;
+  }
+  const idx =
+    manifest && currentSnapshot
+      ? manifest.snapshots.findIndex((s) => s.file === currentSnapshot.file)
+      : -1;
+  const needsPrevFetch = idx > 0 && previousSnapshotIndex !== idx - 1;
+  if (!needsPrevFetch) {
+    state.compare = true;
+    state.phase = 'after';
+    state.region = null;
+    renderMap();
+    renderCaption();
+    renderDetails();
+    save();
+    return;
+  }
+  const token = ++sequence;
+  const targetSnapshot = currentSnapshot;
+  const prevEntry = manifest.snapshots[idx - 1];
+  clearTimeout(loadingNoticeTimer);
+  loading = true;
+  $('#map-stage').setAttribute('aria-busy', 'true');
+  $('#map-status').hidden = true;
+  loadingNoticeTimer = setTimeout(() => {
+    if (token === sequence)
+      $('#snapshot-label').textContent =
+        `Loading ${fmt(prevEntry.date)} for comparison… Keeping ${fmt(presentedDate)} until ready.`;
+  }, 200);
+  try {
+    const prev = await snapshot(prevEntry);
+    if (token !== sequence || currentSnapshot !== targetSnapshot) return;
+    clearTimeout(loadingNoticeTimer);
+    previousData = prev;
+    previousSnapshotIndex = idx - 1;
+    state.compare = true;
+    state.phase = 'after';
+    state.region = null;
+    loading = false;
+    $('#map-status').hidden = true;
+    $('#map-stage').setAttribute('aria-busy', 'false');
+    renderMap();
+    renderCaption();
+    renderDetails();
+    save();
+  } catch (error) {
+    if (token !== sequence || currentSnapshot !== targetSnapshot) return;
+    clearTimeout(loadingNoticeTimer);
+    loading = false;
+    state.compare = false;
+    state.phase = 'after';
+    $('#compare').checked = false;
+    renderMap();
+    renderCaption();
+    renderDetails();
+    save('replace');
+    showStatus(
+      error.message === 'missing-data'
+        ? 'Comparison boundary data is missing'
+        : 'The before map could not be loaded',
+      `Could not load ${fmt(prevEntry.date)} for comparison. Keeping the map for ${fmt(presentedDate)}.`,
+      true,
+      () => {
+        $('#compare').checked = true;
+        void setCompare(true, { retry: true });
+      },
+    );
+    $('#map-stage').setAttribute('aria-busy', 'false');
+    announce('Before map loading failed. The current map is retained. Retry loading is available.');
+  }
+}
+$('#compare').onchange = (e) => {
+  void setCompare(e.target.checked);
 };
 $('#history-map').addEventListener(
   'wheel',

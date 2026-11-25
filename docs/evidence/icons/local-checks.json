@@ -1,0 +1,57 @@
+{
+  "base": "http://127.0.0.1:4191",
+  "routeCount": 20,
+  "results": [
+    {
+      "engine": "Chrome desktop",
+      "icons": [
+        {
+          "path": "/apple-touch-icon.png",
+          "width": 180,
+          "height": 180,
+          "type": "image/png"
+        },
+        {
+          "path": "/favicon.svg",
+          "width": 150,
+          "height": 150,
+          "type": "image/svg+xml"
+        },
+        {
+          "path": "/icons/icon-192.png",
+          "width": 192,
+          "height": 192,
+          "type": "image/png"
+        }
+      ],
+      "errors": [],
+      "googleRequests": 0
+    },
+    {
+      "engine": "WebKit iPhone 13 emulation",
+      "icons": [
+        {
+          "path": "/apple-touch-icon.png",
+          "width": 180,
+          "height": 180,
+          "type": "image/png"
+        },
+        {
+          "path": "/favicon.svg",
+          "width": 150,
+          "height": 150,
+          "type": "image/svg+xml"
+        },
+        {
+          "path": "/icons/icon-192.png",
+          "width": 192,
+          "height": 192,
+          "type": "image/png"
+        }
+      ],
+      "errors": [],
+      "googleRequests": 0
+    }
+  ],
+  "physicalIPhoneVerified": false
+}

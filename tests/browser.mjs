@@ -279,6 +279,67 @@ await check('failed network and retry recover', async () => {
   await ready(p);
   await p.close();
 });
+await check(
+  'late comparison response after switching year does not overwrite previousData',
+  async () => {
+    const p = await context.newPage();
+    await p.goto(base + '/?date=1958-12-31&event=hawaii-annexation');
+    await ready(p);
+    await p.clock.install();
+    await p.locator('#play').click();
+    await p.clock.runFor(950);
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1959');
+    let releaseLate;
+    const gate = new Promise((resolve) => {
+      releaseLate = resolve;
+    });
+    await p.route('**/data/snapshot-1959-01-03.json', async (r) => {
+      await gate;
+      await r.continue();
+    });
+    await p.locator('#compare').check();
+    await p.locator('[data-event=alaska-purchase]').click();
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1867');
+    releaseLate();
+    await p.waitForTimeout(200);
+    await p.unroute('**/data/snapshot-1959-01-03.json');
+    await p.locator('#compare').check();
+    await p.locator('[data-phase=before]').click();
+    assert.match(await p.locator('#snapshot-label').innerText(), /Mar 1, 1867/);
+    assert.equal(await p.locator('.region[aria-label^="Alaska, State"]').count(), 0);
+    await p.close();
+  },
+);
+await check('failed comparison fetch keeps current map and recovers on retry', async () => {
+  const p = await context.newPage();
+  await p.goto(base + '/?date=1958-12-31&event=hawaii-annexation');
+  await ready(p);
+  await p.clock.install();
+  await p.locator('#play').click();
+  await p.clock.runFor(950);
+  await ready(p);
+  assert.equal(await p.locator('#current-year').innerText(), '1959');
+  await p.route('**/data/snapshot-1959-01-03.json', (r) => r.abort());
+  await p.locator('#compare').check();
+  await p.locator('#retry-map').waitFor();
+  assert.equal(await p.locator('#compare').isChecked(), false);
+  assert.ok((await p.locator('.historic-regions path').count()) > 0);
+  assert.equal(await p.locator('#empty-history-callout').isVisible(), false);
+  assert.match(await p.locator('#map-status').innerText(), /Keeping the map/);
+  assert.equal(
+    await p.locator('#map-status').evaluate((e) => e.classList.contains('is-map-notice')),
+    true,
+  );
+  await p.unroute('**/data/snapshot-1959-01-03.json');
+  await p.locator('#retry-map').click();
+  await ready(p);
+  assert.equal(await p.locator('#compare').isChecked(), true);
+  await p.locator('[data-phase=before]').click();
+  assert.match(await p.locator('#snapshot-label').innerText(), /Jan 3, 1959/);
+  await p.close();
+});
 await check('event pages and sources remain readable without JavaScript', async () => {
   const c = await b.newContext({ javaScriptEnabled: false });
   const p = await c.newPage();

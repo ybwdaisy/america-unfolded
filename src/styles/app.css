@@ -1713,6 +1713,20 @@ dd {
   align-items: center;
 }
 
+/* Shared folded-map identity, also used for browser and home-screen icons. */
+.brand .brand-mark {
+  display: block;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+@media (max-width: 760px) {
+  .brand .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+}
+
 /* Audit improvements: 1776 empty-map callout, zoom hint, speed toggle, mobile nav clarity */
 .empty-history-callout {
   position: absolute;
@@ -1771,6 +1785,10 @@ dd {
     width: 30px;
     height: 30px;
     padding: var(--space-2xs);
+  }
+  .atlas-view .brand .brand-mark {
+    width: 30px;
+    height: 30px;
   }
   .atlas-view .masthead nav {
     gap: var(--space-xs);
