@@ -379,10 +379,12 @@ await check(
     await p.waitForFunction(
       () => document.querySelector('#map-stage')?.getAttribute('aria-busy') === 'true',
     );
+    assert.equal(await p.locator('#export-png').isDisabled(), true);
     await p.locator('#compare').uncheck();
     assert.equal(await p.locator('#compare').isChecked(), false);
     release1818();
     await ready(p);
+    assert.equal(await p.locator('#export-png').isDisabled(), false);
     assert.equal(await p.locator('#current-year').innerText(), '1818');
     assert.match(await p.locator('#snapshot-label').innerText(), /Oct 20, 1818/);
     assert.equal(await p.locator('.region[aria-label^="Missouri Territory,"]').count(), 1);

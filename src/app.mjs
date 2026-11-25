@@ -549,6 +549,7 @@ async function load({ focus = false, userAction = null } = {}) {
   const requested = { date: state.date, event: state.event, phase: state.phase };
   clearTimeout(loadingNoticeTimer);
   loading = true;
+  if ($('#export-png')) $('#export-png').disabled = true;
   $('#map-stage').setAttribute('aria-busy', 'true');
   if (!hasPresentedMap) showStatus('Unfolding the map…', 'Loading the dated boundary snapshot.');
   else {
@@ -652,6 +653,7 @@ async function load({ focus = false, userAction = null } = {}) {
     $('#map-status').hidden = true;
     $('#map-stage').setAttribute('aria-busy', 'false');
     loading = false;
+    if ($('#export-png')) $('#export-png').disabled = compareLoading;
     hasPresentedMap = true;
     presentedSelection = { date: state.date, event: state.event };
     prefetchNextYear();
@@ -659,6 +661,7 @@ async function load({ focus = false, userAction = null } = {}) {
     if (token !== sequence) return;
     clearTimeout(loadingNoticeTimer);
     loading = false;
+    if ($('#export-png')) $('#export-png').disabled = compareLoading;
     pause();
     if (hasPresentedMap) {
       state.date = presentedSelection.date;
@@ -698,6 +701,7 @@ function openRegion(f, target) {
     state.date = presentedSelection.date;
     state.event = presentedSelection.event;
     loading = false;
+    if ($('#export-png')) $('#export-png').disabled = compareLoading;
     $('#map-stage').setAttribute('aria-busy', 'false');
     $('#map-status').hidden = true;
     renderCaption();
@@ -870,6 +874,7 @@ async function setCompare(checked, { retry = false } = {}) {
     if (compareLoading) {
       clearTimeout(loadingNoticeTimer);
       compareLoading = false;
+      if ($('#export-png')) $('#export-png').disabled = loading;
       $('#map-status').hidden = true;
       if (!loading) $('#map-stage').setAttribute('aria-busy', 'false');
     }
@@ -914,6 +919,7 @@ async function setCompare(checked, { retry = false } = {}) {
   const prevEntry = manifest.snapshots[idx - 1];
   clearTimeout(loadingNoticeTimer);
   compareLoading = true;
+  if ($('#export-png')) $('#export-png').disabled = true;
   $('#map-stage').setAttribute('aria-busy', 'true');
   $('#map-status').hidden = true;
   loadingNoticeTimer = setTimeout(() => {
@@ -931,6 +937,7 @@ async function setCompare(checked, { retry = false } = {}) {
       return;
     clearTimeout(loadingNoticeTimer);
     compareLoading = false;
+    if ($('#export-png')) $('#export-png').disabled = loading;
     previousData = prev;
     previousSnapshotIndex = idx - 1;
     state.compare = true;
@@ -951,6 +958,7 @@ async function setCompare(checked, { retry = false } = {}) {
       return;
     clearTimeout(loadingNoticeTimer);
     compareLoading = false;
+    if ($('#export-png')) $('#export-png').disabled = loading;
     state.compare = false;
     state.phase = 'after';
     $('#compare').checked = false;
@@ -1129,15 +1137,27 @@ const exportPngButton = $('#export-png');
 if (exportPngButton) {
   exportPngButton.onclick = async () => {
     pause();
+    if (loading || compareLoading || !hasPresentedMap) {
+      announce('Wait for the current map snapshot to finish loading before saving PNG.');
+      return;
+    }
     const label = $('#export-png span');
     const prevText = label.textContent;
     label.textContent = 'Saving…';
+    exportPngButton.disabled = true;
     try {
+      const exportDate = presentedDate || state.date;
+      const exportEventId = presentedSelection?.event || state.event;
+      const exportPhase = presentedPhase;
+      const visibleData = state.compare && exportPhase === 'before' ? previousData : currentData;
       const sourceSvg = $('#history-map');
       const clone = sourceSvg.cloneNode(true);
       clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      clone.setAttribute('width', '1440');
-      clone.setAttribute('height', '935');
+      // Exact viewBox aspect ratio (1020 / 662) so exported maps are never vertically compressed.
+      const drawWidth = 1386;
+      const drawHeight = 900;
+      clone.setAttribute('width', String(drawWidth));
+      clone.setAttribute('height', String(drawHeight));
       const cs = getComputedStyle(document.documentElement);
       const v = (name, fallback) => cs.getPropertyValue(name).trim() || fallback;
       const inlineStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style');
@@ -1177,20 +1197,41 @@ if (exportPngButton) {
         ctx.strokeStyle = v('--color-ink', '#1f1d1a');
         ctx.lineWidth = 2;
         ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48);
-        const e = eventById(state.event) || eventAt(state.date);
-        const year = state.date.slice(0, 4);
+        const e = eventById(exportEventId) || eventAt(exportDate);
+        const year = exportDate.slice(0, 4);
         ctx.fillStyle = v('--color-ink', '#1f1d1a');
         ctx.font = '600 40px Georgia, "Times New Roman", serif';
         ctx.fillText(`America Unfolded · ${year}`, 56, 84);
         ctx.fillStyle = v('--color-muted', '#5c554a');
         ctx.font = '400 22px system-ui, -apple-system, sans-serif';
-        const subtitle = state.compare
-          ? `${e.short} (${state.phase === 'before' ? 'Before' : 'After'} comparison · ${fmt(state.date)})`
-          : `${e.title} (${fmt(state.date)})`;
+        const subtitle = !visibleData
+          ? `${e.title} (${fmt(exportDate)}) · Modern geographic context only — no verified boundary geometry before Sep 3, 1783`
+          : state.compare
+            ? `${e.short} (${exportPhase === 'before' ? 'Before' : 'After'} comparison · ${fmt(visibleData.date)})`
+            : `${e.title} (${fmt(exportDate)})`;
         ctx.fillText(subtitle, 56, 118);
         ctx.fillStyle = v('--color-ocean', '#f2ece0');
         ctx.fillRect(56, 138, 1488, 900);
-        ctx.drawImage(img, 80, 144, 1440, 888);
+        const drawX = Math.round(56 + (1488 - drawWidth) / 2);
+        ctx.drawImage(img, drawX, 138, drawWidth, drawHeight);
+        if (!visibleData) {
+          const boxW = 780;
+          const boxH = 54;
+          const boxX = 56 + 1488 - boxW - 24;
+          const boxY = 138 + 900 - boxH - 24;
+          ctx.fillStyle = v('--color-paper', '#f7f3e9');
+          ctx.fillRect(boxX, boxY, boxW, boxH);
+          ctx.strokeStyle = v('--color-brass', '#9c8359');
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(boxX, boxY, boxW, boxH);
+          ctx.fillStyle = v('--color-ink', '#1f1d1a');
+          ctx.font = '500 18px system-ui, -apple-system, sans-serif';
+          ctx.fillText(
+            `${year} · No verified historical boundary snapshot — modern geographic context only`,
+            boxX + 18,
+            boxY + 34,
+          );
+        }
         ctx.strokeStyle = v('--color-brass', '#9c8359');
         ctx.lineWidth = 2;
         ctx.strokeRect(56, 138, 1488, 900);
@@ -1204,9 +1245,9 @@ if (exportPngButton) {
         const pngUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.href = pngUrl;
-        link.download = `america-unfolded-${year}-${state.event}.png`;
+        link.download = `america-unfolded-${year}-${exportEventId}.png`;
         link.click();
-        track('map_share_success', { chapter_id: state.event, year: Number(year) });
+        track('map_share_success', { chapter_id: exportEventId, year: Number(year) });
         label.textContent = 'PNG saved';
         announce(`Saved map snapshot PNG for ${year}.`);
         setTimeout(() => (label.textContent = prevText), 2500);
@@ -1216,6 +1257,8 @@ if (exportPngButton) {
     } catch {
       label.textContent = prevText;
       announce('Could not export PNG in this browser.');
+    } finally {
+      exportPngButton.disabled = loading || compareLoading;
     }
   };
 }
