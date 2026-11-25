@@ -1694,3 +1694,17 @@ dd {
   flex-wrap: wrap;
   align-items: center;
 }
+
+/* Shared folded-map identity, also used for browser and home-screen icons. */
+.brand .brand-mark {
+  display: block;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+@media (max-width: 760px) {
+  .brand .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+}
