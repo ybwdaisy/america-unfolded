@@ -1820,3 +1820,111 @@ dd {
     gap: var(--space-xs);
   }
 }
+
+/* Launch polish: inset labels inside frames, share/export/embed actions, mobile horizontal zoom controls, embed view */
+.inset-guides text.inset-label {
+  text-anchor: start;
+  font-size: 13px;
+}
+.share-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+.story-bar {
+  border-top: 0;
+  border-bottom: 1px solid var(--color-rule);
+  gap: var(--space-sm);
+}
+.story-bar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+.back-to-chapter {
+  margin: calc(-1 * var(--space-xs)) 0 var(--space-xs) calc(-1 * var(--space-xs));
+  padding-inline: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--color-navy);
+}
+.embed-credit {
+  display: none;
+  margin: 0;
+  padding: var(--space-xs) var(--space-md);
+  border-top: 1px solid var(--color-rule);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  background: var(--color-paper);
+}
+.embed-view .masthead,
+.embed-view .event-index,
+.embed-view .footer,
+.embed-view .analytics-consent {
+  display: none;
+}
+.embed-view main {
+  padding-inline: 0;
+  max-width: none;
+}
+.embed-view .atlas {
+  margin-top: 0;
+  outline: none;
+  border: 0;
+}
+.embed-view .embed-credit {
+  display: block;
+}
+@media (min-width: 761px) and (max-width: 1180px) {
+  .atlas-view .map-options {
+    gap: var(--space-xs);
+  }
+  .share-actions button span {
+    font-size: var(--text-xs);
+  }
+}
+@media (max-width: 760px) {
+  .atlas-view .story-bar {
+    order: 0;
+  }
+  .atlas-view .map-options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 var(--space-sm);
+  }
+  .atlas-view .share-actions {
+    margin-left: auto;
+    gap: var(--space-2xs);
+  }
+  .atlas-view .share-actions button {
+    font-size: var(--text-xs);
+    padding: var(--space-2xs) var(--space-xs);
+  }
+  .atlas-view .map-controls {
+    flex-direction: row;
+    top: var(--space-xs);
+    left: var(--space-xs);
+  }
+  .atlas-view .map-controls button {
+    border-bottom: 0;
+    border-right: 1px solid var(--color-rule);
+  }
+  .atlas-view .map-controls button:last-child {
+    border-right: 0;
+  }
+  .empty-history-callout {
+    top: 56px;
+    left: var(--space-xs);
+  }
+}
+@media (max-width: 380px) {
+  .atlas-view .share-actions button span {
+    font-size: 0.6875rem;
+  }
+  .atlas-view .share-actions button {
+    padding: var(--space-2xs);
+    min-width: 40px;
+  }
+}
