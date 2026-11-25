@@ -30,11 +30,17 @@ page.on('pageerror', (e) => errors.push(e.message));
 await page.goto(base);
 await ready(page);
 await check(
-  'home starts at 1776 and preserves the honest missing-boundary explanation',
+  'home starts at 1783 with verified boundaries while 1776 preserves the honest missing-boundary explanation',
   async () => {
+    assert.equal(await page.locator('#current-year').innerText(), '1783');
+    assert.match(await page.locator('#chapter-content h2').innerText(), /Mississippi/i);
+    assert.match(await page.locator('#chapter-position').innerText(), /Chapter 2 of/);
+    assert.ok((await page.locator('.historic-regions path').count()) > 0);
+    assert.equal(await page.locator('#empty-history-callout').isVisible(), false);
+    await page.locator('#previous').click();
+    await ready(page);
     assert.equal(await page.locator('#current-year').innerText(), '1776');
     assert.match(await page.locator('#chapter-content h2').innerText(), /independence/i);
-    assert.match(await page.locator('#chapter-position').innerText(), /Chapter 1 of/);
     assert.equal(await page.locator('.historic-regions path').count(), 0);
     assert.equal(await page.locator('#empty-history-callout').isVisible(), true);
     assert.match(
@@ -84,6 +90,7 @@ await check('initial dated map and chapter agree', async () => {
   assert.match(await page.locator('#snapshot-label').innerText(), /Apr 30, 1803/);
   assert.equal(await page.locator('.historic-regions path').count(), 22);
   assert.match(await page.locator('#chapter-content h2').innerText(), /Louisiana/);
+  assert.equal(await page.locator('#chapter-link').isVisible(), false);
 });
 await check('node controls and before/after comparison', async () => {
   await page.locator('#next').click();
@@ -97,12 +104,18 @@ await check('node controls and before/after comparison', async () => {
   await page.locator('#modern').check();
   assert.equal(await page.locator('.modern-lines path').count(), 51);
 });
-await check('region keyboard selection, close and reopen', async () => {
+await check('region keyboard selection, back to chapter, close and reopen', async () => {
   const region = page.locator('.region[aria-label^="Missouri Territory"]').first();
   await region.focus();
   await page.keyboard.press('Enter');
   assert.match(await page.locator('#chapter-content h2').innerText(), /Missouri/);
   assert.match(new URL(page.url()).searchParams.get('region'), /\d+/);
+  await page.locator('#back-to-chapter').click();
+  assert.equal(new URL(page.url()).searchParams.has('region'), false);
+  assert.equal(await page.locator('#chapter').isVisible(), true);
+  assert.match(await page.locator('#chapter-position').innerText(), /Chapter \d+ of/);
+  await region.focus();
+  await page.keyboard.press('Enter');
   await page.keyboard.press('Escape');
   assert.equal(await page.locator('#chapter').isVisible(), false);
   await page.locator('#open-details').click();
@@ -147,7 +160,7 @@ await check('year slider uses most recent dated snapshot and survives reload', a
   await ready(page);
   assert.equal(await page.locator('#current-year').innerText(), '1805');
 });
-await check('share copies a restorable URL', async () => {
+await check('share, embed and embed-view mode work cleanly', async () => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.locator('#share').click();
   const text = await page.evaluate(() => navigator.clipboard.readText());
@@ -156,6 +169,13 @@ await check('share copies a restorable URL', async () => {
   await p.goto(text);
   await ready(p);
   assert.equal(await p.locator('#current-year').innerText(), '1805');
+  await page.locator('#embed').click();
+  const embedCode = await page.evaluate(() => navigator.clipboard.readText());
+  assert.match(embedCode, /^<iframe src=".*embed=1"/);
+  await p.goto(base + '/?date=1803-04-30&event=louisiana-purchase&embed=1');
+  await ready(p);
+  assert.equal(await p.locator('.masthead').isVisible(), false);
+  assert.equal(await p.locator('.embed-credit').isVisible(), true);
   await p.close();
 });
 await check('playback advances and pause stops it', async () => {
@@ -474,6 +494,20 @@ await check('mobile slider does not pan the map', async () => {
   await ready(m);
   assert.equal(await m.locator('.map-content').getAttribute('transform'), before);
   assert.equal(await m.locator('#current-year').innerText(), '1822');
+});
+await check('mobile zoom controls sit horizontally above Pacific Northwest without overlap', async () => {
+  await m.goto(base + '/?date=1959-08-21&event=hawaii-statehood');
+  await ready(m);
+  const controlsBox = await m.locator('.map-controls').boundingBox();
+  const waBox = await m.locator('.region[aria-label^="Washington,"]').boundingBox();
+  assert.ok(controlsBox && waBox);
+  assert.ok(controlsBox.width > controlsBox.height, 'mobile zoom controls should be horizontal');
+  assert.ok(
+    controlsBox.y + controlsBox.height <= waBox.y + 4,
+    `mobile zoom controls bottom ${controlsBox.y + controlsBox.height} overlaps Washington top ${waBox.y}`,
+  );
+  await m.goto(base);
+  await ready(m);
 });
 await check('narrow and landscape screens have no horizontal overflow', async () => {
   for (const [width, height] of [

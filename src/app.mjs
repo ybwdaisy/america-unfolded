@@ -123,8 +123,10 @@ function featuresBounds(features) {
   ];
 }
 svg.html(
-  '<defs><pattern id="claim-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="7" height="7" class="claim-base"/><path d="M0 0V7" class="hatch-line"/></pattern></defs><g class="map-content"><g class="reference-land"></g><g class="inset-guides" aria-hidden="true"><rect x="4" y="445" width="244" height="150"/><rect x="250" y="499" width="116" height="96"/><text x="126" y="615">Alaska (inset)</text><text x="308" y="615">Hawaiʻi (inset)</text></g><g class="graticules"></g><g class="historic-regions"></g><g class="modern-lines"></g><g class="region-labels" aria-hidden="true"></g></g>',
+  '<defs><pattern id="claim-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="7" height="7" class="claim-base"/><path d="M0 0V7" class="hatch-line"/></pattern></defs><g class="map-content"><g class="reference-land"></g><g class="inset-guides" aria-hidden="true"><rect x="4" y="445" width="244" height="150"/><rect x="250" y="499" width="116" height="96"/><text x="12" y="587" class="inset-label">Alaska (inset)</text><text x="258" y="587" class="inset-label">Hawaiʻi (inset)</text></g><g class="graticules"></g><g class="historic-regions"></g><g class="modern-lines"></g><g class="region-labels" aria-hidden="true"></g></g>',
 );
+const isEmbed = new URLSearchParams(location.search).get('embed') === '1';
+if (isEmbed) document.body.classList.add('embed-view');
 const content = svg.select('.map-content');
 const zoomBehavior = zoom()
   .filter((e) => (e.type === 'wheel' ? e.ctrlKey : !e.button))
@@ -227,6 +229,7 @@ function save(mode = 'push') {
   else if (root.dataset.story === 'true') p.set('story', '0');
   if (!state.details) p.set('details', '0');
   if (state.details && state.expanded) p.set('expanded', '1');
+  if (isEmbed) p.set('embed', '1');
   if (state.k !== 1 || state.x !== 0 || state.y !== 0)
     for (const key of ['k', 'x', 'y']) p.set(key, String(Math.round(state[key] * 100) / 100));
   if (u.href !== location.href)
@@ -487,7 +490,7 @@ function renderCaption() {
   $('#compare').disabled = !currentSnapshot;
   $('#story-bar').hidden = !state.story;
   $('#story-next').hidden = !state.story;
-  $('#story-progress').textContent = `How America took shape / ${
+  $('#story-progress').textContent = `Guided story · Step ${
     Math.max(
       0,
       storyEvents.findIndex((x) => x.id === state.event),
@@ -507,10 +510,25 @@ function renderDetails() {
     ? 'Source atlas record'
     : `Chapter ${events.indexOf(e) + 1} of ${events.length}`;
   $('#chapter-content').innerHTML = f
-    ? `<h2>${esc(f.properties.FULL_NAME)}</h2><p class="article-lead">${esc(f.properties.TERR_TYPE)}${statusClass(f) === 'claim' ? '. Displayed as a claim or pending agreement.' : '.'}</p><p>${esc(f.properties.CHANGE)}</p><dl><div><dt>Source record begins</dt><dd>${fmt(f.properties.START_DATE)}</dd></div><div><dt>Source record ends</dt><dd>${fmt(f.properties.END_DATE)}</dd></div>${f.properties.DISPLAY_START ? `<div><dt>Map display begins</dt><dd>${fmt(f.properties.DISPLAY_START)}</dd></div>` : ''}</dl><h3>Source citation</h3><p>${esc(f.properties.CITATION)}</p><p class="record-caveat">Original atlas wording. “Unorganized” is a U.S. administrative label; it does not mean uninhabited or without Indigenous government. A record’s start may be a signature date rather than transfer or effective control.</p><a href="https://publications.newberry.org/ahcb/downloads/united_states.html">Newberry Library source dataset</a>`
+    ? `<button type="button" id="back-to-chapter" class="text-button back-to-chapter">← Back to chapter</button><h2>${esc(f.properties.FULL_NAME)}</h2><p class="article-lead">${esc(f.properties.TERR_TYPE)}${statusClass(f) === 'claim' ? '. Displayed as a claim or pending agreement.' : '.'}</p><p>${esc(f.properties.CHANGE)}</p><dl><div><dt>Source record begins</dt><dd>${fmt(f.properties.START_DATE)}</dd></div><div><dt>Source record ends</dt><dd>${fmt(f.properties.END_DATE)}</dd></div>${f.properties.DISPLAY_START ? `<div><dt>Map display begins</dt><dd>${fmt(f.properties.DISPLAY_START)}</dd></div>` : ''}</dl><h3>Source citation</h3><p>${esc(f.properties.CITATION)}</p><p class="record-caveat">Original atlas wording. “Unorganized” is a U.S. administrative label; it does not mean uninhabited or without Indigenous government. A record’s start may be a signature date rather than transfer or effective control.</p><a href="https://publications.newberry.org/ahcb/downloads/united_states.html">Newberry Library source dataset</a>`
     : eventArticle(e, true);
-  $('#chapter-link').href = `/events/${e.id}/`;
-  $('#chapter-link').textContent = 'Open chapter page';
+  const backToChapter = $('#back-to-chapter');
+  if (backToChapter) {
+    backToChapter.onclick = () => {
+      pause();
+      regionReturn = null;
+      state.region = null;
+      state.expanded = false;
+      $('#chapter').classList.remove('expanded');
+      renderMap();
+      renderDetails();
+      save();
+    };
+  }
+  const chapterLink = $('#chapter-link');
+  chapterLink.href = `/events/${e.id}/`;
+  chapterLink.textContent = 'Open chapter page';
+  chapterLink.hidden = location.pathname === `/events/${e.id}/`;
   const introTitle = $('#atlas-introduction');
   if (introTitle && location.pathname.startsWith('/events/')) introTitle.textContent = e.title;
   document.querySelectorAll('[data-event]').forEach((a) => {
@@ -828,6 +846,13 @@ $('#year-range').onchange = (e) => {
 };
 $('#year-range').addEventListener('pointerdown', () => pause());
 $('#year-input').onchange = (e) => chooseYear(e.target.value);
+$('#year-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    chooseYear(e.target.value);
+    e.target.blur();
+  }
+});
 $('#modern').onchange = (e) => {
   pause();
   state.modern = e.target.checked;
@@ -1063,6 +1088,137 @@ $('#share').onclick = async () => {
     };
   }
 };
+const embedButton = $('#embed');
+if (embedButton) {
+  embedButton.onclick = async () => {
+    pause();
+    save('replace');
+    const u = new URL(location.href);
+    u.searchParams.set('embed', '1');
+    const e = eventById(state.event) || eventAt(state.date);
+    const snippet = `<iframe src="${u.href}" width="100%" height="680" style="border:1px solid #1f1d1a" loading="lazy" title="America Unfolded — ${esc(e.title)} (${state.date.slice(0, 4)})"></iframe>`;
+    const label = $('#embed span');
+    const showBox = () => {
+      const existing = $('#embed-fallback');
+      if (existing) existing.remove();
+      const box = document.createElement('div');
+      box.className = 'share-fallback';
+      box.id = 'embed-fallback';
+      box.innerHTML =
+        '<label for="embed-code">Embed this dated view</label><input id="embed-code" readonly><button type="button">Close</button>';
+      $('.map-toolbar').after(box);
+      box.querySelector('input').value = snippet;
+      box.querySelector('input').select();
+      box.querySelector('button').onclick = () => {
+        box.remove();
+        embedButton.focus();
+      };
+    };
+    try {
+      await navigator.clipboard.writeText(snippet);
+      track('map_share_success', { chapter_id: state.event, year: Number(state.date.slice(0, 4)) });
+      label.textContent = 'Embed copied';
+      announce('Embed iframe snippet copied to clipboard.');
+      setTimeout(() => (label.textContent = 'Embed'), 2500);
+    } catch {
+      showBox();
+    }
+  };
+}
+const exportPngButton = $('#export-png');
+if (exportPngButton) {
+  exportPngButton.onclick = async () => {
+    pause();
+    const label = $('#export-png span');
+    const prevText = label.textContent;
+    label.textContent = 'Saving…';
+    try {
+      const sourceSvg = $('#history-map');
+      const clone = sourceSvg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('width', '1440');
+      clone.setAttribute('height', '935');
+      const cs = getComputedStyle(document.documentElement);
+      const v = (name, fallback) => cs.getPropertyValue(name).trim() || fallback;
+      const inlineStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+      inlineStyle.textContent = `
+        .reference-land path { fill: ${v('--color-paper-3', '#ebe4d2')}; stroke: none; }
+        .graticules path { fill: none; stroke: ${v('--color-grid', '#d5ccb8')}; stroke-width: 0.65; }
+        .inset-guides rect { fill: none; stroke: ${v('--color-rule', '#cfc5ae')}; stroke-width: 1; }
+        .inset-guides text { font-family: Georgia, serif; font-size: 13px; fill: ${v('--color-muted', '#5c554a')}; }
+        .region { stroke: ${v('--color-map-line', '#5d5649')}; stroke-width: 0.9; }
+        .region.state { fill: ${v('--color-state', '#b8c4ce')}; }
+        .region.territory { fill: ${v('--color-territory', '#dfd2b5')}; }
+        .region.claim { fill: url('#claim-hatch'); }
+        .claim-base { fill: ${v('--color-claim', '#e8dec5')}; }
+        .hatch-line { stroke: ${v('--color-map-line', '#5d5649')}; stroke-width: 1; }
+        .region.polity { fill: ${v('--color-polity', '#d8cfbe')}; stroke: ${v('--color-state-line', '#4a5d6e')}; stroke-dasharray: 3 2; }
+        .region.changed { fill: ${v('--color-change', '#c96f55')}; }
+        .modern-lines path { fill: none; stroke: ${v('--color-state-line', '#4a5d6e')}; stroke-dasharray: 4 3; stroke-width: 1; }
+        .region-labels text { font-family: Georgia, serif; font-size: 13px; fill: ${v('--color-ink', '#1f1d1a')}; text-anchor: middle; paint-order: stroke; stroke: ${v('--color-paper', '#f7f3e9')}; stroke-width: 2; stroke-opacity: 0.7; }
+      `;
+      clone.prepend(inlineStyle);
+      const serialized = new XMLSerializer().serializeToString(clone);
+      const blob = new Blob([serialized], { type: 'image/svg+xml;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(blob);
+      try {
+        const img = new Image();
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = blobUrl;
+        });
+        const canvas = document.createElement('canvas');
+        canvas.width = 1600;
+        canvas.height = 1120;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = v('--color-paper', '#f7f3e9');
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = v('--color-ink', '#1f1d1a');
+        ctx.lineWidth = 2;
+        ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48);
+        const e = eventById(state.event) || eventAt(state.date);
+        const year = state.date.slice(0, 4);
+        ctx.fillStyle = v('--color-ink', '#1f1d1a');
+        ctx.font = '600 40px Georgia, "Times New Roman", serif';
+        ctx.fillText(`America Unfolded · ${year}`, 56, 84);
+        ctx.fillStyle = v('--color-muted', '#5c554a');
+        ctx.font = '400 22px system-ui, -apple-system, sans-serif';
+        const subtitle = state.compare
+          ? `${e.short} (${state.phase === 'before' ? 'Before' : 'After'} comparison · ${fmt(state.date)})`
+          : `${e.title} (${fmt(state.date)})`;
+        ctx.fillText(subtitle, 56, 118);
+        ctx.fillStyle = v('--color-ocean', '#f2ece0');
+        ctx.fillRect(56, 138, 1488, 900);
+        ctx.drawImage(img, 80, 144, 1440, 888);
+        ctx.strokeStyle = v('--color-brass', '#9c8359');
+        ctx.lineWidth = 2;
+        ctx.strokeRect(56, 138, 1488, 900);
+        ctx.fillStyle = v('--color-muted', '#5c554a');
+        ctx.font = '400 18px system-ui, -apple-system, sans-serif';
+        ctx.fillText(
+          'Interactive historical atlas: usa.ybwdaisy.com · Boundaries: Newberry Library (CC0) · No interpolation between dated records',
+          56,
+          1074,
+        );
+        const pngUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = pngUrl;
+        link.download = `america-unfolded-${year}-${state.event}.png`;
+        link.click();
+        track('map_share_success', { chapter_id: state.event, year: Number(year) });
+        label.textContent = 'PNG saved';
+        announce(`Saved map snapshot PNG for ${year}.`);
+        setTimeout(() => (label.textContent = prevText), 2500);
+      } finally {
+        URL.revokeObjectURL(blobUrl);
+      }
+    } catch {
+      label.textContent = prevText;
+      announce('Could not export PNG in this browser.');
+    }
+  };
+}
 document.querySelectorAll('[data-event]').forEach(
   (a) =>
     (a.onclick = (e) => {

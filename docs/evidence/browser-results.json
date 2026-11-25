@@ -4,7 +4,7 @@
   "browsers": "Installed Chrome; Playwright WebKit with iPhone emulation (not a physical iPhone)",
   "results": [
     {
-      "name": "home starts at 1776 and preserves the honest missing-boundary explanation",
+      "name": "home starts at 1783 with verified boundaries while 1776 preserves the honest missing-boundary explanation",
       "result": "pass"
     },
     {
@@ -24,7 +24,7 @@
       "result": "pass"
     },
     {
-      "name": "region keyboard selection, close and reopen",
+      "name": "region keyboard selection, back to chapter, close and reopen",
       "result": "pass"
     },
     {
@@ -40,7 +40,7 @@
       "result": "pass"
     },
     {
-      "name": "share copies a restorable URL",
+      "name": "share, embed and embed-view mode work cleanly",
       "result": "pass"
     },
     {
@@ -113,6 +113,10 @@
     },
     {
       "name": "mobile slider does not pan the map",
+      "result": "pass"
+    },
+    {
+      "name": "mobile zoom controls sit horizontally above Pacific Northwest without overlap",
       "result": "pass"
     },
     {

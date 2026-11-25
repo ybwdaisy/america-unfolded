@@ -361,7 +361,7 @@ export const events = [
     story: true,
   },
 ];
-export const defaultEvent = 'independence';
+export const defaultEvent = 'treaty-of-paris';
 export const scopeNote =
   'Reconstructed jurisdictions and claims, not actual control. Other overseas territories and Indigenous boundaries are not mapped.';
 export const eventById = (id) => events.find((e) => e.id === id);
