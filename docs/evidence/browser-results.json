@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-24",
+  "base": "http://localhost:4173",
+  "browsers": "Installed Chrome; Playwright WebKit with iPhone emulation (not a physical iPhone)",
+  "results": [
+    {
+      "name": "home starts at 1776 and preserves the honest missing-boundary explanation",
+      "result": "pass"
+    },
+    {
+      "name": "initial dated map and chapter agree",
+      "result": "pass"
+    },
+    {
+      "name": "node controls and before/after comparison",
+      "result": "pass"
+    },
+    {
+      "name": "region keyboard selection, close and reopen",
+      "result": "pass"
+    },
+    {
+      "name": "zoom, pan, reset and URL restoration",
+      "result": "pass"
+    },
+    {
+      "name": "browser back and forward restore event and state",
+      "result": "pass"
+    },
+    {
+      "name": "year slider uses most recent dated snapshot and survives reload",
+      "result": "pass"
+    },
+    {
+      "name": "share copies a restorable URL",
+      "result": "pass"
+    },
+    {
+      "name": "playback advances and pause stops it",
+      "result": "pass"
+    },
+    {
+      "name": "guided story changes chapter and map focus",
+      "result": "pass"
+    },
+    {
+      "name": "1776 has no invented historical boundary",
+      "result": "pass"
+    },
+    {
+      "name": "late snapshots include Alaska and Hawaiʻi as states",
+      "result": "pass"
+    },
+    {
+      "name": "before-map records open from the displayed snapshot",
+      "result": "pass"
+    },
+    {
+      "name": "before-map hatching uses the earlier snapshot date",
+      "result": "pass"
+    },
+    {
+      "name": "desktop controls fit 900px viewport and no horizontal overflow",
+      "result": "pass"
+    },
+    {
+      "name": "missing-data error and retry recover",
+      "result": "pass"
+    },
+    {
+      "name": "modern toggle is safe while map data is loading",
+      "result": "pass"
+    },
+    {
+      "name": "failed network and retry recover",
+      "result": "pass"
+    },
+    {
+      "name": "event pages and sources remain readable without JavaScript",
+      "result": "pass"
+    },
+    {
+      "name": "mobile panel opens and closes without covering map or timeline",
+      "result": "pass"
+    },
+    {
+      "name": "mobile guided story advances without opening full details",
+      "result": "pass"
+    },
+    {
+      "name": "touch pan and pinch update map, not page position",
+      "result": "pass"
+    },
+    {
+      "name": "mobile slider does not pan the map",
+      "result": "pass"
+    },
+    {
+      "name": "narrow and landscape screens have no horizontal overflow",
+      "result": "pass"
+    },
+    {
+      "name": "reduced-motion mode has no animated map transitions",
+      "result": "pass"
+    },
+    {
+      "name": "all functional UI has focus indication",
+      "result": "pass"
+    },
+    {
+      "name": "iPhone WebKit: map, timeline, details and history",
+      "result": "pass"
+    }
+  ]
+}

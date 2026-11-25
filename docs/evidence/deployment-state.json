@@ -1,0 +1,9 @@
+{
+  "checked": "2026-11-24",
+  "name": "america-unfolded",
+  "hasDeployments": false,
+  "targets": {},
+  "latestDeployments": [],
+  "autoAssignCustomDomains": false,
+  "gitDeploymentMode": "disabled"
+}

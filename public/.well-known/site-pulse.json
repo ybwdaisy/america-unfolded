@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "hostname": "usa.ybwdaisy.com",
+  "revision": "2026-11-24.1",
+  "qaPolicy": "no-collection-for-tests-v1",
+  "events": [
+    "map_explore_start",
+    "map_year_select",
+    "map_region_select",
+    "map_detail_view",
+    "map_source_open",
+    "story_start",
+    "story_step_view",
+    "story_complete",
+    "map_compare_open",
+    "map_compare_change",
+    "map_share_success",
+    "map_play_start",
+    "map_play_pause"
+  ],
+  "funnels": [
+    {
+      "id": "america-map-research",
+      "definition": {
+        "name": "地图探索到来源阅读",
+        "filters": [
+          {
+            "field": "contentGroup",
+            "match": "EXACT",
+            "value": "america_unfolded_public"
+          }
+        ],
+        "steps": [
+          {
+            "label": "开始探索",
+            "event": "map_explore_start",
+            "pageContains": ""
+          },
+          {
+            "label": "选择地区",
+            "event": "map_region_select",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          },
+          {
+            "label": "查看详情",
+            "event": "map_detail_view",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          },
+          {
+            "label": "阅读来源",
+            "event": "map_source_open",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "america-story",
+      "definition": {
+        "name": "引导故事完成",
+        "filters": [
+          {
+            "field": "contentGroup",
+            "match": "EXACT",
+            "value": "america_unfolded_public"
+          }
+        ],
+        "steps": [
+          {
+            "label": "开始故事",
+            "event": "story_start",
+            "pageContains": ""
+          },
+          {
+            "label": "查看章节",
+            "event": "story_step_view",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          },
+          {
+            "label": "到达最后章节",
+            "event": "story_complete",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "america-compare",
+      "definition": {
+        "name": "前后对照使用",
+        "filters": [
+          {
+            "field": "contentGroup",
+            "match": "EXACT",
+            "value": "america_unfolded_public"
+          }
+        ],
+        "steps": [
+          {
+            "label": "开始探索",
+            "event": "map_explore_start",
+            "pageContains": ""
+          },
+          {
+            "label": "打开对照",
+            "event": "map_compare_open",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          },
+          {
+            "label": "切换对照时期",
+            "event": "map_compare_change",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "america-share",
+      "definition": {
+        "name": "探索到分享成功",
+        "filters": [
+          {
+            "field": "contentGroup",
+            "match": "EXACT",
+            "value": "america_unfolded_public"
+          }
+        ],
+        "steps": [
+          {
+            "label": "开始探索",
+            "event": "map_explore_start",
+            "pageContains": ""
+          },
+          {
+            "label": "查看详情",
+            "event": "map_detail_view",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          },
+          {
+            "label": "分享成功",
+            "event": "map_share_success",
+            "pageContains": "",
+            "withinSeconds": 1800,
+            "directlyFollowed": false
+          }
+        ]
+      }
+    }
+  ]
+}

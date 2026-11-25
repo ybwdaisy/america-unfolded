@@ -1,0 +1,213 @@
+{
+  "pending": false,
+  "results": [
+    {
+      "id": "america-map-research",
+      "name": "地图探索到来源阅读",
+      "status": 200,
+      "data": {
+        "steps": [
+          {
+            "label": "开始探索",
+            "event": "map_explore_start",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "选择地区",
+            "event": "map_region_select",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "查看详情",
+            "event": "map_detail_view",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "阅读来源",
+            "event": "map_source_open",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          }
+        ],
+        "overallRate": null,
+        "missingEvents": [
+          "map_explore_start",
+          "map_region_select",
+          "map_detail_view",
+          "map_source_open"
+        ],
+        "range": {
+          "startDate": "2026-10-27",
+          "endDate": "2026-11-23",
+          "previousStart": "2026-09-29",
+          "previousEnd": "2026-10-26",
+          "timeZone": "Asia/Shanghai"
+        },
+        "meta": {
+          "thresholded": false,
+          "sampled": false,
+          "dataLoss": false
+        },
+        "updatedAt": "2026-11-24T12:51:38.386Z",
+        "cached": false
+      }
+    },
+    {
+      "id": "america-story",
+      "name": "引导故事完成",
+      "status": 200,
+      "data": {
+        "steps": [
+          {
+            "label": "开始故事",
+            "event": "story_start",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "查看章节",
+            "event": "story_step_view",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "到达最后章节",
+            "event": "story_complete",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          }
+        ],
+        "overallRate": null,
+        "missingEvents": [
+          "story_start",
+          "story_step_view",
+          "story_complete"
+        ],
+        "range": {
+          "startDate": "2026-10-27",
+          "endDate": "2026-11-23",
+          "previousStart": "2026-09-29",
+          "previousEnd": "2026-10-26",
+          "timeZone": "Asia/Shanghai"
+        },
+        "meta": {
+          "thresholded": false,
+          "sampled": false,
+          "dataLoss": false
+        },
+        "updatedAt": "2026-11-24T12:51:40.260Z",
+        "cached": false
+      }
+    },
+    {
+      "id": "america-compare",
+      "name": "前后对照使用",
+      "status": 200,
+      "data": {
+        "steps": [
+          {
+            "label": "开始探索",
+            "event": "map_explore_start",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "打开对照",
+            "event": "map_compare_open",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "切换对照时期",
+            "event": "map_compare_change",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          }
+        ],
+        "overallRate": null,
+        "missingEvents": [
+          "map_explore_start",
+          "map_compare_open",
+          "map_compare_change"
+        ],
+        "range": {
+          "startDate": "2026-10-27",
+          "endDate": "2026-11-23",
+          "previousStart": "2026-09-29",
+          "previousEnd": "2026-10-26",
+          "timeZone": "Asia/Shanghai"
+        },
+        "meta": {
+          "thresholded": false,
+          "sampled": false,
+          "dataLoss": false
+        },
+        "updatedAt": "2026-11-24T12:51:42.149Z",
+        "cached": false
+      }
+    },
+    {
+      "id": "america-share",
+      "name": "探索到分享成功",
+      "status": 200,
+      "data": {
+        "steps": [
+          {
+            "label": "开始探索",
+            "event": "map_explore_start",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "查看详情",
+            "event": "map_detail_view",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          },
+          {
+            "label": "分享成功",
+            "event": "map_share_success",
+            "users": 0,
+            "completionRate": null,
+            "observed": false
+          }
+        ],
+        "overallRate": null,
+        "missingEvents": [
+          "map_explore_start",
+          "map_detail_view",
+          "map_share_success"
+        ],
+        "range": {
+          "startDate": "2026-10-27",
+          "endDate": "2026-11-23",
+          "previousStart": "2026-09-29",
+          "previousEnd": "2026-10-26",
+          "timeZone": "Asia/Shanghai"
+        },
+        "meta": {
+          "thresholded": false,
+          "sampled": false,
+          "dataLoss": false
+        },
+        "updatedAt": "2026-11-24T12:51:43.474Z",
+        "cached": false
+      }
+    }
+  ]
+}

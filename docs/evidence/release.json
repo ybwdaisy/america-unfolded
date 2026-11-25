@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-24",
+  "publicUrl": "https://usa.ybwdaisy.com/",
+  "repository": "ybwdaisy/america-unfolded",
+  "visibility": "private",
+  "branch": "feat/historical-atlas",
+  "pr": "https://github.com/ybwdaisy/america-unfolded/pull/2",
+  "prMerged": false,
+  "production": {
+    "project": "america-unfolded",
+    "projectId": "prj_9TbpWYsiprpOdCHzt7PLMKzSWcVu",
+    "deploymentId": "dpl_CrCY1uLPrcvKyuHL2DxRRv5GUqTN",
+    "state": "READY",
+    "commit": "91fcf9f2f476fef366a0a93bfd570225106d035f",
+    "releaseCIPassed": true
+  },
+  "dns": {
+    "newRecord": "usa",
+    "type": "CNAME",
+    "value": "58cdf4874bafc68d.vercel-dns-017.com",
+    "ttlSeconds": 600,
+    "existingRecordsModified": false,
+    "vercelMisconfigured": false
+  },
+  "ga4": {
+    "propertyId": "565688768",
+    "streamId": "16405063176",
+    "measurementId": "G-G1BH7EZXL9",
+    "timeZone": "Asia/Shanghai",
+    "enhancedMeasurement": false,
+    "keyEvents": [
+      "story_complete",
+      "map_source_open",
+      "map_share_success"
+    ],
+    "defaultMonetaryValuesSet": false,
+    "eventRetentionMonths": 14,
+    "productionIngestionVerified": false,
+    "qaRequestsSent": 0
+  },
+  "gsc": {
+    "siteUrl": "https://usa.ybwdaisy.com/",
+    "permissionLevel": "siteOwner",
+    "sitemap": "https://usa.ybwdaisy.com/sitemap.xml",
+    "status": "Success",
+    "discoveredPages": 20,
+    "discoveredVideos": 0,
+    "indexedPagesVerified": false
+  },
+  "sitePulse": {
+    "url": "https://site-pulse-nine-tau.vercel.app/",
+    "manifest": "https://usa.ybwdaisy.com/.well-known/site-pulse.json",
+    "revision": "2026-11-24.1",
+    "sha256": "020a71970db8f477ee46617fcdc29c880980cb65369b93ba026a49c0f377a076",
+    "events": 13,
+    "funnels": 4,
+    "allFunnelReadStatus": 200,
+    "originalFunnelsPreserved": 16,
+    "totalFunnels": 20,
+    "productionCollectionSent": false
+  },
+  "checks": {
+    "dataAndTimeline": 9,
+    "localBrowser": 27,
+    "transition": 17,
+    "offlineAnalytics": 12,
+    "realSDKWithCollectionBlocked": true,
+    "productionBrowser": 9,
+    "productionPages": 20
+  },
+  "limits": [
+    "Physical iPhone Safari not tested",
+    "Historical data is an approximate reconstruction; no specialist sign-off",
+    "Sitemap discovery is not indexing",
+    "Live ingestion from real consenting visitors not claimed"
+  ]
+}

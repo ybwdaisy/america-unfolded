@@ -1,0 +1,102 @@
+{
+  "updatedAt": "2026-11-24T12:48:51.863Z",
+  "warnings": [],
+  "failures": [],
+  "sites": [
+    {
+      "hostname": "policypilot.cc",
+      "propertyId": "494048879",
+      "count": 1,
+      "ids": [
+        "policy-generation"
+      ],
+      "sync": {
+        "source": "remote",
+        "revision": "2026-11-23.1",
+        "updatedAt": "2026-11-24T12:48:52.907Z",
+        "checkedAt": "2026-11-24T12:48:52.907Z",
+        "configured": true,
+        "failed": false
+      }
+    },
+    {
+      "hostname": "airfryer.ybwdaisy.com",
+      "propertyId": "494048879",
+      "count": 3,
+      "ids": [
+        "airfryer-directory",
+        "airfryer-search",
+        "airfryer-reading"
+      ],
+      "sync": {
+        "source": "remote",
+        "revision": "2026-11-23.1",
+        "updatedAt": "2026-11-24T12:48:52.016Z",
+        "checkedAt": "2026-11-24T12:48:52.016Z",
+        "configured": true,
+        "failed": false
+      }
+    },
+    {
+      "hostname": "peptides.ybwdaisy.com",
+      "propertyId": "494048879",
+      "count": 5,
+      "ids": [
+        "peptides-first-product",
+        "peptides-calculator",
+        "peptides-generation",
+        "peptides-saving",
+        "peptides-entry"
+      ],
+      "sync": {
+        "source": "remote",
+        "revision": "2026-11-23.1",
+        "updatedAt": "2026-11-24T12:48:52.104Z",
+        "checkedAt": "2026-11-24T12:48:52.104Z",
+        "configured": true,
+        "failed": false
+      }
+    },
+    {
+      "hostname": "mandarin.ybwdaisy.com",
+      "propertyId": "494048879",
+      "count": 7,
+      "ids": [
+        "mandarin-tone-test",
+        "mandarin-purchase",
+        "mandarin-starter",
+        "mandarin-shadowing",
+        "mandarin-dialogue",
+        "mandarin-review",
+        "mandarin-learning-purchase"
+      ],
+      "sync": {
+        "source": "remote",
+        "revision": "2026-11-23.1",
+        "updatedAt": "2026-11-24T12:48:53.014Z",
+        "checkedAt": "2026-11-24T12:48:53.014Z",
+        "configured": true,
+        "failed": false
+      }
+    },
+    {
+      "hostname": "usa.ybwdaisy.com",
+      "propertyId": "565688768",
+      "count": 4,
+      "ids": [
+        "america-map-research",
+        "america-story",
+        "america-compare",
+        "america-share"
+      ],
+      "sync": {
+        "source": "remote",
+        "revision": "2026-11-24.1",
+        "updatedAt": "2026-11-24T12:48:52.657Z",
+        "checkedAt": "2026-11-24T12:48:52.657Z",
+        "configured": true,
+        "failed": false
+      }
+    }
+  ]
+}

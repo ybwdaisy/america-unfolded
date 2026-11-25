@@ -1,0 +1,11 @@
+{
+  "kind": "Real SDK with collection blocked",
+  "collectionBlocked": true,
+  "ingestionVerified": false,
+  "results": [
+    {
+      "name": "actual Google SDK: query-free packets, single page view and consent withdrawal; collection intercepted",
+      "result": "pass"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+.git
+node_modules
+docs/evidence
+.hallmark
+README.md
+tests
+scripts/generate_maps.py
+scripts/topology.mjs

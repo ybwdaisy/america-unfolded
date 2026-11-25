@@ -1,0 +1,68 @@
+{
+  "scanned": "2026-11-24",
+  "scope": "app",
+  "findings": {
+    "existingProduct": "New independent project; no existing app design to preserve",
+    "fonts": "Self-hosted EB Garamond and Public Sans, SIL OFL",
+    "palette": "User-specified warm ivory, dark ink, muted navy, brick red and brass",
+    "framework": "Static HTML/CSS and vanilla JS with D3 geometry/zoom"
+  },
+  "preserve": [
+    "America Unfolded name and supplied subtitle",
+    "User-specified historical visual direction",
+    "No authentication, payments, database or analytics"
+  ],
+  "introduce": [
+    "Map workbench",
+    "Time ruler",
+    "Sourced chapter margin",
+    "Inline mobile details"
+  ],
+  "styleUpdate": {
+    "date": "2026-11-24",
+    "depth": "restyle",
+    "scope": "app",
+    "preserved": [
+      "All historical records and sources",
+      "All routes and control IDs",
+      "Existing layout and interactions",
+      "Local preview and PR-only delivery"
+    ],
+    "changed": [
+      "Exact owner-specified palette",
+      "EB Garamond system-serif fallback",
+      "Projection-derived compass reference",
+      "Original engraved frame and seal-style legend"
+    ],
+    "files": [
+      "src/styles/tokens.css",
+      "src/styles/app.css",
+      "src/app.mjs",
+      "scripts/template.mjs",
+      "scripts/build.mjs",
+      "public/favicon.svg"
+    ]
+  },
+  "mapFirstUpdate": {
+    "date": "2026-11-24",
+    "depth": "layout refinement",
+    "scope": "app",
+    "preserved": [
+      "All event and data files",
+      "All control IDs and link destinations",
+      "Existing no-blank-frame snapshot rendering",
+      "Local preview and existing PR only"
+    ],
+    "changed": [
+      "Compact masthead; story entry in map toolbar",
+      "Expanded desktop map; chapter sidebar",
+      "Mobile timeline immediately below map; legends and inline chapter follow",
+      "Single-column tablet workspace",
+      "Title and description relocated to visible chapter index"
+    ],
+    "files": [
+      "scripts/template.mjs",
+      "src/styles/app.css"
+    ]
+  }
+}

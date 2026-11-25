@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-24",
+  "checks": [
+    "Vermont Republic uses separate-polity style",
+    "Texas Republic uses separate-polity style",
+    "Gadsden final footprint absent in 1853, present on June 30 1854",
+    "License evidence served as plain text, no upstream script executes",
+    "No external requests from tested app/sources/evidence routes",
+    "Expanded mobile chapter survives reload",
+    "All guided story steps center cited source geometry, with no unsourced event pins"
+  ],
+  "result": "pass",
+  "initialResourceBytes": 1067455,
+  "resources": [
+    {
+      "path": "/fonts/eb-garamond.woff2",
+      "bytes": 296780
+    },
+    {
+      "path": "/assets/app.css",
+      "bytes": 23525
+    },
+    {
+      "path": "/assets/app.js",
+      "bytes": 113333
+    },
+    {
+      "path": "/data/manifest.json",
+      "bytes": 8427
+    },
+    {
+      "path": "/fonts/public-sans.woff2",
+      "bytes": 42080
+    },
+    {
+      "path": "/data/modern.json",
+      "bytes": 332038
+    },
+    {
+      "path": "/data/snapshot-1803-04-30.json",
+      "bytes": 137164
+    },
+    {
+      "path": "/data/snapshot-1803-03-01.json",
+      "bytes": 113879
+    },
+    {
+      "path": "/favicon.svg",
+      "bytes": 229
+    }
+  ]
+}

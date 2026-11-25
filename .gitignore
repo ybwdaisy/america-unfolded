@@ -1,5 +1,7 @@
 node_modules/
-.DS_Store
 dist/
-.cache/
-*.log
+.vercel/
+.env*
+test-results/
+.DS_Store
+.hallmark/shots/
