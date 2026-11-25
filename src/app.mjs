@@ -1,4 +1,4 @@
-import { geoAlbersUsa, geoPath, geoGraticule10, geoCentroid } from 'd3-geo';
+import { geoAlbersUsa, geoAlbers, geoPath, geoGraticule10, geoCentroid } from 'd3-geo';
 import { select } from 'd3-selection';
 import { feature as topoFeature } from 'topojson-client';
 import { zoom, zoomIdentity } from 'd3-zoom';
@@ -43,9 +43,11 @@ let manifest,
   previousData,
   currentSnapshot,
   sequence = 0,
+  compareSequence = 0,
   playing = null,
   regionReturn = null,
   loading = false,
+  compareLoading = false,
   gestureMoved = false,
   suppressMapClickUntil = 0,
   viewRevision = 0,
@@ -54,22 +56,71 @@ let manifest,
   presentedDate = null,
   presentedPhase = 'after',
   loadingNoticeTimer,
+  zoomHintTimer,
   isScrubbing = false,
+  playSpeed = 1,
+  previousSnapshotIndex = -1,
   snapshotAnimations = [],
   previousFrame = null;
 const cache = new Map(),
   svg = select('#history-map');
 const projection = geoAlbersUsa().scale(1170).translate([500, 305]);
+// Exact lower-48 parameters matching geoAlbersUsa so mainland polygons extending north
+// of 50°N (such as 1804–1846 Oregon Country) never leak into the Alaska inset box.
+const mainlandProjection = geoAlbers()
+  .parallels([29.5, 45.5])
+  .rotate([96, 0])
+  .center([-0.6, 38.7])
+  .scale(1170)
+  .translate([500, 305]);
 const path = geoPath(projection);
+const mainlandPath = geoPath(mainlandProjection);
 const pathCache = new WeakMap();
 const labelCache = new WeakMap();
+const LABEL_NAMES = {
+  'Uncert. Bound. Area': 'Disputed area',
+  'Dist. of Louisiana': 'District of Louisiana',
+  'Florida Unorg. FT': 'Florida (unorg.)',
+  'Oregon Unorg. FT': 'Oregon (unorg.)',
+  'Unorg. Fed. Terr.': 'Federal territory',
+  'Wisc. Terr. De Facto': 'Wisconsin (de facto)',
+  'Mississippi Terr.': 'Mississippi Territory',
+  'Alaska Department': 'Alaska',
+  'Alaska District': 'Alaska',
+};
+function isInsetFeature(feature) {
+  return /^(Alaska|Hawaii)\b/i.test(feature?.properties?.NAME || '');
+}
 function regionPath(feature) {
-  if (!pathCache.has(feature)) pathCache.set(feature, path(feature));
+  if (!pathCache.has(feature)) {
+    pathCache.set(feature, (isInsetFeature(feature) ? path : mainlandPath)(feature));
+  }
   return pathCache.get(feature);
 }
 function labelPoint(feature) {
-  if (!labelCache.has(feature)) labelCache.set(feature, projection(geoCentroid(feature)));
+  if (!labelCache.has(feature)) {
+    const proj = isInsetFeature(feature) ? projection : mainlandProjection;
+    labelCache.set(feature, proj(geoCentroid(feature)));
+  }
   return labelCache.get(feature);
+}
+function featuresBounds(features) {
+  let x0 = Infinity,
+    y0 = Infinity,
+    x1 = -Infinity,
+    y1 = -Infinity;
+  for (const f of features) {
+    const b = (isInsetFeature(f) ? path : mainlandPath).bounds(f);
+    if (!b || !Number.isFinite(b[0][0])) continue;
+    if (b[0][0] < x0) x0 = b[0][0];
+    if (b[0][1] < y0) y0 = b[0][1];
+    if (b[1][0] > x1) x1 = b[1][0];
+    if (b[1][1] > y1) y1 = b[1][1];
+  }
+  return [
+    [x0, y0],
+    [x1, y1],
+  ];
 }
 svg.html(
   '<defs><pattern id="claim-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="7" height="7" class="claim-base"/><path d="M0 0V7" class="hatch-line"/></pattern></defs><g class="map-content"><g class="reference-land"></g><g class="inset-guides" aria-hidden="true"><rect x="4" y="445" width="244" height="150"/><rect x="250" y="499" width="116" height="96"/><text x="126" y="615">Alaska (inset)</text><text x="308" y="615">Hawaiʻi (inset)</text></g><g class="graticules"></g><g class="historic-regions"></g><g class="modern-lines"></g><g class="region-labels" aria-hidden="true"></g></g>',
@@ -319,8 +370,10 @@ function prepareSnapshotTransition(data, enabled) {
     });
   };
 }
-function regionClass(f) {
-  const previousIds = new Set((previousData?.features || []).map((item) => item.properties.ID_NUM));
+function buildPreviousIds() {
+  return new Set((previousData?.features || []).map((item) => item.properties.ID_NUM));
+}
+function regionClass(f, previousIds = buildPreviousIds()) {
   return `region ${statusClass(f)}${state.compare && state.phase === 'after' && !previousIds.has(f.properties.ID_NUM) ? ' changed' : ''}${state.region === String(f.properties.ID_NUM) ? ' selected' : ''}`;
 }
 function prefetchNextYear() {
@@ -328,18 +381,21 @@ function prefetchNextYear() {
   const date = nextYearDate(state.date);
   if (!date) return;
   const i = manifest.snapshots.findLastIndex((s) => s.date <= date);
-  void Promise.allSettled([snapshot(manifest.snapshots[i]), snapshot(manifest.snapshots[i - 1])]);
+  const requests = [snapshot(manifest.snapshots[i])];
+  if (state.compare) requests.push(snapshot(manifest.snapshots[i - 1]));
+  void Promise.allSettled(requests);
 }
 function renderMap({ animate = false } = {}) {
   const data = state.compare && state.phase === 'before' ? previousData : currentData;
   const reveal = prepareSnapshotTransition(data, animate);
+  const previousIds = buildPreviousIds();
   svg
     .select('.historic-regions')
     .selectAll('path')
     .data(data?.features || [], (f) => f.properties.ID_NUM)
     .join('path')
     .attr('d', regionPath)
-    .attr('class', regionClass)
+    .attr('class', (f) => regionClass(f, previousIds))
     .attr('role', 'button')
     .attr('tabindex', 0)
     .attr(
@@ -381,13 +437,11 @@ function renderMap({ animate = false } = {}) {
     .text((f) =>
       f.properties.TERR_TYPE === 'State'
         ? f.properties.ABBR_NAME
-        : {
-            'Unorg. Fed. Terr.': 'Federal territory',
-            'Alaska Department': 'Alaska',
-            'Alaska District': 'Alaska',
-          }[f.properties.NAME] || f.properties.NAME,
+        : LABEL_NAMES[f.properties.NAME] || f.properties.NAME,
     );
   $('#map-stage').classList.toggle('no-history', !data);
+  const emptyCallout = $('#empty-history-callout');
+  if (emptyCallout) emptyCallout.hidden = Boolean(currentData);
   $('#comparison-key').hidden = !state.compare;
   $('#modern-key').hidden = !state.modern;
   const cap = $('#comparison-caption');
@@ -457,6 +511,8 @@ function renderDetails() {
     : eventArticle(e, true);
   $('#chapter-link').href = `/events/${e.id}/`;
   $('#chapter-link').textContent = 'Open chapter page';
+  const introTitle = $('#atlas-introduction');
+  if (introTitle && location.pathname.startsWith('/events/')) introTitle.textContent = e.title;
   document.querySelectorAll('[data-event]').forEach((a) => {
     if (a.dataset.event === e.id) a.setAttribute('aria-current', 'true');
     else a.removeAttribute('aria-current');
@@ -470,6 +526,8 @@ function renderDetails() {
 async function load({ focus = false, userAction = null } = {}) {
   const focusRevision = viewRevision;
   const token = ++sequence;
+  ++compareSequence;
+  compareLoading = false;
   const requested = { date: state.date, event: state.event, phase: state.phase };
   clearTimeout(loadingNoticeTimer);
   loading = true;
@@ -497,18 +555,24 @@ async function load({ focus = false, userAction = null } = {}) {
     }
     const index = manifest.snapshots.findLastIndex((s) => s.date <= requested.date);
     const s = manifest.snapshots[index];
+    const needPrev = state.compare || (!playing && !isScrubbing);
+    const keepPrev = !needPrev && previousSnapshotIndex === index - 1;
     const [current, prev] = await Promise.all([
       snapshot(s),
-      snapshot(manifest.snapshots[index - 1]),
+      needPrev
+        ? snapshot(manifest.snapshots[index - 1])
+        : Promise.resolve(keepPrev ? previousData : null),
     ]);
     if (token !== sequence) return;
     clearTimeout(loadingNoticeTimer);
     const changedSnapshot = currentData?.date !== current?.date;
-    const samePair = hasPresentedMap && currentData === current && previousData === prev;
+    const samePair =
+      hasPresentedMap && currentData === current && (!state.compare || previousData === prev);
     currentSnapshot = s;
     presentedDate = requested.date;
     currentData = current;
     previousData = prev;
+    previousSnapshotIndex = needPrev || keepPrev ? index - 1 : -1;
     if (!hasPresentedMap) {
       svg
         .select('.reference-land')
@@ -527,9 +591,10 @@ async function load({ focus = false, userAction = null } = {}) {
     // update when their exact date threshold is crossed within the same snapshot.
     const visibleData = state.compare && state.phase === 'before' ? previousData : currentData;
     const nodes = [...svg.select('.historic-regions').node().children];
+    const previousIds = buildPreviousIds();
     const sameAppearance =
       nodes.length === (visibleData?.features.length || 0) &&
-      nodes.every((node) => node.getAttribute('class') === regionClass(node.__data__));
+      nodes.every((node) => node.getAttribute('class') === regionClass(node.__data__, previousIds));
     if (!samePair || requested.phase !== presentedPhase || !sameAppearance)
       renderMap({ animate: hasPresentedMap && changedSnapshot });
     renderCaption();
@@ -554,7 +619,7 @@ async function load({ focus = false, userAction = null } = {}) {
       const regions =
         currentData?.features.filter((f) => e.match.includes(f.properties.NAME)) || [];
       if (regions.length) {
-        const bounds = path.bounds({ type: 'FeatureCollection', features: regions });
+        const bounds = featuresBounds(regions);
         const center = [(bounds[0][0] + bounds[1][0]) / 2, (bounds[0][1] + bounds[1][1]) / 2];
         if (center.every(Number.isFinite)) {
           const k = e.scale;
@@ -686,6 +751,27 @@ $('#next').onclick = () => {
   const e = adjacent(1);
   if (e) setEvent(e);
 };
+function playInterval() {
+  const base = matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? REDUCED_YEAR_INTERVAL
+    : YEAR_INTERVAL;
+  return Math.round(base / playSpeed);
+}
+function playTick() {
+  if (loading) return;
+  const date = nextYearDate(state.date);
+  if (!date) {
+    pause();
+    return;
+  }
+  state.date = date;
+  state.event = eventAt(date).id;
+  state.region = null;
+  state.phase = 'after';
+  save('replace');
+  load();
+  if (!nextYearDate(date)) pause();
+}
 $('#play').onclick = () => {
   if (playing) {
     track('map_play_pause');
@@ -696,30 +782,32 @@ $('#play').onclick = () => {
   track('map_play_start');
   state.story = false;
   if (state.date >= events.at(-1).date) setEvent(events[0], { action: null });
-  const tick = () => {
-    if (loading) return;
-    const date = nextYearDate(state.date);
-    if (!date) {
-      pause();
-      return;
-    }
-    state.date = date;
-    state.event = eventAt(date).id;
-    state.region = null;
-    state.phase = 'after';
-    save('replace');
-    load();
-    if (!nextYearDate(date)) pause();
-  };
   $('#play').innerHTML = '<span aria-hidden="true">Ⅱ</span>';
   $('#play').setAttribute('aria-label', 'Pause timeline');
-  playing = setInterval(
-    tick,
-    matchMedia('(prefers-reduced-motion: reduce)').matches ? REDUCED_YEAR_INTERVAL : YEAR_INTERVAL,
-  );
+  playing = setInterval(playTick, playInterval());
   prefetchNextYear();
   announce('Playing one year at a time, using year-end views. Use Pause to stop.');
 };
+const speedButton = $('#play-speed');
+if (speedButton) {
+  speedButton.onclick = () => {
+    const speeds = [1, 2, 4];
+    playSpeed = speeds[(speeds.indexOf(playSpeed) + 1) % speeds.length];
+    speedButton.textContent = `${playSpeed}×`;
+    speedButton.setAttribute('aria-label', `Playback speed: ${playSpeed}x`);
+    if (playing) {
+      clearInterval(playing);
+      playing = setInterval(playTick, playInterval());
+    }
+  };
+}
+const jumpFirst = $('#jump-first-snapshot');
+if (jumpFirst) {
+  jumpFirst.onclick = () => {
+    state.story = false;
+    setEvent(eventById('treaty-of-paris'));
+  };
+}
 let yearTimer, pendingYear;
 $('#year-range').oninput = (e) => {
   pause();
@@ -746,18 +834,137 @@ $('#modern').onchange = (e) => {
   renderMap();
   save();
 };
-$('#compare').onchange = (e) => {
-  explore('compare');
-  if (e.target.checked) track('map_compare_open');
+async function setCompare(checked, { retry = false } = {}) {
+  if (!retry) {
+    explore('compare');
+    if (checked) track('map_compare_open');
+  }
   pause();
-  state.compare = e.target.checked;
-  state.phase = 'after';
-  state.region = null;
-  renderMap();
-  renderCaption();
-  renderDetails();
-  save();
+  const compareToken = ++compareSequence;
+  if (!checked) {
+    if (compareLoading) {
+      clearTimeout(loadingNoticeTimer);
+      compareLoading = false;
+      $('#map-status').hidden = true;
+      if (!loading) $('#map-stage').setAttribute('aria-busy', 'false');
+    }
+    state.compare = false;
+    state.phase = 'after';
+    state.region = null;
+    if (!loading) {
+      renderMap();
+      renderCaption();
+      renderDetails();
+    } else {
+      renderMap();
+    }
+    save();
+    return;
+  }
+  if (loading) {
+    state.compare = true;
+    state.phase = 'after';
+    state.region = null;
+    save();
+    void load();
+    return;
+  }
+  const idx =
+    manifest && currentSnapshot
+      ? manifest.snapshots.findIndex((s) => s.file === currentSnapshot.file)
+      : -1;
+  const needsPrevFetch = idx > 0 && previousSnapshotIndex !== idx - 1;
+  if (!needsPrevFetch) {
+    state.compare = true;
+    state.phase = 'after';
+    state.region = null;
+    renderMap();
+    renderCaption();
+    renderDetails();
+    save();
+    return;
+  }
+  const loadToken = sequence;
+  const targetSnapshot = currentSnapshot;
+  const prevEntry = manifest.snapshots[idx - 1];
+  clearTimeout(loadingNoticeTimer);
+  compareLoading = true;
+  $('#map-stage').setAttribute('aria-busy', 'true');
+  $('#map-status').hidden = true;
+  loadingNoticeTimer = setTimeout(() => {
+    if (compareToken === compareSequence && loadToken === sequence)
+      $('#snapshot-label').textContent =
+        `Loading ${fmt(prevEntry.date)} for comparison… Keeping ${fmt(presentedDate)} until ready.`;
+  }, 200);
+  try {
+    const prev = await snapshot(prevEntry);
+    if (
+      compareToken !== compareSequence ||
+      loadToken !== sequence ||
+      currentSnapshot !== targetSnapshot
+    )
+      return;
+    clearTimeout(loadingNoticeTimer);
+    compareLoading = false;
+    previousData = prev;
+    previousSnapshotIndex = idx - 1;
+    state.compare = true;
+    state.phase = 'after';
+    state.region = null;
+    $('#map-status').hidden = true;
+    if (!loading) $('#map-stage').setAttribute('aria-busy', 'false');
+    renderMap();
+    renderCaption();
+    renderDetails();
+    save();
+  } catch (error) {
+    if (
+      compareToken !== compareSequence ||
+      loadToken !== sequence ||
+      currentSnapshot !== targetSnapshot
+    )
+      return;
+    clearTimeout(loadingNoticeTimer);
+    compareLoading = false;
+    state.compare = false;
+    state.phase = 'after';
+    $('#compare').checked = false;
+    renderMap();
+    renderCaption();
+    renderDetails();
+    save('replace');
+    showStatus(
+      error.message === 'missing-data'
+        ? 'Comparison boundary data is missing'
+        : 'The before map could not be loaded',
+      `Could not load ${fmt(prevEntry.date)} for comparison. Keeping the map for ${fmt(presentedDate)}.`,
+      true,
+      () => {
+        $('#compare').checked = true;
+        void setCompare(true, { retry: true });
+      },
+    );
+    if (!loading) $('#map-stage').setAttribute('aria-busy', 'false');
+    announce('Before map loading failed. The current map is retained. Retry loading is available.');
+  }
+}
+$('#compare').onchange = (e) => {
+  void setCompare(e.target.checked);
 };
+$('#history-map').addEventListener(
+  'wheel',
+  (e) => {
+    if (e.ctrlKey || e.metaKey) return;
+    const hint = $('#map-zoom-hint');
+    if (!hint) return;
+    hint.hidden = false;
+    clearTimeout(zoomHintTimer);
+    zoomHintTimer = setTimeout(() => {
+      hint.hidden = true;
+    }, 2200);
+  },
+  { passive: true },
+);
 $('#zoom-in').onclick = () => {
   explore('map');
   pause();
@@ -797,6 +1004,8 @@ $('#history-map').addEventListener('keydown', (e) => {
 });
 function closeDetails() {
   pause();
+  const hadRegion = Boolean(regionReturn);
+  regionReturn = null;
   state.details = false;
   state.expanded = false;
   state.region = null;
@@ -805,6 +1014,9 @@ function closeDetails() {
   renderMap();
   save();
   $('#open-details').focus({ preventScroll: true });
+  if (hadRegion && matchMedia('(max-width: 760px)').matches) {
+    $('#map-stage').scrollIntoView({ block: 'start', behavior: 'instant' });
+  }
 }
 $('#close-details').onclick = closeDetails;
 $('#open-details').onclick = () => {

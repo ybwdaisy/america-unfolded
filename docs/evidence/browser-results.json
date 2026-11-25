@@ -8,6 +8,14 @@
       "result": "pass"
     },
     {
+      "name": "year input and playback speed toggle work on standard 1440px desktop",
+      "result": "pass"
+    },
+    {
+      "name": "1805 Oregon Country does not leak into the Alaska inset box",
+      "result": "pass"
+    },
+    {
       "name": "initial dated map and chapter agree",
       "result": "pass"
     },
@@ -73,6 +81,18 @@
     },
     {
       "name": "failed network and retry recover",
+      "result": "pass"
+    },
+    {
+      "name": "late comparison response after switching year does not overwrite previousData",
+      "result": "pass"
+    },
+    {
+      "name": "failed comparison fetch keeps current map and recovers on retry",
+      "result": "pass"
+    },
+    {
+      "name": "turning off comparison while a year snapshot is loading does not cancel the year load",
       "result": "pass"
     },
     {

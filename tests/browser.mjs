@@ -36,6 +36,7 @@ await check(
     assert.match(await page.locator('#chapter-content h2').innerText(), /independence/i);
     assert.match(await page.locator('#chapter-position').innerText(), /Chapter 1 of/);
     assert.equal(await page.locator('.historic-regions path').count(), 0);
+    assert.equal(await page.locator('#empty-history-callout').isVisible(), true);
     assert.match(
       await page.locator('#snapshot-label').innerText(),
       /No historical boundary snapshot/,
@@ -49,8 +50,34 @@ await check(
     );
     await page.locator('#play').click();
     assert.equal(await page.locator('.historic-regions path').count(), 0);
+    await page.locator('#jump-first-snapshot').click();
+    await ready(page);
+    assert.equal(await page.locator('#current-year').innerText(), '1783');
+    assert.equal(await page.locator('#empty-history-callout').isVisible(), false);
   },
 );
+await check('year input and playback speed toggle work on standard 1440px desktop', async () => {
+  assert.equal(await page.locator('#year-input').isVisible(), true);
+  assert.equal(await page.locator('#play-speed').innerText(), '1×');
+  await page.locator('#play-speed').click();
+  assert.equal(await page.locator('#play-speed').innerText(), '2×');
+  await page.locator('#play-speed').click();
+  assert.equal(await page.locator('#play-speed').innerText(), '4×');
+  await page.locator('#play-speed').click();
+  assert.equal(await page.locator('#play-speed').innerText(), '1×');
+});
+await check('1805 Oregon Country does not leak into the Alaska inset box', async () => {
+  await page.goto(base + '/?date=1805-12-31&event=louisiana-purchase');
+  await ready(page);
+  const oregonBox = await page.locator('.region[aria-label^="Oregon Country,"]').boundingBox();
+  const alaskaInset = await page.locator('.inset-guides rect').first().boundingBox();
+  assert.ok(oregonBox && alaskaInset);
+  assert.ok(
+    oregonBox.y + oregonBox.height < alaskaInset.y,
+    `Oregon Country bottom ${oregonBox.y + oregonBox.height} overlaps Alaska inset top ${alaskaInset.y}`,
+  );
+  assert.equal(await page.locator('.region-labels text', { hasText: 'Disputed area' }).count(), 1);
+});
 await page.goto(louisiana);
 await ready(page);
 await check('initial dated map and chapter agree', async () => {
@@ -252,6 +279,98 @@ await check('failed network and retry recover', async () => {
   await ready(p);
   await p.close();
 });
+await check(
+  'late comparison response after switching year does not overwrite previousData',
+  async () => {
+    const p = await context.newPage();
+    await p.goto(base + '/?date=1958-12-31&event=hawaii-annexation');
+    await ready(p);
+    await p.clock.install();
+    await p.locator('#play').click();
+    await p.clock.runFor(950);
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1959');
+    let releaseLate;
+    const gate = new Promise((resolve) => {
+      releaseLate = resolve;
+    });
+    await p.route('**/data/snapshot-1959-01-03.json', async (r) => {
+      await gate;
+      await r.continue();
+    });
+    await p.locator('#compare').check();
+    await p.locator('[data-event=alaska-purchase]').click();
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1867');
+    releaseLate();
+    await p.waitForTimeout(200);
+    await p.unroute('**/data/snapshot-1959-01-03.json');
+    await p.locator('#compare').check();
+    await p.locator('[data-phase=before]').click();
+    assert.match(await p.locator('#snapshot-label').innerText(), /Mar 1, 1867/);
+    assert.equal(await p.locator('.region[aria-label^="Alaska, State"]').count(), 0);
+    await p.close();
+  },
+);
+await check('failed comparison fetch keeps current map and recovers on retry', async () => {
+  const p = await context.newPage();
+  await p.goto(base + '/?date=1958-12-31&event=hawaii-annexation');
+  await ready(p);
+  await p.clock.install();
+  await p.locator('#play').click();
+  await p.clock.runFor(950);
+  await ready(p);
+  assert.equal(await p.locator('#current-year').innerText(), '1959');
+  await p.route('**/data/snapshot-1959-01-03.json', (r) => r.abort());
+  await p.locator('#compare').check();
+  await p.locator('#retry-map').waitFor();
+  assert.equal(await p.locator('#compare').isChecked(), false);
+  assert.ok((await p.locator('.historic-regions path').count()) > 0);
+  assert.equal(await p.locator('#empty-history-callout').isVisible(), false);
+  assert.match(await p.locator('#map-status').innerText(), /Keeping the map/);
+  assert.equal(
+    await p.locator('#map-status').evaluate((e) => e.classList.contains('is-map-notice')),
+    true,
+  );
+  await p.unroute('**/data/snapshot-1959-01-03.json');
+  await p.locator('#retry-map').click();
+  await ready(p);
+  assert.equal(await p.locator('#compare').isChecked(), true);
+  await p.locator('[data-phase=before]').click();
+  assert.match(await p.locator('#snapshot-label').innerText(), /Jan 3, 1959/);
+  await p.close();
+});
+await check(
+  'turning off comparison while a year snapshot is loading does not cancel the year load',
+  async () => {
+    const p = await context.newPage();
+    await p.goto(louisiana);
+    await ready(p);
+    await p.locator('#compare').check();
+    let release1818;
+    const gate = new Promise((resolve) => {
+      release1818 = resolve;
+    });
+    await p.route('**/data/snapshot-1818-10-20.json', async (r) => {
+      await gate;
+      await r.continue();
+    });
+    await p.locator('#next').click();
+    await p.waitForFunction(
+      () => document.querySelector('#map-stage')?.getAttribute('aria-busy') === 'true',
+    );
+    await p.locator('#compare').uncheck();
+    assert.equal(await p.locator('#compare').isChecked(), false);
+    release1818();
+    await ready(p);
+    assert.equal(await p.locator('#current-year').innerText(), '1818');
+    assert.match(await p.locator('#snapshot-label').innerText(), /Oct 20, 1818/);
+    assert.equal(await p.locator('.region[aria-label^="Missouri Territory,"]').count(), 1);
+    assert.equal(await p.locator('#compare').isChecked(), false);
+    await p.unroute('**/data/snapshot-1818-10-20.json');
+    await p.close();
+  },
+);
 await check('event pages and sources remain readable without JavaScript', async () => {
   const c = await b.newContext({ javaScriptEnabled: false });
   const p = await c.newPage();
