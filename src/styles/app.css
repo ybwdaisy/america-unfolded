@@ -1712,6 +1712,12 @@ dd {
   flex-wrap: wrap;
   align-items: center;
 }
+.footer nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+}
 
 /* Shared folded-map identity, also used for browser and home-screen icons. */
 .brand .brand-mark {

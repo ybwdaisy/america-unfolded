@@ -2,6 +2,8 @@
 
 > Explore American history through maps.
 
+[Live atlas](https://usa.ybwdaisy.com/) · [Source code](https://github.com/ybwdaisy/america-unfolded) · [Report an issue](https://github.com/ybwdaisy/america-unfolded/issues)
+
 A free, static atlas of U.S. territorial formation, 1776–1959. An independently written application with dated Newberry geometry, 15 sourced chapters, a guided story, and no accounts, database or paid map API. Optional, consent-based GA4 is isolated to the production hostname; QA, automation, local and preview traffic never load it.
 
 ## Run locally
@@ -60,7 +62,7 @@ Each event has a crawlable `/events/<slug>/` page with readable text and sources
 
 ## Deployment policy
 
-This repository is private. Product changes stay on `feat/historical-atlas` and PR #2 for review; the owner's later explicit instruction authorizes production publication without automatically merging the PR. The independent Vercel project is **america-unfolded**, linked to `ybwdaisy/america-unfolded`; production is published manually from the tested feature commit. Automatic Git deployment remains disabled. The approved production hostname is **usa.ybwdaisy.com**, with one project-specific CNAME at Aliyun. No existing DNS records or other projects are modified.
+This repository is public. Develop changes on feature branches and submit pull requests against `main`. Production releases are verified and published manually to the independent Vercel project **america-unfolded**, at **https://usa.ybwdaisy.com/**. Automatic Git deployment remains disabled; merging a pull request does not itself publish a release.
 
 See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for the earlier preview classification incident and subsequent release record. No domain purchase or paid service is required. Public funnel configuration is maintained only in `analytics/funnels.json` and published byte-for-byte at `/.well-known/site-pulse.json`; the build and CI validate the Site Pulse public v1 contract. See docs/ANALYTICS.md for resource IDs, events, consent and QA isolation.
 
